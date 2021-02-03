@@ -1,13 +1,7 @@
 #Include <mustExec>
 #NoTrayIcon
-if !A_DebuggerName {
-	Msgbox This program needs a debugger!
-	ExitApp 1
-}
 
-debug.init()
-
-; TODO config for each server
+debug.init({console: !A_DebuggerName})
 includer.init("commands")
 
 try {
@@ -21,7 +15,8 @@ Return
 #Include bot.ahk
 #Include <Discord>
 #Include <Includer>
-#Include <EzGui>
+#Include <Counter>
 #Include <debug>
+#Include <urlCode>
 #Include <configLoader>
 #include *i commands/_includer.ahk

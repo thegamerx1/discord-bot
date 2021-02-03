@@ -1,9 +1,9 @@
-class command_exit {
+class command_exit extends command_ {
 	static owneronly := true
 	, cooldown := 0
 	, info := "Exits the bot safely"
 
-	call(bot, data, args := "") {
+	call(ctx, args := "") {
 		bot.api.disconnect()
 		exitapp 0
 	}
