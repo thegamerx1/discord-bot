@@ -14,8 +14,9 @@
 			debug.print(e)
 			return ctx.react("❌")
 		}
-		embed := new discord.embed()
-		embed.setEmbed(args, "``````ahk`n" StrReplace(code, "``", "\u200b") "``````")
-		ctx.reply(embed)
+		if (StrLen(code) > 1500)
+			return ctx.reply("too long!")
+		; TODO: FIX
+		ctx.reply("``````ahk`n" StrReplace(code, "``", "​``") "``````"-)
 	}
 }

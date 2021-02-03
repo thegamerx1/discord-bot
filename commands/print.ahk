@@ -4,8 +4,8 @@ class command_print extends command_ {
 	, info := "Gets output of a message"
 
 	call(ctx, args := "") {
-		embed := new discord.embed("test")
-		embed.setEmbed("Output", "json`n" JSON.dump(data))
+		embed := new discord.embed()
+		embed.setEmbed("Output", "``````json`n" data := JSON.dump(ctx.data) "``````")
 		ctx.reply(embed)
 	}
 }

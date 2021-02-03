@@ -4,7 +4,7 @@ class DiscoBot {
 		this.guilds := {}
 		this.commands := {}
 		this.loadCommands()
-		this.cache := {}
+		this.cache := {guild:{}, user:{}}
 		botFile := new configLoader("settings.json")
 		this.bot := botFile.data
 		this.api := new Discord(this, this.bot.TOKEN, 769)
@@ -34,7 +34,6 @@ class DiscoBot {
 	}
 
 	save() {
-		; this.botFile.save()
 		for key, value in this.guilds {
 			value.save()
 		}

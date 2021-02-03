@@ -5,6 +5,6 @@ class command_invite extends command_ {
 
 	call(ctx, args := "") {
 		static base := "https://discord.com/api/oauth2/authorize?client_id={}&permissions={}&scope=bot"
-		ctx.reply(format(base, bot.bot.USER_ID, bot.bot.PERMISSIONS))
+		ctx.reply(format(base, this.bot.bot.USER_ID, this.bot.bot.PERMISSIONS))
 	}
 }
