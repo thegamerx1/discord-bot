@@ -2,21 +2,24 @@
 	static cooldown := 2
 	, info := "Gets code of a command"
 
-	call(ctx, args := "") {
-		if (regex(args, "\.\\\/"))
-			return ctx.react("⛔")
+	call(ctx, args) {
+		if !args[1] {
+			embed := new discord.embed()
+			embed.setEmbed("My code is at", "https://github.com/thegamerx1/discord-bot`nhttps://github.com/thegamerx1/ahk-libs")
+			ctx.reply(embed)
+			return
+		}
 
-		file := (args = "bot") ? "bot.ahk" : "commands\" args ".ahk"
+		command := this.bot.getAlias(args[1])
+		if !command
+			return ctx.react("bot_no")
 
 		try {
-			FileRead code, % file
-		} catch e {
-			debug.print(e)
-			return ctx.react("❌")
+			FileRead code, % "commands\" command ".ahk"
+		} catch {
+			Throw Exception("File read failed to", command)
 		}
-		if (StrLen(code) > 1500)
-			return ctx.reply("too long!")
-		; TODO: FIX
-		ctx.reply("``````ahk`n" StrReplace(code, "``", "​``") "``````"-)
+
+		ctx.reply("``````autoit`n" StrReplace(code, "``", "​``") "``````")
 	}
 }

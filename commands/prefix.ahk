@@ -1,14 +1,13 @@
 ﻿class command_prefix extends command_ {
 	static serverowneronly := true
 	, cooldown := 0
-	, info := "Gets output of a message"
+	, info := "Sets server prefix for the bot"
 
-	call(ctx, args := "") {
-		if (StrLen(args) > 1 || StrLen(args) < 1) {
-			ctx.reply("Prefix must be 1 char!")
-			return
-		}
-		this.bot.guilds[data.guild_id].data.prefix := param
-		ctx.react("✅")
+	call(ctx, args) {
+		if StrLen(args[1]) != 1
+			return ctx.reply("Prefix must be 1 char!")
+
+		this.bot.guilds[ctx.data.guild_id].data.prefix := args[1]
+		ctx.react("bot_ok")
 	}
 }

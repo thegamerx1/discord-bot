@@ -1,8 +1,8 @@
 #Include <mustExec>
 #NoTrayIcon
+includer.init("commands")
 
 debug.init({console: !A_DebuggerName})
-includer.init("commands")
 
 try {
 	DiscoBot.init()
