@@ -1,11 +1,13 @@
 ﻿class command_code extends command_ {
 	static cooldown := 2
 	, info := "Gets code of a command"
+	, aliases := ["source"]
 
 	call(ctx, args) {
 		if !args[1] {
-			embed := new discord.embed()
-			embed.setEmbed("My code is at", "https://github.com/thegamerx1/discord-bot`nhttps://github.com/thegamerx1/ahk-libs")
+			embed := new discord.embed("", "", 0x3E4BBB)
+			embed.addField("Source code", "https://github.com/thegamerx1/discord-bot")
+			embed.addField("Made with Discord.ahk", "https://github.com/thegamerx1/ahk-libs")
 			ctx.reply(embed)
 			return
 		}
@@ -15,11 +17,12 @@
 			return ctx.react("bot_no")
 
 		try {
-			FileRead code, % "commands\" command ".ahk"
+			code := FileOpen("commands\" command ".ahk", "r", "UTF-8").read()
 		} catch {
 			Throw Exception("File read failed to", command)
 		}
-
-		ctx.reply("``````autoit`n" StrReplace(code, "``", "​``") "``````")
+		page := new discord.paginator(code)
+		for _, value in page.pages
+			ctx.reply("``````autoit`n" value  "``````")
 	}
 }

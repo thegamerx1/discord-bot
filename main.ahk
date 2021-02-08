@@ -1,8 +1,8 @@
 #Include <mustExec>
 #NoTrayIcon
 includer.init("commands")
-
 debug.init({console: !A_DebuggerName})
+
 
 try {
 	DiscoBot.init()
@@ -16,7 +16,10 @@ Return
 #Include <Discord>
 #Include <Includer>
 #Include <Counter>
+#Include <HtmlFile>
 #Include <debug>
+#Include <base64>
 #Include <urlCode>
+#Include <Process>
 #Include <configLoader>
 #include *i commands/_includer.ahk

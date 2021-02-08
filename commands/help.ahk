@@ -1,18 +1,39 @@
 class command_help extends command_ {
-	static owneronly := false
-	, cooldown := 4
+	static cooldown := 4
 	, info := "Prints info about a command"
+	, args := [{optional: true, name: "command"}]
 
-	call(ctx, args) {
+	call(ctx, args, missing := false) {
 		if args[1] {
-			info := this.bot.commands[args[1]].info
-			embed := new discord.embed(args[1] ".ahk", info)
-		} else {
-			info := ""
-			for key, value in this.bot.commands {
-				info .= "``" key "`` - " value.info "`n"
+			arg := ""
+			aliases := ""
+			args[1] := this.bot.getAlias(args[1])
+			if !args[1]
+				return ctx.react("bot_no")
+
+			command := this.bot.commands[args[1]]
+			for _, oarg in command.args {
+				wraps := (oarg.optional) ? ["[", "]"] : ["<", ">"]
+				arg .= " " wraps[1] oarg.name wraps[2] " "
 			}
-			embed := new discord.embed("Commands", info)
+
+			for _, alias in command.aliases {
+				aliases .= (aliases ? ", " : "") "_" alias "_"
+			}
+
+			embed := new discord.embed(args[1] " " arg, command.info)
+			debug.print(aliases)
+			embed.addField("Aliases", aliases)
+			if missing {
+				embed.addField("There is a required argument missing", "<required> [optional]")
+			}
+		} else {
+			embed := new discord.embed("Commands")
+			for key, value in this.bot.commands {
+				embed.addField(key, value.info, !!Mod(A_Index, 3))
+			}
+			ctx.author.sendDM(embed)
+			embed := new discord.embed(,ctx.getEmoji("bot_ok") " Sent you a DM", 0xFF5959)
 		}
 		ctx.reply(embed)
 	}
