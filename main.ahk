@@ -7,7 +7,7 @@ debug.init({console: !A_DebuggerName})
 try {
 	DiscoBot.init()
 } catch e {
-	Debug.print(e,, {pretty: 2})
+	Debug.print(e, {pretty: 2})
 	ExitApp 1
 }
 Return
@@ -17,9 +17,7 @@ Return
 #Include <Includer>
 #Include <Counter>
 #Include <HtmlFile>
+#Include <textrower>
 #Include <debug>
-#Include <base64>
-#Include <urlCode>
-#Include <Process>
 #Include <configLoader>
 #include *i commands/_includer.ahk

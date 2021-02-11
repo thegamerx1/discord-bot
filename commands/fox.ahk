@@ -1,12 +1,12 @@
-class command_duck extends command_ {
+class command_fox extends command_ {
 	static cooldown := 1
-	, info := "Gets a duck for you"
-	, aliases := ["quack", "ducky", "duckling"]
+	, info := "Gets a cat for you"
+	, aliases := ["foxy", "floof"]
 	, permissions := ["EMBED_LINKS"]
 
 
 	call(ctx, args) {
-		static API := "https://random-d.uk/api/v1/random"
+		static API := "https://randomfox.ca/floof/"
 		ctx.typing()
 		http := new requests("get", API,, true)
 		http.OnFinished := ObjBindMethod(this, "response", ctx)
@@ -16,6 +16,6 @@ class command_duck extends command_ {
 	response(ctx, http) {
 		if http.status != 200
 			return ctx.reply("Error " http.status)
-		ctx.reply(http.json().url)
+		ctx.reply(http.json().image)
 	}
 }

@@ -2,6 +2,8 @@
 	static owneronly := true
 	, info := "Restarts the bot"
 	, aliases := ["restart"]
+	, permissions := ["ADD_REACTIONS"]
+
 
 	E_READY(data) {
 		if (this.bot.resumedata) {

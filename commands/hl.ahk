@@ -2,6 +2,7 @@
 	static cooldown := 5
 	, info := "Highlights your text"
 	, args := [{optional: false, name: "code"}]
+	, permissions := ["EMBED_LINKS"]
 
 	call(ctx, args) {
 		static regex := "^``+(?<lang>\w+)?\n(?<code>.*?)``+$"
@@ -12,7 +13,7 @@
 		ctx.delete()
 		embed := new discord.embed(,"_Paste by " ctx.author.mention "_")
 		embed.setFooter(ctx.author.id)
-		embed.setContent("``````" match.lang "`n" discord.sanitize(code) "``````")
+		embed.setContent("``````" match.lang "`n" discord.utils.sanitize(code) "``````")
 		msg := ctx.reply(embed)
 		msg.react("🚮")
 	}
@@ -21,8 +22,7 @@
 		msg := ctx.api.GetMessage(ctx.channel, ctx.message)
 		if ctx.emoji != "🚮"
 			return
-		debug.print(ctx.emoji)
-		debug.print("🚮")
+
 		if (msg.author.id == ctx.api.user_id) {
 			if (ctx.author.id = msg.data.embeds[1].footer.text) {
 				msg.delete()

@@ -2,6 +2,7 @@ class command_help extends command_ {
 	static cooldown := 4
 	, info := "Prints info about a command"
 	, args := [{optional: true, name: "command"}]
+	, permissions := ["EMBED_LINKS"]
 
 	call(ctx, args, missing := false) {
 		if args[1] {
@@ -21,8 +22,9 @@ class command_help extends command_ {
 				aliases .= (aliases ? ", " : "") "_" alias "_"
 			}
 
-			embed := new discord.embed(args[1] " " arg, command.info)
-			debug.print(aliases)
+			embed := new discord.embed()
+			embed.addField(args[1] " " arg, command.info)
+
 			embed.addField("Aliases", aliases)
 			if missing {
 				embed.addField("There is a required argument missing", "<required> [optional]")

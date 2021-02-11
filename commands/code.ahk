@@ -2,6 +2,9 @@
 	static cooldown := 2
 	, info := "Gets code of a command"
 	, aliases := ["source"]
+	, permissions := ["EMBED_LINKS"]
+	, args := [{optional: true, name: "command"}]
+
 
 	call(ctx, args) {
 		if !args[1] {

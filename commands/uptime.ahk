@@ -1,6 +1,7 @@
 class command_uptime extends command_ {
-	static cooldown := 1
+	static cooldown := 5
 	, info := "Gets bot uptime"
+	, permissions := ["EMBED_LINKS"]
 
 	start() {
 		this.uptime := new Counter(2, true)

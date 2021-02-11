@@ -3,6 +3,7 @@
 	, info := "Queries the wolfram API"
 	, aliases := ["w", "wa"]
 	, args := [{optional: false, name: "query"}]
+	, permissions := ["EMBED_LINKS"]
 
 	start() {
 		this.cache := {}

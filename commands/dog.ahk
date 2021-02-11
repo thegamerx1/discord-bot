@@ -1,14 +1,16 @@
-class command_duck extends command_ {
+class command_dog extends command_ {
 	static cooldown := 1
-	, info := "Gets a duck for you"
-	, aliases := ["quack", "ducky", "duckling"]
+	, info := "Gets a cat for you"
+	, aliases := ["woof", "doggo"]
 	, permissions := ["EMBED_LINKS"]
 
 
 	call(ctx, args) {
-		static API := "https://random-d.uk/api/v1/random"
+		static API := "https://random.dog/woof.json"
 		ctx.typing()
+		; TODO  checky
 		http := new requests("get", API,, true)
+		http.headers["filter"] := "mp4"
 		http.OnFinished := ObjBindMethod(this, "response", ctx)
 		http.send()
 	}

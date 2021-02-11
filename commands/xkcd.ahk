@@ -2,6 +2,7 @@ class command_xkcd extends command_ {
 	static cooldown := 3
 	, info := "Gets xkcd post"
 	, args := [{optional: true, name: "number"}]
+	, permissions := ["EMBED_LINKS"]
 
 	start() {
 		this.cache := {}

@@ -1,8 +1,6 @@
 class DiscoBot {
-	guilds := {}
-	commands := {}
 	init() {
-		this.cache := {}
+		this.guilds := this.commands := this.cache := {}
 		botFile := new configLoader("settings.json")
 		this.bot := botFile.data
 		this.loadCommands()
@@ -14,14 +12,17 @@ class DiscoBot {
 		OnExit(ObjBindMethod(this, "save"))
 	}
 
-	mirrorToExtension(event, data) {
+	_event(event, data) {
+		fn := this["E_" event]
 		for key, value in this.commands
 			this.executeCommand(key, "_event", event, data)
-		this.executeCommand
+		if !fn
+			Debug.print("|Event not handled: " event)
+		%fn%(this, data)
 	}
 
 	loadCommands() {
-		debug.print("Loading commands")
+		debug.print("|Loading commands")
 		for key, value in includer.list {
 			command := "Command_" value
 			this.commands[value] := new Command_%value%(this)
@@ -36,31 +37,18 @@ class DiscoBot {
 				this.cache.aliases[aname] := cname
 			}
 		}
-		this.cache.aliasarray := []
-		this.cache.aliasmeans := []
-		for aname, _ in this.cache.aliases
-			this.cache.aliasarray.push(aname)
-	}
-
-	loadGuilds(guild := "") {
-		debug.print("Loading guilds")
-		Loop Files, guildData/*.json, F
-			this.loadGuild(StrReplace(A_LoopFileName, ".json"))
 	}
 
 	loadGuild(id) {
 		this.guilds[id] := new configLoader("guildData/" id ".json", {prefix: this.bot.PREFIX})
 	}
 
-	getAlias(name) {
-		alias := this.cache.aliases[name]
-		if alias
-			return alias
-		if this.cache.aliasmeans[name]
-			return this.cache.aliasmeans[name]
+	E_GUILD_CREATE(data) {
+		this.loadGuild(data.id)
+	}
 
-		this.cache.aliasmeans[name] := stringDiffBest(this.cache.aliasarray, name)
-		return this.getAlias(name)
+	getAlias(name) {
+		return this.cache.aliases[name]
 	}
 
 	save() {
@@ -75,41 +63,31 @@ class DiscoBot {
 	}
 
 	E_ready(args*) {
-		this.loadGuilds()
-
 		this.api.SetPresence("online", "Discord.ahk")
 	}
 
 	E_MESSAGE_CREATE(ctx) {
-		static bot_what := ["bot_question", "bot_what", "bot_angry", "bot_why"]
+		static bot_what := ["bot_question", "bot_what", "bot_angry"]
 		if (ctx.author.bot)
 			return
 
-		prefix := this.guilds[ctx.data.guild_id].data.prefix
-		isPing := (SubStr(ctx.message, 1, StrLen(this.api.USER_ID)+4) == "<@!" this.api.USER_ID ">")
-		if (SubStr(ctx.message,1,1) == prefix || isPing) {
-			data := StrSplit(SubStr(ctx.message, 2), [" ", "`n"],, 2+isPing)
+		prefix := this.guilds[ctx.guild.id].data.prefix
+		isPing := (SubStr(ctx.message, 1, StrLen(this.api.self.id)+4) == "<@!" this.api.self.id ">")
+		if (SubStr(ctx.message,1,StrLen(prefix)) == prefix || isPing) {
+			data := StrSplit(SubStr(ctx.message, StrLen(prefix)+1), [" ", "`n"],, 2+isPing)
 
 			if isPing
 				data.RemoveAt(1)
+
 			command := this.getAlias(data[1])
 
-
-			if (isObject(command) && isPing)
-				command = help
-
-			if isObject(command) {
-				embed := new discord.embed("Did you mean?", command.str)
-				embed.setFooter(command.percent "%")
-				return ctx.reply(embed)
-			}
+			if (!command && isPing)
+				return ctx.reply(new discord.embed(, "My prefix is ``" prefix "``"))
 
 			if !command
 				return ctx.react(random(bot_what))
 
-
 			try {
-				debug.print(ctx.author.name " issued command " command " on " ctx.guild.name)
 				this.executeCommand(command, "called", ctx, command, data[2])
 			} catch e {
 				return this.printError(ctx, e)
@@ -132,6 +110,7 @@ class DiscoBot {
 
 class command_ {
 	__New(bot) {
+		this.permissions.push("SEND_MESSAGES")
 		this.bot := bot
 		this.cooldowns := {}
 	}
@@ -174,18 +153,40 @@ class command_ {
 			}
 		}
 		if this.cooldown {
-			if (this.cooldowns[author])
-				return ctx.react("bot_cooldown")
+			if (this.cooldowns[author].time > A_TickCount) {
+				if !this.cooldowns[author].reacted {
+					this.cooldowns[author].reacted := true
+					ctx.react("bot_cooldown")
+				}
+				return
+			}
 
-			this.cooldowns[author] := true
-			fn := ObjBindMethod(this, "removeCooldown", author)
-			SetTimer %fn%, % "-" this.cooldown * 1000
+			this.setCooldown(author)
+		}
+
+		for _, value in this.permissions {
+			if !contains(value, ctx.self.permissions) {
+				if contains("SEND_MESSAGES", ctx.self.permissions) {
+					ctx.reply("I need """ value """ for that!")
+				}
+				return
+			}
+		}
+
+		for _, value in this.userperms {
+			if !contains(value, ctx.author.permissions) {
+				ctx.reply(new discord.embed(, "You don't have permissions to do that!"))
+				return
+			}
+
 		}
 
 		this.call(ctx, args)
 	}
 
-	removeCooldown(author) {
-		this.cooldowns[author] := false
+	setCooldown(author, time := "") {
+		if !time
+			time := this.cooldown
+		this.cooldowns[author] := {time: A_TickCount + time * 1000, reacted: false}
 	}
 }

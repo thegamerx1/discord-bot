@@ -1,7 +1,8 @@
 class command_urban extends command_ {
-	static cooldown := 3
+	static cooldown := 2
 	, info := "Gets word definition from urban dictionary"
 	, args := [{optional: false, name: "word"}]
+	, permissions := ["EMBED_LINKS", "ADD_REACTIONS"]
 
 	static API := "https://www.urbandictionary.com/define.php?term="
 

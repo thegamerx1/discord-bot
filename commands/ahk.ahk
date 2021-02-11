@@ -1,10 +1,13 @@
+#Include <base64>
 class command_ahk extends command_ {
 	static cooldown := 5
-	, info := "Runs ahk through CloudAHK"
+	, info := "Runs code through CloudAHK"
 	, args := [{optional: false, name: "code"}]
+	, permissions := ["EMBED_LINKS"]
+
 
 	start() {
-		this.auth := "Basic " b64Encode(this.bot.bot.CLOUDAHK_USR ":" this.bot.bot.CLOUDAHK_PASS)
+		this.auth := "Basic " b64Encode(this.bot.bot.CLOUDAHK)
 		this.pasteCache := {}
 	}
 
@@ -37,7 +40,7 @@ class command_ahk extends command_ {
 		if StrLen(http.text) > 100000
 			return ctx.reply("What the fuck does that link contain??")
 		this.pasteCache[id] := http.text
-		this.gotCode(ctx, this.pasteCache[id])
+		this.gotCode(ctx, http.text)
 	}
 
 	gotCode(ctx, code) {
@@ -74,7 +77,7 @@ class command_ahk extends command_ {
 		if (StrLen(hjson.stdout) == 0) {
 			data.content := "No output"
 		} else {
-			data.content := "``````autoit`n" discord.sanitize(hjson.stdout) "``````"
+			data.content := "``````autoit`n" discord.utils.sanitize(hjson.stdout) "``````"
 		}
 		this.reply(ctx, data)
 	}

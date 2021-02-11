@@ -1,16 +1,20 @@
 class command_gateway extends command_ {
 	static owneronly := true
 	, info := "Gets gateway shit"
+	, permissions := ["EMBED_LINKS"]
 
 	start() {
 		this.events := {}
 	}
 
 	call(ctx, args) {
+		rows := new textrower(0, [{align: "left", name: "EVENT"}, {align: "right", name: "COUNT"}])
 		embed := new discord.embed()
 		for key, value in this.events {
-			embed.addField(key, value)
+			rows.addRow("EVENT", key)
+			rows.addRow("COUNT", value)
 		}
+		embed.setContent("``" rows.get() "``")
 		ctx.reply(embed)
 	}
 

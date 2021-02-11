@@ -3,7 +3,7 @@ class command_exit extends command_ {
 	, info := "Exits the bot safely"
 
 	call(ctx, args) {
-		this.bot.api.disconnect()
+		ctx.api.disconnect()
 		exitapp 0
 	}
 }
