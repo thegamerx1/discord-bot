@@ -1,3 +1,4 @@
+#Include %A_ScriptDir%
 #Include <mustExec>
 #NoTrayIcon
 includer.init("commands")
