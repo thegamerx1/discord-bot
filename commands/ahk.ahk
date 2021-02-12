@@ -7,7 +7,7 @@ class command_ahk extends command_ {
 
 
 	start() {
-		this.auth := "Basic " b64Encode(this.bot.bot.CLOUDAHK)
+		this.auth := "Basic " this.bot.bot.CLOUDAHK
 		this.pasteCache := {}
 	}
 
