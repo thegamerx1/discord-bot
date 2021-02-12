@@ -23,7 +23,7 @@
 		if ctx.emoji != "🚮"
 			return
 
-		if (msg.author.id == ctx.api.user_id) {
+		if (msg.author.id == ctx.api.self.id) {
 			if (ctx.author.id = msg.data.embeds[1].footer.text) {
 				msg.delete()
 			}
