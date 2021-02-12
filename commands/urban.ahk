@@ -25,14 +25,18 @@ class command_urban extends command_ {
 
 		html := new HtmlFile(http.text)
 		most := {}
+		index := 0
 		for _, value in html.Each(html.qsa("#content .def-panel")) {
 			if InStr(value.querySelector(".ribbon").textContent, "day")
 				continue
+			if (index++ > 4)
+				break
 			obj := {}
 			obj.likes := value.querySelector("div.def-footer a.up > span").textContent
-			if obj.likes < most.likes
-				continue
 			obj.dislikes := value.querySelector("div.def-footer a.down > span").textContent
+			obj.ratio := obj.likes/obj.dislikes
+			if obj.ratio < most.ratio
+				continue
 			obj.ratio := obj.likes/obj.dislikes
 			obj.word := value.querySelector("div.def-header > a").innerHTML
 			obj.meaning := value.querySelector("div.meaning").textContent

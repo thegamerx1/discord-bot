@@ -24,7 +24,32 @@ class command_dic extends command_ {
 		if (http.status != 200 && http.status != 404)
 			return ctx.reply("Error " http.status)
 
-		this.cache[query] := http.json()
+		data := http.json()
+		obj := {}
+		if !data[1].meanings {
+			obj.error := data.title
+			return this.reply(ctx, query)
+		}
+		data := data[1]
+
+		means := phonetics := examples := ""
+		for _, value in data.meanings {
+			for _, def in value.definitions {
+				means .= Chr(8226) " " def.definition "`n"
+				if def.example
+					examples .= Chr(8226) " " def.example "`n"`
+			}
+		}
+
+		for _, value in data.phonetics {
+			phonetics .= Chr(8226) " " value.text "`n"
+		}
+		obj.means := means
+		obj.examples := examples
+		obj.phonetics := phonetics
+
+
+		this.cache[query] := obj
 		this.reply(ctx, query)
 	}
 
@@ -32,27 +57,15 @@ class command_dic extends command_ {
 		data := this.cache[query]
 
 		embed := new discord.embed(,, 0x8CD9D7)
-		if !data[1].meanings {
-			embed.addField("Error", data.title)
+		if data.error {
+			embed.addField("Error", data.error)
 			ctx.reply(embed)
 			return
 		}
 
-		data := data[1]
-
-		for _, value in data.meanings {
-			out := ""
-			for _, def in value.definitions {
-				out .= Chr(8226) " " def.definition "`n"
-			}
-		}
-		embed.addField("Meanings", out)
-
-		for _, value in data.phonetics {
-			out := ""
-			out .= Chr(8226) " " value.text "`n"
-		}
-		embed.addField("Phonetics", out)
+		embed.addField("Meanings", data.means)
+		embed.addField("Examples", data.examples)
+		embed.addField("Phonetics", data.phonetics)
 		ctx.reply(embed)
 	}
 }
