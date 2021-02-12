@@ -1,7 +1,6 @@
 class command_nick extends command_ {
 	static info := "Changes bot nick"
 	, args := [{optional: true, name: "nick"}]
-	, permissions := ["ADD_REACTIONS"]
 	, userperms := ["MANAGE_NICKNAMES"]
 
 

@@ -11,9 +11,9 @@ class command_urban extends command_ {
 	}
 
 	call(ctx, args) {
-		if this.cache[args[1]] {
+		if this.cache[args[1]]
 			return this.reply(ctx, args[1])
-		}
+
 		ctx.typing()
 		http := new requests("GET", this.API args[1],, true)
 		http.onFinished := ObjBindMethod(this, "response", ctx, args[1])
@@ -38,21 +38,19 @@ class command_urban extends command_ {
 			if obj.ratio < most.ratio
 				continue
 			obj.ratio := obj.likes/obj.dislikes
-			obj.word := value.querySelector("div.def-header > a").innerHTML
+			obj.word := value.querySelector("div.def-header > a").textContent
 			obj.meaning := value.querySelector("div.meaning").textContent
 			obj.example := value.querySelector("div.example").textContent
 			obj.contributor := value.querySelector(".contributor > a").textContent
 			most := obj
 		}
-		if (!most.word)
+		if StrLen(most.word) = 0
 			return ctx.reply("Error in query")
 		this.cache[query] := most
 		this.reply(ctx, query)
 	}
 	reply(ctx, query) {
 		most := this.cache[query]
-		if !most
-			Throw Exception("Most is null?" -1)
 
 		embed := new discord.embed("Definition of " most.word, most.meaning)
 		embed.addField("Example", most.example)

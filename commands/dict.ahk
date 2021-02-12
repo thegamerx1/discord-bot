@@ -1,4 +1,4 @@
-class command_dic extends command_ {
+class command_dict extends command_ {
 	static cooldown := 2
 	, info := "Gets definition of a word"
 	, args := [{optional: false, name: "word"}]
@@ -28,6 +28,7 @@ class command_dic extends command_ {
 		obj := {}
 		if !data[1].meanings {
 			obj.error := data.title
+			this.cache[query] := obj
 			return this.reply(ctx, query)
 		}
 		data := data[1]

@@ -1,6 +1,6 @@
 class command_purge extends command_ {
 	static info := "Delet server"
-	, permissions := ["EMBED_LINKS", "MANAGE_MESSAGES", "VIEW_CHANNEL", "ADD_REACTIONS"]
+	, permissions := ["EMBED_LINKS", "MANAGE_MESSAGES", "VIEW_CHANNEL"]
 	, userperms := ["MANAGE_MESSAGES"]
 	, args := [{optional: false, name: "count"}]
 

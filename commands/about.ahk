@@ -6,13 +6,25 @@ class command_about extends command_ {
 
 	start() {
 		this.pid := DllCall("GetCurrentProcessId")
+		this.uptime := new Counter(2, true)
 	}
 
 	call(ctx, args) {
-		embed := new discord.embed("Bot information")
-		embed.setFooter("Made by " ctx.author.get(this.bot.bot.OWNER_ID).notMention())
-		embed.addField("Ram usage", ctx.GetEmoji("bot_ram") " " GetProcessMemoryUsage(this.pid) "MiB")
-		embed.addField("Guilds", this.bot.api.cache.guild.Count())
+		embed := new discord.embed("About")
+		embed.setFooter("Made by " ctx.author.get(this.bot.bot.OWNER_ID).notMention() " " Chr(8226) " https://github.com/thegamerx1/discord-bot")
+		data := [{name: "Bot", content: [{name:"Uptime"
+				,value: niceDate(this.uptime.get())}
+				,{name: "Guilds", value: this.bot.api.cache.guild.Count()}
+				,{name: "Ram Usage", value: GetProcessMemoryUsage(this.pid) "MiB"}]}
+			,{name: "System", content: [{name:"Uptime", value:  niceDate(A_TickCount)}]}]
+		for _, value in data {
+			out := ""
+			for _, ef in value.content {
+				out .= "``" ef.name "`` " ef.value "`n"
+			}
+			embed.addField(value.name, out, true)
+
+		}
 		ctx.reply(embed)
 	}
 }

@@ -1,6 +1,5 @@
 class command_eval extends command_ {
 	static owneronly := true
-	, info := "Gets output of a message"
 	, args := [{optional: false, name: "query"}]
 	, aliases := ["print"]
 

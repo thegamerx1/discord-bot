@@ -1,6 +1,5 @@
 class command_gateway extends command_ {
 	static owneronly := true
-	, info := "Gets gateway shit"
 	, permissions := ["EMBED_LINKS"]
 
 	start() {

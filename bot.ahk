@@ -76,7 +76,7 @@ class DiscoBot {
 
 		prefix := this.guilds[ctx.guild.id].data.prefix
 		isPing := (SubStr(ctx.message, 1, StrLen(this.api.self.id)+4) == "<@!" this.api.self.id ">")
-		if (SubStr(ctx.message,1,StrLen(prefix)) == prefix || isPing) {
+		if (SubStr(ctx.message, 1, StrLen(prefix)) == prefix || isPing) {
 			data := StrSplit(SubStr(ctx.message, StrLen(prefix)+1), [" ", "`n"],, 2+isPing)
 
 			if isPing
@@ -113,8 +113,9 @@ class DiscoBot {
 }
 
 class command_ {
-	permissions := []
 	__New(bot) {
+		if !this.permissions
+			this.permissions := []
 		this.permissions.push("SEND_MESSAGES")
 		this.permissions.push("ADD_REACTIONS")
 		this.bot := bot
@@ -167,15 +168,16 @@ class command_ {
 		}
 		args := out
 
-		for _, arg in this.args {
-			if !arg.optional {
-				if (args[A_Index] = "") {
-					this.bot.executeCommand("help", "call", ctx, [command], true)
-					return
-				}
+		for i, arg in this.args {
+			if (arg.optional && arg.default != "") {
+				args[i] := arg.default
+			}
+			if (!arg.optional && args[i] = "") {
+				this.bot.executeCommand("help", "call", ctx, [command], A_Index)
+				return
 			}
 		}
-		if this.cooldown {
+		if (this.cooldown && author != this.bot.bot.OWNER_ID) {
 			if (this.cooldowns[author].time > A_TickCount) {
 				if !this.cooldowns[author].reacted {
 					this.cooldowns[author].reacted := true
