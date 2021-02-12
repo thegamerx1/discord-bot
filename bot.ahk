@@ -4,7 +4,7 @@ class DiscoBot {
 		botFile := new configLoader("settings.json")
 		this.bot := botFile.data
 		if this.bot.release
-			debug.attachFile("log.log")
+			debug.attachFile := "log.log"
 
 		this.loadCommands()
 		this.api := new Discord(this, this.bot.TOKEN, this.bot.INTENTS, this.bot.OWNER_GUILD_ID)
