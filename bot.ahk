@@ -87,8 +87,9 @@ class DiscoBot {
 			if (!command && isPing)
 				return ctx.reply(new discord.embed(, "My prefix is ``" prefix "``"))
 
-			if !command
+			if (!command && contains("ADD_REACTIONS", ctx.self.permissions))
 				return ctx.react(random(bot_what))
+
 
 			try {
 				this.executeCommand(command, "called", ctx, command, data[2])
@@ -112,8 +113,10 @@ class DiscoBot {
 }
 
 class command_ {
+	permissions := []
 	__New(bot) {
 		this.permissions.push("SEND_MESSAGES")
+		this.permissions.push("ADD_REACTIONS")
 		this.bot := bot
 		this.cooldowns := {}
 	}
@@ -126,6 +129,23 @@ class command_ {
 	called(ctx, command, args := "") {
 		static regex := "[^\s""']+|""([^""]+)"""
 		author := ctx.author.id
+
+		for _, value in this.permissions {
+			if !contains(value, ctx.self.permissions) {
+				if contains("SEND_MESSAGES", ctx.self.permissions) {
+					ctx.reply("I need ``" value "`` for that!")
+				}
+				return
+			}
+		}
+
+		for _, value in this.userperms {
+			if !contains(value, ctx.author.permissions) {
+				ctx.reply(new discord.embed(, "You don't have permissions to do that!"))
+				return
+			}
+
+		}
 
 		if (this.owneronly && this.bot.bot.OWNER_ID != author)
 			return ctx.react("bot_notallowed")
@@ -167,22 +187,6 @@ class command_ {
 			this.setCooldown(author)
 		}
 
-		for _, value in this.permissions {
-			if !contains(value, ctx.self.permissions) {
-				if contains("SEND_MESSAGES", ctx.self.permissions) {
-					ctx.reply("I need """ value """ for that!")
-				}
-				return
-			}
-		}
-
-		for _, value in this.userperms {
-			if !contains(value, ctx.author.permissions) {
-				ctx.reply(new discord.embed(, "You don't have permissions to do that!"))
-				return
-			}
-
-		}
 
 		this.call(ctx, args)
 	}
