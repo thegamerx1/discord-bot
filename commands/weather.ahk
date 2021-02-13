@@ -24,15 +24,16 @@ class command_weather extends command_ {
 		embed.addField("Feels like", data.main.feels_like Chr(176) "C", true)
 		embed.addField("Humidity", data.main.humidity "%", true)
 		embed.addField("Wind", data.wind.speed "m/s " data.wind.deg Chr(176), true)
-		embed.addField("Precipitation", data.rain.1h ? data.rain.1h : 0 "mm", true)
+		embed.addField("Precipitation", (data.rain.1h ? data.rain.1h "mm": "No precipitation"), true)
 		if data.snow
 			embed.addField("Snow", data.snow.1h "mm", true)
-		FormatTime sunrise, % Time_unix2human(data.sys.sunrise), HH:MM
-		FormatTime sunset, % Time_unix2human(data.sys.sunset), HH:MM
+		FormatTime sunrise, % Unix2Miss(data.sys.sunrise), HH:MM
+		FormatTime sunset, % Unix2Miss(data.sys.sunset), HH:MM
 		embed.addField("Sunrise", sunrise, true)
 		embed.addField("Sunset", sunset, true)
 		embed.addField("Clouds", data.clouds.all "%", true)
 		embed.setThumbnail(format(iconurl, data.weather[1].icon))
+		embed.setFooter("UTC times " Chr(2886) " Current weather")
 		ctx.reply(embed)
 	}
 }

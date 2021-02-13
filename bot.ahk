@@ -71,7 +71,9 @@ class DiscoBot {
 
 	E_MESSAGE_CREATE(ctx) {
 		static bot_what := ["bot_question", "bot_what", "bot_angry"]
-		if (ctx.author.bot)
+		if ctx.author.bot
+			return
+		if (this.bot.release && ctx.author.id != this.bot.OWNER_ID)
 			return
 
 		prefix := this.guilds[ctx.guild.id].data.prefix
@@ -169,12 +171,14 @@ class command_ {
 		args := out
 
 		for i, arg in this.args {
-			if (arg.optional && arg.default != "") {
-				args[i] := arg.default
-			}
-			if (!arg.optional && args[i] = "") {
-				this.bot.executeCommand("help", "call", ctx, [command], A_Index)
-				return
+			if (args[1] = "") {
+				if (arg.optional && arg.default != "")
+					args[i] := arg.default
+
+				if !arg.optional {
+					this.bot.executeCommand("help", "call", ctx, [command], A_Index)
+					return
+				}
 			}
 		}
 		if (this.cooldown && author != this.bot.bot.OWNER_ID) {
