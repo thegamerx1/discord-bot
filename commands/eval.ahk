@@ -2,6 +2,7 @@ class command_eval extends command_ {
 	static owneronly := true
 	, args := [{optional: false, name: "query"}]
 	, aliases := ["print"]
+	, category := "Owner"
 
 
 	call(ctx, args) {

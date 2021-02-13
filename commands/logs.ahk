@@ -1,6 +1,8 @@
 class command_logs extends command_ {
 	static owneronly := true
-	,args := [{optional: true, name: "lines", default: 20}]
+	, info := "Gets bot logs"
+	, args := [{optional: true, name: "lines", default: 20}]
+	, category := "Owner"
 
 	call(ctx, args) {
 		ctx.reply("``````prolog`n" discord.utils.sanitize(strGetLast(debug.log, args[1])) "``````")

@@ -1,7 +1,8 @@
 #include <dataframe>
 class command_gateway extends command_ {
 	static owneronly := true
-	, permissions := ["EMBED_LINKS"]
+	, info := "Gets gateway log"
+	, category := "Owner"
 
 	start() {
 		this.events := {}

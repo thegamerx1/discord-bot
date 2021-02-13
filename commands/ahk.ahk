@@ -3,7 +3,7 @@ class command_ahk extends command_ {
 	static cooldown := 5
 	, info := "Runs code through CloudAHK"
 	, args := [{optional: false, name: "code"}]
-	, permissions := ["EMBED_LINKS"]
+	, category := "Code"
 
 
 	start() {

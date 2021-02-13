@@ -2,7 +2,7 @@ class command_cat extends command_ {
 	static cooldown := 1
 	, info := "Gets a cat for you"
 	, aliases := ["meow"]
-	, permissions := ["EMBED_LINKS"]
+	, category := "Fun"
 
 
 	call(ctx, args) {

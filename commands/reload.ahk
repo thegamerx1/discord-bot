@@ -1,7 +1,9 @@
 ﻿class command_reload extends command_ {
 	static owneronly := true
+	, info := "Restarts the bot"
 	, aliases := ["restart"]
 	, permissions := ["ADD_REACTIONS"]
+	, category := "Owner"
 
 
 	E_READY(data) {

@@ -2,7 +2,8 @@ class command_dict extends command_ {
 	static cooldown := 2
 	, info := "Gets definition of a word"
 	, args := [{optional: false, name: "word"}]
-	, permissions := ["EMBED_LINKS"]
+
+	, category := "Search"
 
 	start() {
 		this.cache := {}

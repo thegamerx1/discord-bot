@@ -2,7 +2,7 @@ class command_fox extends command_ {
 	static cooldown := 1
 	, info := "Gets a cat for you"
 	, aliases := ["foxy", "floof"]
-	, permissions := ["EMBED_LINKS"]
+	, category := "Fun"
 
 
 	call(ctx, args) {

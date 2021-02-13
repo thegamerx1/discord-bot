@@ -4,6 +4,7 @@
 	, args := [{optional: false, name: "prefix"}]
 	, permissions := ["CHANGE_NICKNAME"]
 	, userperms := ["ADMINISTRATOR"]
+	, category := "Bot"
 
 	call(ctx, args) {
 		length := StrLen(args[1])

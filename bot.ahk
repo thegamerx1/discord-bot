@@ -25,10 +25,12 @@ class DiscoBot {
 
 	loadCommands() {
 		debug.print("|Loading commands")
-		for key, value in includer.list {
+		for _, value in includer.list {
 			command := "Command_" value
 			this.commands[value] := new Command_%value%(this)
-			this.executeCommand(value, "start")
+		}
+		for name in this.commands {
+			this.executeCommand(name, "start")
 		}
 		this.cache.aliases := {}
 		for cname, value in this.commands {
@@ -117,7 +119,6 @@ class command_ {
 	__New(bot) {
 		if !this.permissions
 			this.permissions := []
-		this.permissions.push("SEND_MESSAGES")
 		this.permissions.push("ADD_REACTIONS")
 		this.bot := bot
 		this.cooldowns := {}
@@ -131,13 +132,18 @@ class command_ {
 	called(ctx, command, args := "") {
 		static regex := "[^\s""']+|""([^""]+)"""
 		author := ctx.author.id
+		if !contains("SEND_MESSAGES", ctx.self.permissions)
+			return
 
+		if !contains("EMBED_LINKS", ctx.self.permissions) {
+			ctx.reply("I need ``EMBED_LINKS`` to function!")
+			return
+		}
+
+		neededperms := ""
 		for _, value in this.permissions {
 			if !contains(value, ctx.self.permissions) {
-				if contains("SEND_MESSAGES", ctx.self.permissions) {
-					ctx.reply("I need ``" value "`` for that!")
-				}
-				return
+				neededperms .= Chr(8226) " " value "`n"
 			}
 		}
 
@@ -146,13 +152,15 @@ class command_ {
 				ctx.reply(new discord.embed(, "You don't have permissions to do that!"))
 				return
 			}
+		}
 
+		if neededperms {
+			embed := new discord.embed("I need the following permissions for that", neededperms)
+			ctx.reply(embed)
+			return
 		}
 
 		if (this.owneronly && this.bot.bot.OWNER_ID != author)
-			return ctx.react("bot_notallowed")
-
-		if (this.serverowneronly && ctx.author.id != ctx.guild.owner)
 			return ctx.react("bot_notallowed")
 
 		out := []

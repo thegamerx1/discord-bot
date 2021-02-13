@@ -1,7 +1,8 @@
 class command_server extends command_ {
 	static  cooldown := 2
 	, info := "Gets info about the server"
-	, permissions := ["EMBED_LINKS"]
+
+	, category := "Fun"
 
 
 	call(ctx, args) {

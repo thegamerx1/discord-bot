@@ -1,6 +1,7 @@
 ﻿class command_ping extends command_ {
-	static cooldown := 5
+	static cooldown := 1
 	, info := "Checks the ping of the bot"
+	, category := "Fun"
 
 	call(ctx, args) {
 		time := new Counter()

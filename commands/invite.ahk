@@ -1,7 +1,8 @@
 class command_invite extends command_ {
 	static cooldown := 10
 	, info := "Gets a invite for the bot"
-	, permissions := ["EMBED_LINKS"]
+
+	, category := "Bot"
 
 
 	call(ctx, args) {

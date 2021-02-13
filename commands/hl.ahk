@@ -2,7 +2,8 @@
 	static cooldown := 5
 	, info := "Highlights your text"
 	, args := [{optional: false, name: "code"}]
-	, permissions := ["EMBED_LINKS"]
+
+	, category := "Code"
 
 	call(ctx, args) {
 		static regex := "^``+(?<lang>\w+)?\n(?<code>.*?)``+$"

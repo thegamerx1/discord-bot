@@ -2,7 +2,7 @@
 class command_about extends command_ {
 	static cooldown := 5
 	, info := "Gets bot info"
-	, permissions := ["EMBED_LINKS"]
+	, category := "Bot"
 
 	start() {
 		this.pid := DllCall("GetCurrentProcessId")

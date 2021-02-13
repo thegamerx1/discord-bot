@@ -1,7 +1,8 @@
 class command_nick extends command_ {
-	static info := "Changes bot nick"
+	static info := "Changes bot nickname"
 	, args := [{optional: true, name: "nick"}]
 	, userperms := ["MANAGE_NICKNAMES"]
+	, category := "Bot"
 
 
 	call(ctx, args) {

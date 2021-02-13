@@ -2,7 +2,18 @@ class command_help extends command_ {
 	static cooldown := 4
 	, info := "Prints help"
 	, args := [{optional: true, name: "command"}]
-	, permissions := ["EMBED_LINKS"]
+	, category := "Bot"
+
+	start() {
+		this.categories := {}
+		for name, cmd in this.bot.commands {
+			if !cmd.category
+				continue
+			if !this.categories[cmd.category]
+				this.categories[cmd.category] := []
+			this.categories[cmd.category].push({name: name, info: cmd.info})
+		}
+	}
 
 	call(ctx, args, missing := false) {
 		if args[1] {
@@ -12,29 +23,34 @@ class command_help extends command_ {
 			if !args[1]
 				return ctx.react("bot_no")
 
-			command := this.bot.commands[args[1]]
-			for _, oarg in command.args {
+			cmd := this.bot.commands[args[1]]
+			for _, oarg in cmd.args {
 				wraps := (oarg.optional) ? ["[", "]"] : ["<", ">"]
-				arg .= " " wraps[1] oarg.name wraps[2] " "
+				args .= " " wraps[1] oarg.name wraps[2]
 			}
 
-			for _, alias in command.aliases {
+			for _, alias in cmd.aliases {
 				aliases .= (aliases ? ", " : "") "_" alias "_"
 			}
 
-			embed := new discord.embed("**" args[1] " " arg "**", command.info)
-
+			embed := new discord.embed(missing ? "Argument missing: " cmd.args[missing].name : "", cmd.info)
+			embed.addField("Usage", args[1] " " args)
 			embed.addField("Aliases", aliases)
-			if missing {
-				embed.addField("Argument missing", command.args[missing].name)
-			}
 		} else {
 			embed := new discord.embed("Commands")
-			for key, value in this.bot.commands {
-				embed.addField(key, value.info, !!Mod(A_Index, 3))
+			index := 1
+			for category, cmd in this.categories {
+				index++
+				if (!Mod(index, 2) && index != 2)
+					embed.addField("", "",, true)
+				out := ""
+				for _, value in cmd {
+					out .= "``" value.name "`` " value.info "`n"
+				}
+				embed.addField(category, out, true)
 			}
-			ctx.author.sendDM(embed)
-			embed := new discord.embed(,ctx.getEmoji("bot_ok") " Sent you a DM", 0xFF5959)
+			; ctx.author.sendDM(embed)
+			; embed := new discord.embed(,ctx.getEmoji("bot_ok") " Sent you a DM", 0xFF5959)
 		}
 		ctx.reply(embed)
 	}

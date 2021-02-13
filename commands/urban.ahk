@@ -3,7 +3,7 @@ class command_urban extends command_ {
 	static cooldown := 2
 	, info := "Gets word definition from urban dictionary"
 	, args := [{optional: false, name: "word"}]
-	, permissions := ["EMBED_LINKS"]
+	, category := "Search"
 
 	static API := "https://www.urbandictionary.com/define.php?term="
 
@@ -45,8 +45,10 @@ class command_urban extends command_ {
 			obj.contributor := value.querySelector(".contributor > a").textContent
 			most := obj
 		}
-		if !StrLen(most.word)
+		if !StrLen(most.word) {
+			clipboard := http.text
 			return ctx.reply("Error in query")
+		}
 		this.cache[query] := most
 		this.reply(ctx, query)
 	}
