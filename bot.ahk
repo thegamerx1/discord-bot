@@ -19,8 +19,7 @@ class DiscoBot {
 		fn := this["E_" event]
 		for key, value in this.commands
 			this.executeCommand(key, "_event", event, data)
-		if !fn
-			Debug.print("|Event not handled: " event)
+		Debug.print("|Event: " event)
 		%fn%(this, data)
 	}
 

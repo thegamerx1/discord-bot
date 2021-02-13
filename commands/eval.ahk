@@ -5,7 +5,8 @@ class command_eval extends command_ {
 
 
 	call(ctx, args) {
-		clipboard := ctx.message
+		if !this.bot.bot.release
+			clipboard := ctx.message
 		msg := ctx.referenced_msg ? ctx.referenced_msg : ctx
 		data := msg[StrSplit(args[1], ".")*]
 		if IsObject(data) {

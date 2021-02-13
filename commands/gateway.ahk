@@ -1,3 +1,4 @@
+#include <dataframe>
 class command_gateway extends command_ {
 	static owneronly := true
 	, permissions := ["EMBED_LINKS"]
@@ -7,13 +8,16 @@ class command_gateway extends command_ {
 	}
 
 	call(ctx, args) {
-		rows := new textrower(0, [{align: "left", name: "EVENT"}, {align: "right", name: "COUNT"}])
-		embed := new discord.embed()
-		for key, value in this.events {
-			rows.addRow("EVENT", key)
-			rows.addRow("COUNT", value)
+		frame := new dataframe(dataframe.fromObj(this.events, ["EVENT", "CALLS"]))
+		total := 0
+		unique := 0
+		for _, count in this.events {
+			total += count
+			unique++
 		}
-		embed.setContent("``" rows.get() "``")
+		embed := new discord.embed(,"``````AsciiDoc`n" frame.get() "``````")
+		embed.addField("Total events", total, true)
+		embed.addField("Unique events", unique, true)
 		ctx.reply(embed)
 	}
 

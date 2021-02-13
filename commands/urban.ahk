@@ -1,3 +1,4 @@
+#Include <HtmlFile>
 class command_urban extends command_ {
 	static cooldown := 2
 	, info := "Gets word definition from urban dictionary"
@@ -44,7 +45,7 @@ class command_urban extends command_ {
 			obj.contributor := value.querySelector(".contributor > a").textContent
 			most := obj
 		}
-		if StrLen(most.word) = 0
+		if !StrLen(most.word)
 			return ctx.reply("Error in query")
 		this.cache[query] := most
 		this.reply(ctx, query)

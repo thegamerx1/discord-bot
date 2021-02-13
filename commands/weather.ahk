@@ -14,12 +14,15 @@ class command_weather extends command_ {
 
 	response(ctx, http) {
 		static iconurl := "http://openweathermap.org/img/wn/{}@2x.png"
+		static url := "https://openweathermap.org/city/{}"
 		if http.status != 200
 			return ctx.react("bot_no")
 
 		data := http.json()
+		http := ""
 
 		embed := new discord.embed("Weather for " data.name ", " data.sys.country, format("{:T}", data.weather[1].description))
+		embed.setUrl(format(url, data.id))
 		embed.addField("Temperature", data.main.temp Chr(176) "C", true)
 		embed.addField("Feels like", data.main.feels_like Chr(176) "C", true)
 		embed.addField("Humidity", data.main.humidity "%", true)
@@ -27,13 +30,12 @@ class command_weather extends command_ {
 		embed.addField("Precipitation", (data.rain.1h ? data.rain.1h "mm": "No precipitation"), true)
 		if data.snow
 			embed.addField("Snow", data.snow.1h "mm", true)
-		FormatTime sunrise, % Unix2Miss(data.sys.sunrise), HH:MM
-		FormatTime sunset, % Unix2Miss(data.sys.sunset), HH:MM
-		embed.addField("Sunrise", sunrise, true)
-		embed.addField("Sunset", sunset, true)
 		embed.addField("Clouds", data.clouds.all "%", true)
 		embed.setThumbnail(format(iconurl, data.weather[1].icon))
-		embed.setFooter("UTC times " Chr(2886) " Current weather")
+		FormatTime calc, % Unix2Miss(data.dt), yyyy-MM-ddTHH:mm:ss.000Z
+		embed.setTimestamp(calc)
+		embed.setFooter("Current weather")
+
 		ctx.reply(embed)
 	}
 }

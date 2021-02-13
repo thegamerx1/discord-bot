@@ -12,21 +12,19 @@
 
 		ctx.delete()
 		embed := new discord.embed(,"_Paste by " ctx.author.mention "_")
-		embed.setFooter(ctx.author.id)
 		embed.setContent("``````" match.lang "`n" discord.utils.sanitize(code) "``````")
 		msg := ctx.reply(embed)
 		msg.react("🚮")
 	}
 
 	E_MESSAGE_REACTION_ADD(ctx) {
-		msg := ctx.api.GetMessage(ctx.channel, ctx.message)
 		if ctx.emoji != "🚮"
 			return
+		msg := ctx.api.GetMessage(ctx.channel, ctx.message)
 
-		if (msg.author.id == ctx.api.self.id) {
-			if (ctx.author.id = msg.data.embeds[1].footer.text) {
+		if (msg.author.id = ctx.api.self.id)
+			if (ctx.author.id = discord.utils.getId(msg.data.embeds[1].description))
 				msg.delete()
-			}
-		}
+
 	}
 }

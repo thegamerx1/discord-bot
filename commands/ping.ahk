@@ -5,6 +5,8 @@
 	call(ctx, args) {
 		time := new Counter()
 		msg := ctx.reply("Ping")
-		msg.edit("Pong on " time.get() "ms")
+		embed := new discord.embed(, "Pong on " time.get() "ms")
+		embed.setContent("Pong.")
+		msg.edit(embed)
 	}
 }

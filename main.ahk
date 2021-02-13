@@ -17,8 +17,6 @@ Return
 #Include <Discord>
 #Include <Includer>
 #Include <Counter>
-#Include <HtmlFile>
-#Include <textrower>
 #Include <debug>
 #Include <configLoader>
 #include *i commands/_includer.ahk
