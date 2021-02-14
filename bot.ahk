@@ -8,7 +8,6 @@ class DiscoBot {
 
 		this.loadCommands()
 		this.api := new Discord(this, this.bot.TOKEN, this.bot.INTENTS, this.bot.OWNER_GUILD_ID)
-		this.api.setMirror(ObjBindMethod(this, "mirrorToExtension"))
 		if (A_Args[1] == "-reload")
 			this.resume := StrSplit(A_Args[2], ",", " ")
 
@@ -78,8 +77,8 @@ class DiscoBot {
 			return
 
 		prefix := this.guilds[ctx.guild.id].data.prefix
-		isPing := (SubStr(ctx.message, 1, StrLen(this.api.self.id)+4) == "<@!" this.api.self.id ">")
-		if (SubStr(ctx.message, 1, StrLen(prefix)) == prefix || isPing) {
+		isPing := StartsWith(ctx.message, "<@!" this.api.self.id ">")
+		if (isPing || StartsWith(ctx.message, prefix)) {
 			data := StrSplit(SubStr(ctx.message, StrLen(prefix)+1), [" ", "`n"],, 2+isPing)
 
 			if isPing
@@ -129,8 +128,24 @@ class command_ {
 		%fn%(this, data)
 	}
 
-	called(ctx, command, args := "") {
+	_parseArgs(str) {
 		static regex := "[^\s""']+|""([^""]+)"""
+		out := []
+		loops := 0
+		while match := regex(str, regex)
+		{
+			loops++
+			if (loops >= this.args.length()) {
+				out.push(str)
+				break
+			}
+			str := StrReplace(str, match.value,,, 1)
+			out.push(match[1] ? match[1] : match[0])
+		}
+		return out
+	}
+
+	called(ctx, command, args := "") {
 		author := ctx.author.id
 		if !contains("SEND_MESSAGES", ctx.self.permissions)
 			return
@@ -163,27 +178,31 @@ class command_ {
 		if (this.owneronly && this.bot.bot.OWNER_ID != author)
 			return ctx.react("bot_notallowed")
 
-		out := []
-		loops := 0
-		while match := regex(args, regex)
-		{
-			loops++
-			if (loops >= this.args.length()) {
-				out.push(args)
+		args := this._parseArgs(args)
+		func := "call"
+		cmdargs := this.args
+		for i, cmd in this.commands {
+			if StartsWith(args[1], cmd.name) {
+				cmdargs := cmd.args
+				cmdspace := cmd.name " "
+				if StartsWith(args[1], cmdspace) {
+					args[1] := temp := SubStr(args[1], StrLen(cmdspace)+1)
+				} else {
+					temp := args.RemoveAt(1)
+				}
+				func := "C_" cmd.name
 				break
 			}
-			args := StrReplace(args, match.value,,, 1)
-			out.push(match[1] ? match[1] : match[0])
 		}
-		args := out
 
-		for i, arg in this.args {
+
+		for i, arg in cmdargs {
 			if (args[1] = "") {
 				if (arg.optional && arg.default != "")
 					args[i] := arg.default
 
 				if !arg.optional {
-					this.bot.executeCommand("help", "call", ctx, [command], A_Index)
+					this.bot.executeCommand("help", command, ctx, [command], i)
 					return
 				}
 			}
@@ -200,8 +219,15 @@ class command_ {
 			this.setCooldown(author)
 		}
 
-
-		this.call(ctx, args)
+		try {
+			this[func](ctx, args)
+		} catch e {
+			if (e.extra = 400) {
+				ctx.reply(new discord.embed("Error", e.message))
+			} else {
+				Throw e
+			}
+		}
 	}
 
 	setCooldown(author, time := "") {

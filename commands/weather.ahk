@@ -2,7 +2,6 @@ class command_weather extends command_ {
 	static cooldown := 2
 	, info := "Gets the weather"
 	, args := [{optional: false, name: "site"}]
-
 	, category := "Search"
 
 

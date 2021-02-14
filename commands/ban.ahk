@@ -9,8 +9,15 @@ class command_ban extends command_ {
 
 
 	call(ctx, args) {
+		id := discord.utils.getId(args[1])
+		if (id = ctx.api.self.id) {
+			ctx.react("bot_ok")
+			ctx.api.LeaveGuild(ctx.guild.id)
+			return
+		}
+
 		try {
-			ctx.api.AddBan(ctx.guild.id, discord.utils.getId(args[1]), args[2], 0)
+			ctx.api.AddBan(ctx.guild.id, id, args[2], 0)
 		} catch e {
 			embed := new discord.embed("Error", e.message)
 			ctx.reply(embed)
