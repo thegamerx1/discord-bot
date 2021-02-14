@@ -4,29 +4,44 @@ class command_purge extends command_ {
 	, userperms := ["MANAGE_MESSAGES"]
 	, args := [{optional: false, name: "count"}]
 	, category := "Moderation"
+	, commands := [{name: "until", args: {name: "id"}}]
 
+
+	C_until(ctx, args) {
+		try {
+			ids := this.getMessages(ctx, {limit: 100, after: args[1]})
+			ctx.api.BulkDelete(ctx.channel.id, ids)
+		} catch e {
+			throw Exception(e.message, e.what, 400)
+		}
+
+		ctx.react("bot_ok")
+		TimeOnce(ObjBindMethod(ctx, "delete"), 500)
+	}
 
 	call(ctx, args) {
 		if (args[1] > 100 || args[1] < 2)
 			return ctx.reply("Invalid amount")
 
 		try {
-			messages := ctx.api.GetMessages(ctx.channel.id, {limit: args[1], before: ctx.id})
-			ids := []
-			for _, value in messages
-				ids.push(value.id)
-
+			ids := this.getMessages(ctx, {limit: args[1], before: ctx.id})
 			ctx.api.BulkDelete(ctx.channel.id, ids)
 		} catch e {
-			embed := new discord.embed()
-			embed.addField("Error " e.message, e.what)
-			return ctx.reply(embed)
+			throw Exception(e.message, e.what, 400)
 		}
+
 		ctx.react("bot_ok")
-		TimeOnce(ObjBindMethod(this, "deleteSource", ctx), 500)
+		TimeOnce(ObjBindMethod(ctx, "delete"), 500)
 	}
 
-	deleteSource(ctx) {
-		ctx.delete()
+	getMessages(ctx, opt) {
+		messages := ctx.api.GetMessages(ctx.channel.id, opt)
+		ids := []
+		for _, value in messages {
+			if value.id = ctx.id
+				continue
+			ids.push(value.id)
+		}
+		return ids
 	}
 }
