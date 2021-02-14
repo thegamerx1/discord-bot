@@ -4,7 +4,6 @@
 includer.init("commands")
 debug.init({console: !A_DebuggerName, stamp: true})
 
-
 try {
 	DiscoBot.init()
 } catch e {
