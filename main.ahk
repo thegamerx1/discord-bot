@@ -2,7 +2,7 @@
 #Include <mustExec>
 #NoTrayIcon
 includer.init("commands")
-debug.init({console: !A_DebuggerName})
+debug.init({console: !A_DebuggerName, stamp: true})
 
 
 try {

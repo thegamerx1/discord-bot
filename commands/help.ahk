@@ -26,16 +26,16 @@ class command_help extends command_ {
 			cmd := this.bot.commands[args[1]]
 			for _, oarg in cmd.args {
 				wraps := (oarg.optional) ? ["[", "]"] : ["<", ">"]
-				args .= " " wraps[1] oarg.name wraps[2]
+				arg .= " " wraps[1] oarg.name wraps[2]
 			}
 
 			for _, alias in cmd.aliases {
-				aliases .= (aliases ? ", " : "") "_" alias "_"
+				aliases .= (aliases ? ", " : "") alias
 			}
 
-			embed := new discord.embed(missing ? "Argument missing: " cmd.args[missing].name : "", cmd.info)
-			embed.addField("Usage", args[1] " " args)
-			embed.addField("Aliases", aliases)
+			embed := new discord.embed(, (missing ? "**Argument missing: " cmd.args[missing].name "**`n" : "") cmd.info)
+			embed.addField("Usage", args[1] " " arg)
+			embed.setFooter("Aliases: " aliases)
 		} else {
 			embed := new discord.embed("Commands")
 			index := 1

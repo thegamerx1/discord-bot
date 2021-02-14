@@ -202,7 +202,7 @@ class command_ {
 					args[i] := arg.default
 
 				if !arg.optional {
-					this.bot.executeCommand("help", command, ctx, [command], i)
+					this.bot.executeCommand("help", "call", ctx, [command], i)
 					return
 				}
 			}

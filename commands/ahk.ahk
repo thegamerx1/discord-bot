@@ -74,7 +74,7 @@ class command_ahk extends command_ {
 			return
 		}
 
-		if (StrLen(hjson.stdout) == 0) {
+		if (hjson.stdout = "" || hjson.stdout = "`n") {
 			data.content := "No output"
 		} else {
 			data.content := "``````autoit`n" discord.utils.sanitize(hjson.stdout) "``````"
