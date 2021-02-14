@@ -22,8 +22,8 @@ class command_purge extends command_ {
 			embed.addField("Error " e.message, e.what)
 			return ctx.reply(embed)
 		}
-		TimeOnce(ObjBindMethod(this, "deleteSource", ctx), 2000)
 		ctx.react("bot_ok")
+		TimeOnce(ObjBindMethod(this, "deleteSource", ctx), 500)
 	}
 
 	deleteSource(ctx) {
