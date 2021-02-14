@@ -73,7 +73,7 @@ class DiscoBot {
 		static bot_what := ["bot_question", "bot_what", "bot_angry"]
 		if ctx.author.bot
 			return
-		if (this.bot.release && ctx.author.id != this.bot.OWNER_ID)
+		if (!this.bot.release && ctx.author.id != this.bot.OWNER_ID)
 			return
 
 		prefix := this.guilds[ctx.guild.id].data.prefix
