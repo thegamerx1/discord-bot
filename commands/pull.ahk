@@ -1,4 +1,4 @@
-class command_prefix extends command_ {
+class command_pull extends command_ {
 	static owneronly := true
 	, info := "Gets code from github"
 	, category := "Owner"
