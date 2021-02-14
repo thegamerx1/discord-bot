@@ -1,3 +1,4 @@
+#include <RunCMD>
 class command_pull extends command_ {
 	static owneronly := true
 	, info := "Gets code from github"
@@ -5,7 +6,7 @@ class command_pull extends command_ {
 
 	call(ctx, args) {
 		try {
-			output := RunCMD("../pullall.cmd")
+			output := RunCMD("pullall.cmd")
 		} catch e {
 			Throw Exception(e.message, e.what, 400)
 		}
