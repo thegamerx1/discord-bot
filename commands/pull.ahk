@@ -5,6 +5,7 @@ class command_pull extends command_ {
 	, category := "Owner"
 
 	call(ctx, args) {
+		ctx.typing()
 		try {
 			output := RunCMD("pullall.cmd")
 		} catch e {
