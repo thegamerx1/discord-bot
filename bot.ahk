@@ -10,7 +10,7 @@ class DiscoBot {
 		this.api := new Discord(this, this.bot.TOKEN, this.bot.INTENTS, this.bot.OWNER_GUILD_ID)
 		this.api.setMirror(ObjBindMethod(this, "mirrorToExtension"))
 		if (A_Args[1] == "-reload")
-			this.resumedata := StrSplit(A_Args[2], ",", " ")
+			this.resume := StrSplit(A_Args[2], ",", " ")
 
 		OnExit(ObjBindMethod(this, "save"))
 	}
@@ -19,12 +19,11 @@ class DiscoBot {
 		fn := this["E_" event]
 		for key, value in this.commands
 			this.executeCommand(key, "_event", event, data)
-		Debug.print("|Event: " event)
 		%fn%(this, data)
 	}
 
 	loadCommands() {
-		debug.print("|Loading commands")
+		debug.print(">Loading commands")
 		for _, value in includer.list {
 			command := "Command_" value
 			this.commands[value] := new Command_%value%(this)
@@ -68,6 +67,7 @@ class DiscoBot {
 
 	E_ready(args*) {
 		this.api.SetPresence("online", "Discord.ahk")
+		this.resume := ""
 	}
 
 	E_MESSAGE_CREATE(ctx) {

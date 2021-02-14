@@ -7,9 +7,9 @@
 
 
 	E_READY(data) {
-		if (this.bot.resumedata) {
-			this.bot.api.RemoveReaction(this.bot.resumedata[1], this.bot.resumedata[2], "bot_loading")
-			this.bot.api.AddReaction(this.bot.resumedata[1], this.bot.resumedata[2], "bot_ok")
+		if (this.bot.resume) {
+			this.bot.api.RemoveReaction(this.bot.resume[1], this.bot.resume[2], "bot_loading")
+			this.bot.api.AddReaction(this.bot.resume[1], this.bot.resume[2], "bot_ok")
 		}
 	}
 
