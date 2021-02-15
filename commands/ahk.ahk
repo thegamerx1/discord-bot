@@ -50,7 +50,7 @@ class command_ahk extends DiscoBot.command {
 		http := new requests("post", API,, true)
 		http.headers["Authorization"] := this.auth
 		http.onFinished := ObjBindMethod(this, "response", ctx, cont)
-		http.send("`n" code)
+		http.send(code)
 	}
 
 	response(ctx, cont, http) {
