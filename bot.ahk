@@ -77,7 +77,7 @@ class DiscoBot {
 	}
 
 	E_ready(args*) {
-		this.api.SetPresence("online", "Selling your data")
+		this.api.SetPresence("online", "@me for prefix")
 		this.resume := ""
 	}
 
