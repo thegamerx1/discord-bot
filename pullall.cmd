@@ -1,6 +1,6 @@
 @echo off
-git fetch origin master
-git pull
+git fetch
+git pull -q
 cd %userprofile%\Documents\AutoHotkey\lib
-git fetch origin master
-git pull
+git fetch
+git pull -q
