@@ -24,6 +24,7 @@ class command_eval extends DiscoBot.command {
 		}
 		pages := new discord.paginator(output)
 		for _, page in pages.pages {
+			; debug.print(page)
 			ctx.reply(discord.utils.codeblock("json", page, false))
 		}
 	}

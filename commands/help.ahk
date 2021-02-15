@@ -1,8 +1,6 @@
 class command_help extends DiscoBot.command {
 	static cooldown := 4
-	, info := "Prints help"
-	, args := [{optional: true, name: "command"}]
-	, category := "Bot"
+	, args := [{optional: true, name: "command", type: "str"}]
 
 	start() {
 		this.categories := {}
@@ -15,7 +13,7 @@ class command_help extends DiscoBot.command {
 		}
 	}
 
-	call(ctx, args, message := false, cmdargs := "") {
+	call(ctx, args, message := false, cmdargs := "", subname := false) {
 		if args[1] {
 			message := message ? "**" message "**`n" : ""
 			args[1] := this.bot.getAlias(args[1])
@@ -31,11 +29,13 @@ class command_help extends DiscoBot.command {
 			}
 
 			cmdargs := cmdargs ? cmdargs : cmd.args
-			embed := new discord.embed(, message cmd.info)
-			usage := this.getCommand(args[1], cmd.args)
-			if !message {
+			embed := new discord.embed(, message cmd.info)`
+			if message {
+				usage := this.getCommand(args[1], cmdargs, subname)
+			} else {
+				usage := this.getCommand(args[1], cmd.args)
 				for _, command in cmd.commands {
-					usage .= "**" args[1] "** " this.getCommand(command.name, command.args, true)
+					usage .= this.getCommand(args[1], command.args, command.name)
 				}
 			}
 			embed.addField("Usage", usage)
@@ -58,13 +58,12 @@ class command_help extends DiscoBot.command {
 		ctx.reply(embed)
 	}
 
-	getCommand(name, args, issub := false) {
+	getCommand(name, args, subname := "") {
 		out := ""
-		issub := issub ? "" : "**"
 		for _, arg in args {
 			wraps := (arg.optional) ? ["[", "]"] : ["<", ">"]
-			out .= issub name issub " _" wraps[1] arg.name wraps[2] "_"
+			out .= " _" wraps[1] arg.name wraps[2] "_"
 		}
-		return out "`n"
+		return "**" name "**" (subname ? " _" subname "_ " : "") out "`n"
 	}
 }

@@ -2,7 +2,6 @@
 	static cooldown := 5
 	, info := "Highlights your text"
 	, args := [{optional: false, name: "code"}]
-
 	, category := "Code"
 
 	call(ctx, args) {
@@ -13,7 +12,7 @@
 
 		ctx.delete()
 		embed := new discord.embed(,"_Paste by " ctx.author.mention "_")
-		embed.setContent("``````" match.lang "`n" discord.utils.sanitize(code) "``````")
+		embed.setContent(discord.utils.codeblock(match.lang, code))
 		msg := ctx.reply(embed)
 		msg.react("🚮")
 	}

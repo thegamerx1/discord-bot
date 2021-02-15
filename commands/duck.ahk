@@ -1,7 +1,7 @@
 class command_duck extends DiscoBot.command {
 	static cooldown := 1
 	, info := "Gets a duck for you"
-	, aliases := ["quack", "ducky", "duckling"]
+	, aliases := ["quack", "ducky"]
 	, category := "Fun"
 
 

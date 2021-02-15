@@ -1,6 +1,6 @@
 class command_fox extends DiscoBot.command {
 	static cooldown := 1
-	, info := "Gets a cat for you"
+	, info := "Floofy"
 	, aliases := ["foxy", "floof"]
 	, category := "Fun"
 

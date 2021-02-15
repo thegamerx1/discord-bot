@@ -76,20 +76,16 @@ class command_ahk extends DiscoBot.command {
 			return
 		}
 
-		if (hjson.stdout = "" || hjson.stdout = "`n") {
-			data.content := "No output"
-		} else {
-			data.content := discord.utils.codeblock("autoit", hjson.stdout)
-		}
+		data.content := discord.utils.codeblock("autoit", hjson.stdout)
 		this.reply(ctx, data, cont)
 	}
 
 	toolongreply(ctx, data, cont, http) {
-		if (http.status != 200 || !http.headers["ahk-location"])
+		if (http.status != 200 || !http.url)
 			this.except(ctx, "Uploading file went wrong")
 
 
-		data.content := http.headers["ahk-location"]
+		data.content := http.url
 		this.reply(ctx, data, cont, true)
 	}
 
@@ -98,9 +94,9 @@ class command_ahk extends DiscoBot.command {
 		if !isPaste
 			embed.setContent(data.content)
 
-		embed.addField("Characters", data.length, true)
+		embed.addField("Chars", data.length, true)
 		embed.addField("Lines", data.lines, true)
-		embed.addField("Time", Round(cont.get()/1000, 2) "s", true)
+		embed.addField("User wait", Round(cont.get()/1000, 2) "s", true)
 		ctx.reply(embed)
 	}
 }

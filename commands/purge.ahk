@@ -2,9 +2,9 @@ class command_purge extends DiscoBot.command {
 	static info := "Deletes messages"
 	, permissions := ["MANAGE_MESSAGES", "VIEW_CHANNEL"]
 	, userperms := ["MANAGE_MESSAGES"]
-	, args := [{optional: false, name: "count"}]
+	, args := [{optional: false, name: "count", type: "int"}]
 	, category := "Moderation"
-	, commands := [{name: "until", args: [{name: "id"}]}]
+	, commands := [{name: "until", args: [{name: "id", type: "int"}]}]
 
 
 	C_until(ctx, args) {
@@ -12,7 +12,7 @@ class command_purge extends DiscoBot.command {
 			ids := this.getMessages(ctx, {limit: 100, after: args[1]})
 			ctx.api.BulkDelete(ctx.channel.id, ids)
 		} catch e {
-			throw Exception(e.message, e.what, 400)
+			this.except(e.message)
 		}
 
 		ctx.react("bot_ok")
@@ -20,14 +20,14 @@ class command_purge extends DiscoBot.command {
 	}
 
 	call(ctx, args) {
-		if (args[1] > 100 || args[1] < 2)
-			this.except(ctx, "Invalid amount")
+		if (Between(args[1], 2, 100))
+			this.except(ctx, "Count must be between 2 and 100!")
 
 		try {
 			ids := this.getMessages(ctx, {limit: args[1], before: ctx.id})
 			ctx.api.BulkDelete(ctx.channel.id, ids)
 		} catch e {
-			throw Exception(e.message, e.what, 400)
+			this.except(ctx, e.message)
 		}
 
 		ctx.react("bot_ok")
@@ -42,6 +42,8 @@ class command_purge extends DiscoBot.command {
 				continue
 			ids.push(value.id)
 		}
+		if (ids.length() < 2)
+			this.except(ctx, "Error getting messages")
 		return ids
 	}
 }

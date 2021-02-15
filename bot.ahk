@@ -3,6 +3,7 @@ class DiscoBot {
 		this.guilds := this.commands := this.cache := {}
 		botFile := new configLoader("settings.json")
 		this.bot := botFile.data
+		this.settings := new configLoader("global.json")
 		if this.bot.release
 			debug.attachFile := "log.log"
 
@@ -16,9 +17,15 @@ class DiscoBot {
 
 	_event(event, data) {
 		fn := this["E_" event]
+		capture := false
 		for key, value in this.commands
-			this.executeCommand(key, "_event", event, data)
-		%fn%(this, data)
+			if this.executeCommand(key, "_event", event, data)
+				capture := true
+		if !fn
+			debug.print(">Event not handled " event)
+
+		if !capture
+			%fn%(this, data)
 	}
 
 	loadCommands() {
@@ -41,13 +48,17 @@ class DiscoBot {
 		}
 	}
 
-	loadGuild(id) {
-		this.guilds[id] := new configLoader("guildData/" id ".json", {prefix: this.bot.PREFIX})
+	E_GUILD_CREATE(data) {
+		this.guilds[data.id] := new configLoader("guildData/" data.id ".json", {prefix: this.bot.PREFIX})
 	}
 
-	E_GUILD_CREATE(data) {
-		this.loadGuild(data.id)
+	E_GUILD_DELETE(data) {
+		if data.unavailable
+			return
+		this.guilds[data.id] := ""
+		FileDelete % "guildData/" data.id ".json"
 	}
+
 
 	getAlias(name) {
 		return this.cache.aliases[name]
@@ -57,6 +68,7 @@ class DiscoBot {
 		for key, value in this.guilds {
 			value.save()
 		}
+		this.settings.save()
 	}
 
 	executeCommand(command, func, args*) {
@@ -65,15 +77,13 @@ class DiscoBot {
 	}
 
 	E_ready(args*) {
-		this.api.SetPresence("online", "Discord.ahk")
+		this.api.SetPresence("online", "Selling your data")
 		this.resume := ""
 	}
 
 	E_MESSAGE_CREATE(ctx) {
 		static bot_what := ["bot_question", "bot_what", "bot_angry"]
 		if ctx.author.bot
-			return
-		if (!this.bot.release && ctx.author.id != this.bot.OWNER_ID)
 			return
 
 		prefix := this.guilds[ctx.guild.id].data.prefix
@@ -96,7 +106,7 @@ class DiscoBot {
 			try {
 				this.executeCommand(command, "called", ctx, command, data[2])
 			} catch e {
-				embed := new discord.embed("Oops!", "An error ocurred on the command and my developer has been notified.`n`nYou can you the support server [here](" this.bot.SUPPORT_SERVER ")", 0xAC3939)
+				embed := new discord.embed("Oops!", "An error ocurred on the command and my developer has been notified.`n`nYou can you join the support server [here](" this.bot.SUPPORT_SERVER ")!", 0xAC3939)
 				embed.setFooter("Error ID: " e.errorid)
 				ctx.reply(embed)
 				this.printError(ctx, e)
@@ -126,7 +136,7 @@ class DiscoBot {
 
 		_event(event, data) {
 			fn := this["E_" event]
-			%fn%(this, data)
+			return %fn%(this, data)
 		}
 
 		_parseArgs(byref args, byref cmdargs) {
@@ -151,10 +161,10 @@ class DiscoBot {
 					} else {
 						temp := args.RemoveAt(1)
 					}
-					return "C_" cmd.name
+					return cmd.name
 				}
 			}
-			return "call"
+			return
 		}
 
 		called(ctx, command, args := "") {
@@ -199,11 +209,11 @@ class DiscoBot {
 						args[i] := arg.default
 
 					if !arg.optional {
-						this.bot.executeCommand("help", "call", ctx, [command], "Argument missing: " arg.name, cmdargs)
+						this.bot.executeCommand("help", "call", ctx, [command], "Argument missing: " arg.name, cmdargs, func)
 						return
 					}
 				} else if (arg.type && arg.type != typeof(args[1])) {
-					this.bot.executeCommand("help", "call", ctx, [command], "Argument ``" arg.name "`` requires type ``" arg.type "``" , cmdargs)
+					this.bot.executeCommand("help", "call", ctx, [command], "Argument ``" arg.name "`` requires type ``" arg.type "``" , cmdargs, func)
 					return
 				}
 			}
@@ -220,7 +230,7 @@ class DiscoBot {
 			}
 
 			try {
-				this[func](ctx, args)
+				this[func ? "C_" func : "call"](ctx, args)
 			} catch e {
 				if (e = -99)
 					return
