@@ -18,7 +18,10 @@
 		data := ctx.data.channel_id "," ctx.data.id
 		debug.print(data)
 		this.bot.api.disconnect()
-		Run % "AutoHotkeyU64 /restart main.ahk -reload " data
+		if release
+			Run launch.cmd
+		else
+			Run % "AutoHotkeyU64 /restart main.ahk -reload " data
 		ExitApp 0
 	}
 }
