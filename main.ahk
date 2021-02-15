@@ -4,7 +4,7 @@
 SingleInstance("Discobot")
 includer.init("commands")
 debug.init({console: !A_DebuggerName, stamp: true})
-throw Exception("adsd")
+
 DiscoBot.init()
 Return
 
