@@ -1,7 +1,7 @@
 #Include %A_ScriptDir%
 #Include <mustExec>
 #NoTrayIcon
-SingleInstance()
+SingleInstance("DiscoBot")
 includer.init("commands")
 debug.init({console: !A_DebuggerName, stamp: true})
 
