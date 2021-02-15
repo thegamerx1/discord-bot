@@ -19,7 +19,8 @@
 		debug.print(data)
 		this.bot.api.disconnect()
 		if this.bot.bot.release
-			Run launch.cmd
+			Run schtasks /run /tn "Servers\DiscoBot"
+			Run % "main.ahk -reload " data
 		else
 			Run % "AutoHotkeyU64 /restart main.ahk -reload " data
 		ExitApp 0
