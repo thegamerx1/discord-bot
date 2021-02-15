@@ -14,8 +14,12 @@
 	}
 
 	call(ctx, args) {
+		critical
 		ctx.react("bot_loading")
 		this.bot.api.disconnect()
+		if this.SET.release {
+			Run schtasks /end /tn "Servers\Discobot"
+		}
 		Reload("-reload " ctx.channel.id "," ctx.data.id)
 	}
 }
