@@ -1,15 +1,11 @@
 #Include %A_ScriptDir%
 #Include <mustExec>
 #NoTrayIcon
+SingleInstance("Discobot")
 includer.init("commands")
 debug.init({console: !A_DebuggerName, stamp: true})
 
-try {
-	DiscoBot.init()
-} catch e {
-	Debug.print(e, {pretty: 2})
-	ExitApp 1
-}
+DiscoBot.init()
 Return
 
 #Include bot.ahk
