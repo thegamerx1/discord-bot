@@ -15,14 +15,7 @@
 
 	call(ctx, args) {
 		ctx.react("bot_loading")
-		data := ctx.data.channel_id "," ctx.data.id
-		debug.print(data)
 		this.bot.api.disconnect()
-		if this.bot.bot.release
-			; Run schtasks /run /tn "Servers\DiscoBot"
-			Run % "main.ahk -reload " data
-		else
-			Run % "AutoHotkeyU64 /restart main.ahk -reload " data
-		ExitApp 0
+		Reload(ctx.channel.id "," ctx.data.id)
 	}
 }
