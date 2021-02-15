@@ -8,10 +8,9 @@ class DiscoBot {
 			debug.attachFile := "log.log"
 
 		this.loadCommands()
+		if (A_Args[1] = "-reload")
+			this.resume := StrSplit(A_Args[2], ",")
 		this.api := new Discord(this, this.bot.TOKEN, this.bot.INTENTS, this.bot.OWNER_GUILD_ID)
-		if (A_Args[1] == "-reload")
-			this.resume := StrSplit(A_Args[2], ",", " ")
-
 		OnExit(ObjBindMethod(this, "save"))
 	}
 
@@ -221,7 +220,7 @@ class DiscoBot {
 				if (this.cooldowns[author].time > A_TickCount) {
 					if !this.cooldowns[author].reacted {
 						this.cooldowns[author].reacted := true
-						ctx.react("bot_cooldown")
+						ctx.reply(new discord.embed("You are on cooldown!", ctx.getEmoji("bot_cooldown") " Wait " this.cooldowns[author].time-A_TickCount "s"))
 					}
 					return
 				}

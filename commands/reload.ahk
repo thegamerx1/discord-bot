@@ -6,7 +6,7 @@
 	, category := "Owner"
 
 
-	E_READY(data) {
+	E_READY() {
 		if (this.bot.resume) {
 			this.bot.api.RemoveReaction(this.bot.resume[1], this.bot.resume[2], "bot_loading")
 			this.bot.api.AddReaction(this.bot.resume[1], this.bot.resume[2], "bot_ok")
@@ -16,6 +16,6 @@
 	call(ctx, args) {
 		ctx.react("bot_loading")
 		this.bot.api.disconnect()
-		Reload(ctx.channel.id "," ctx.data.id)
+		Reload("-reload " ctx.channel.id "," ctx.data.id)
 	}
 }
