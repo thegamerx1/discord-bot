@@ -15,7 +15,7 @@
 			return this.reply(ctx, args[1])
 
 		ctx.typing()
-		http := new requests("get", API, {appid: this.bot.bot.WOLFRAM_KEY
+		http := new requests("get", API, {appid: this.SET.keys.wolfram
 										,input: args[1]
 										,output: "json"
 										,units: "metric"

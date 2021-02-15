@@ -43,18 +43,18 @@ class command_help extends DiscoBot.command {
 			embed.setFooter((aliases ? "Aliases: " aliases " " Chr(8226) " " : "") "Have questions? Join the support server with the support command!")
 		} else {
 			embed := new discord.embed("Commands")
-			index := 1
 			for category, cmd in this.categories {
-				index++
-				if (!Mod(index, 2) && index != 2)
-					embed.addField("", "",, true)
+				if (category = "Owner" && !ctx.author.isBotOwner)
+					continue
 				out := ""
-				for _, value in cmd {
-					out .= "***" value.name "*** " value.info "`n"
+				for i, value in cmd {
+					; out .= "*" value.name "* "
+					out .= "**[" value.name "](https://github.com/thegamerx1/discord-bot """ value.info """)**  "
 				}
 				embed.addField(category, out, true)
 			}
 		}
+		embed.setFooter("Hover over the commands for description! " chr(8226) " Alternatively you can " ctx.prefix "help <command>!")
 		ctx.reply(embed)
 	}
 

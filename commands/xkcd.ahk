@@ -1,8 +1,8 @@
 class command_xkcd extends DiscoBot.command {
 	static cooldown := 3
 	, info := "Gets xkcd post"
-	, args := [{name: "id"}]
-	, commands := [{name: "latest"}, {name: "explain", args: [{name: "id"}]}]
+	, args := [{name: "id", type: "int"}]
+	, commands := [{name: "latest"}, {name: "explain", args: [{name: "id", type: "int"}]}]
 	, category := "Search"
 
 	start() {

@@ -7,7 +7,7 @@ class command_ahk extends DiscoBot.command {
 
 
 	start() {
-		this.auth := "Basic " this.bot.bot.CLOUDAHK
+		this.auth := "Basic " this.SET.keys.cloudahk
 		this.pasteCache := {}
 	}
 

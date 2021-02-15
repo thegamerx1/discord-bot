@@ -17,12 +17,12 @@
 
 		command := this.bot.getAlias(args[1])
 		if !command
-			return ctx.react("bot_no")
+			this.except(ctx, "Command not found")
 
 		try {
 			code := FileOpen("commands\" command ".ahk", "r", "UTF-8").read()
 		} catch e {
-			this.except(ctx, "Command not found")
+			this.except(ctx, "Error reading file")
 		}
 		page := new discord.paginator(code)
 		for _, value in page.pages

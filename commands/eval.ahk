@@ -4,9 +4,8 @@ class command_eval extends DiscoBot.command {
 	, aliases := ["print"]
 	, category := "Owner"
 
-
 	call(ctx, args) {
-		if !this.bot.bot.release
+		if !this.SET.release
 			clipboard := ctx.message
 		msg := ctx.referenced_msg ? ctx.referenced_msg : ctx
 		data := msg[StrSplit(args[1], ".")*]

@@ -12,7 +12,7 @@ class command_purge extends DiscoBot.command {
 			ids := this.getMessages(ctx, {limit: 100, after: args[1]})
 			ctx.api.BulkDelete(ctx.channel.id, ids)
 		} catch e {
-			this.except(e.message)
+			this.except(ctx, e.message)
 		}
 
 		ctx.react("bot_ok")

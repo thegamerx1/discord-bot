@@ -4,7 +4,6 @@ class command_duck extends DiscoBot.command {
 	, aliases := ["quack", "ducky"]
 	, category := "Fun"
 
-
 	call(ctx, args) {
 		static API := "https://random-d.uk/api/v1/random"
 		ctx.typing()

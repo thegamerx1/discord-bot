@@ -5,7 +5,7 @@ class command_support extends DiscoBot.command {
 
 	call(ctx, args) {
 		embed := new discord.embed("Support server link",, 0x65C85B)
-		embed.setUrl(this.bot.bot.SUPPORT_SERVER)
+		embed.setUrl(this.SET.owner.server_invite)
 		ctx.reply(embed)
 	}
 }

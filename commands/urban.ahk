@@ -22,7 +22,7 @@ class command_urban extends DiscoBot.command {
 	}
 	response(ctx, query, http) {
 		if http.status != 200
-			return ctx.react("bot_no")
+			this.except(ctx, "Not found")
 
 		html := new HtmlFile(http.text)
 		most := {}
@@ -47,7 +47,7 @@ class command_urban extends DiscoBot.command {
 		}
 		if !StrLen(most.word) {
 			clipboard := http.text
-			return ctx.reply("Error in query")
+			this.except(ctx, "Error in query")
 		}
 		this.cache[query] := most
 		this.reply(ctx, query)

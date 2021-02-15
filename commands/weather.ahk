@@ -7,7 +7,7 @@ class command_weather extends DiscoBot.command {
 
 	call(ctx, args) {
 		static API := "https://api.openweathermap.org/data/2.5/weather?q={}&appid={}&units=metric"
-		http := new requests("GET", format(API, args[1], this.bot.bot.WEATHER_KEY),, true)
+		http := new requests("GET", format(API, args[1], this.SET.keys.weather),, true)
 		http.onFinished := ObjBindMethod(this, "response", ctx)
 		http.send()
 	}

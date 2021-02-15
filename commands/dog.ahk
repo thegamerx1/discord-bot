@@ -2,9 +2,7 @@ class command_dog extends DiscoBot.command {
 	static cooldown := 1
 	, info := "Prints doggo"
 	, aliases := ["woof", "doggo"]
-
 	, category := "Fun"
-
 
 	call(ctx, args) {
 		static API := "https://random.dog/woof.json"

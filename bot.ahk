@@ -1,8 +1,7 @@
 class DiscoBot {
 	init() {
 		this.guilds := this.commands := this.cache := {}
-		botFile := new configLoader("settings.json")
-		this.bot := botFile.data
+		this.bot := new configLoader("settings.json").data
 		this.settings := new configLoader("global.json")
 		if this.bot.release
 			debug.attachFile := "log.log"
@@ -10,7 +9,7 @@ class DiscoBot {
 		this.loadCommands()
 		if (A_Args[1] = "-reload")
 			this.resume := StrSplit(A_Args[2], ",")
-		this.api := new Discord(this, this.bot.TOKEN, this.bot.INTENTS, this.bot.OWNER_GUILD_ID)
+ 		this.api := new Discord(this, this.bot.token, this.bot.intents, this.bot.owner.guild, this.bot.owner.id)
 		OnExit(ObjBindMethod(this, "save"))
 	}
 
@@ -21,7 +20,7 @@ class DiscoBot {
 			if this.executeCommand(key, "_event", event, data)
 				capture := true
 		if !fn
-			debug.print(">Event not handled " event)
+			debug.print("|Event not handled " event)
 
 		if !capture
 			%fn%(this, data)
@@ -48,7 +47,7 @@ class DiscoBot {
 	}
 
 	E_GUILD_CREATE(data) {
-		this.guilds[data.id] := new configLoader("guildData/" data.id ".json", {prefix: this.bot.PREFIX})
+		this.guilds[data.id] := new configLoader("guildData/" data.id ".json", {prefix: this.bot.prefix})
 	}
 
 	E_GUILD_DELETE(data) {
@@ -82,13 +81,14 @@ class DiscoBot {
 
 	E_MESSAGE_CREATE(ctx) {
 		static bot_what := ["bot_question", "bot_what", "bot_angry"]
+		static pingPrefix := "My prefix is ``{1}```n***{1}help*** for help menu!`n***{1}help*** **<command>** for command description!"
 		if ctx.author.bot
 			return
 
-		prefix := this.guilds[ctx.guild.id].data.prefix
+		ctx.prefix := this.guilds[ctx.guild.id].data.prefix
 		isPing := StartsWith(ctx.message, "<@!" this.api.self.id ">")
-		if (isPing || StartsWith(ctx.message, prefix)) {
-			data := StrSplit(SubStr(ctx.message, StrLen(prefix)+1), [" ", "`n"],, 2+isPing)
+		if (isPing || StartsWith(ctx.message, ctx.prefix)) {
+			data := StrSplit(SubStr(ctx.message, StrLen(ctx.prefix)+1), [" ", "`n"],, 2+isPing)
 
 			if isPing
 				data.RemoveAt(1)
@@ -96,7 +96,7 @@ class DiscoBot {
 			command := this.getAlias(data[1])
 
 			if (!command && isPing)
-				return ctx.reply(new discord.embed(, "My prefix is ``" prefix "``"))
+				return ctx.reply(new discord.embed(, format(pingPrefix, ctx.prefix)))
 
 			if (!command && contains("ADD_REACTIONS", ctx.self.permissions))
 				return ctx.react(random(bot_what))
@@ -105,7 +105,7 @@ class DiscoBot {
 			try {
 				this.executeCommand(command, "called", ctx, command, data[2])
 			} catch e {
-				embed := new discord.embed("Oops!", "An error ocurred on the command and my developer has been notified.`n`nYou can you join the support server [here](" this.bot.SUPPORT_SERVER ")!", 0xAC3939)
+				embed := new discord.embed("Oops!", "An error ocurred on the command and my developer has been notified.`n`nYou can you join the support server [here](" this.bot.owner.server_invite ")!", 0xAC3939)
 				embed.setFooter("Error ID: " e.errorid)
 				ctx.reply(embed)
 				this.printError(ctx, e)
@@ -121,15 +121,16 @@ class DiscoBot {
 		embed.addField("Error", format(source1, "Message", e.message) "`n" format(source1, "What", e.what) "`n" format(source1, "Extra", e.extra))
 		embed.addField("File", "``" e.file "`` (" e.line ")")
 		embed.addField("Error ID", "`" e.errorid "`")
-		discord.utils.sendWebhook(embed, this.bot.ERROR_WEBHOOK)
+		discord.utils.sendWebhook(embed, this.bot.owner.webhook)
 	}
 
 	class command {
-		__New(bot) {
+		__New(byref bot) {
 			if !this.permissions
 				this.permissions := []
 			this.permissions.push("ADD_REACTIONS")
 			this.bot := bot
+			this.SET := bot.bot
 			this.cooldowns := {}
 		}
 
@@ -167,7 +168,7 @@ class DiscoBot {
 		}
 
 		called(ctx, command, args := "") {
-			author := ctx.author.id
+			author := ctx.author
 			if !contains("SEND_MESSAGES", ctx.self.permissions)
 				return
 
@@ -184,7 +185,7 @@ class DiscoBot {
 			}
 
 			for _, value in this.userperms {
-				if !contains(value, ctx.author.permissions) {
+				if !contains(value, author.permissions) {
 					ctx.reply(new discord.embed(, "You don't have permissions to do that!"))
 					return
 				}
@@ -196,7 +197,7 @@ class DiscoBot {
 				return
 			}
 
-			if (this.owneronly && this.bot.bot.OWNER_ID != author)
+			if (this.owneronly && !author.isBotOwner)
 				return ctx.react("bot_notallowed")
 
 			cmdargs := this.args
@@ -216,16 +217,16 @@ class DiscoBot {
 					return
 				}
 			}
-			if (this.cooldown && author != this.bot.bot.OWNER_ID) {
-				if (this.cooldowns[author].time > A_TickCount) {
-					if !this.cooldowns[author].reacted {
-						this.cooldowns[author].reacted := true
-						ctx.reply(new discord.embed("You are on cooldown!", ctx.getEmoji("bot_cooldown") " Wait " this.cooldowns[author].time-A_TickCount "s"))
+			if (this.cooldown && !author.isBotOwner) {
+				if (this.cooldowns[author.id].time > A_TickCount) {
+					if !this.cooldowns[author.id].reacted {
+						this.cooldowns[author.id].reacted := true
+						ctx.reply(new discord.embed("You are on cooldown!", ctx.getEmoji("bot_cooldown") " Wait for " Round((this.cooldowns[author.id].time-A_TickCount)/1000, 2) "s"))
 					}
 					return
 				}
 
-				this.setCooldown(author)
+				this.setCooldown(author.id)
 			}
 
 			try {
