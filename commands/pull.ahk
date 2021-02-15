@@ -5,7 +5,11 @@ class command_pull extends DiscoBot.command {
 	, category := "Owner"
 
 	call(ctx, args) {
+		if !this.bot.bot.release
+			this.except("pull only works on release mode!")
 		ctx.typing()
-		ctx.reply(discord.utils.codeblock("git", RunCMD("pullall.cmd")))
+		output := RunCMD("pullall.cmd")
+		ctx.react(ErrorLevel ? "bot_no" : "bot_ok")
+		ctx.reply(discord.utils.codeblock("git", output))
 	}
 }

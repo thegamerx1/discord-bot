@@ -1,7 +1,7 @@
 @echo off
 git fetch origin master
-git reset --hard FETCH_HEAD
+git pull
 cd %userprofile%\Documents\AutoHotkey\lib
 git fetch origin master
-git reset --hard FETCH_HEAD
+git pull
 cd %userprofile%\Documents\disco\discord-bot
