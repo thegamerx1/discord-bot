@@ -1,4 +1,4 @@
-class command_logs extends command_ {
+class command_logs extends DiscoBot.command {
 	static owneronly := true
 	, info := "Gets bot logs"
 	, args := [{optional: true, name: "lines", default: 20}]

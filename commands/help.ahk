@@ -1,4 +1,4 @@
-class command_help extends command_ {
+class command_help extends DiscoBot.command {
 	static cooldown := 4
 	, info := "Prints help"
 	, args := [{optional: true, name: "command"}]
@@ -15,27 +15,32 @@ class command_help extends command_ {
 		}
 	}
 
-	call(ctx, args, missing := false) {
+	call(ctx, args, message := false, cmdargs := "") {
 		if args[1] {
-			arg := ""
-			aliases := ""
+			message := message ? "**" message "**`n" : ""
 			args[1] := this.bot.getAlias(args[1])
+
 			if !args[1]
-				return ctx.react("bot_no")
+				this.except(ctx, "Command not found")
 
 			cmd := this.bot.commands[args[1]]
-			for _, oarg in cmd.args {
-				wraps := (oarg.optional) ? ["[", "]"] : ["<", ">"]
-				arg .= " " wraps[1] oarg.name wraps[2]
-			}
 
+			aliases := ""
 			for _, alias in cmd.aliases {
 				aliases .= (aliases ? ", " : "") alias
 			}
 
-			embed := new discord.embed(, (missing ? "**Argument missing: " cmd.args[missing].name "**`n" : "") cmd.info)
-			embed.addField("Usage", args[1] " " arg)
-			embed.setFooter("Aliases: " aliases)
+			cmdargs := cmdargs ? cmdargs : cmd.args
+			embed := new discord.embed(, message cmd.info)
+			usage := this.getCommand(args[1], cmd.args)
+			if !message {
+				for _, command in cmd.commands {
+					usage .= "**" args[1] "** " this.getCommand(command.name, command.args, true)
+				}
+			}
+			embed.addField("Usage", usage)
+
+			embed.setFooter((aliases ? "Aliases: " aliases " " Chr(8226) " " : "") "Have questions? Join the support server with the support command!")
 		} else {
 			embed := new discord.embed("Commands")
 			index := 1
@@ -45,13 +50,21 @@ class command_help extends command_ {
 					embed.addField("", "",, true)
 				out := ""
 				for _, value in cmd {
-					out .= "``" value.name "`` " value.info "`n"
+					out .= "***" value.name "*** " value.info "`n"
 				}
 				embed.addField(category, out, true)
 			}
-			; ctx.author.sendDM(embed)
-			; embed := new discord.embed(,ctx.getEmoji("bot_ok") " Sent you a DM", 0xFF5959)
 		}
 		ctx.reply(embed)
+	}
+
+	getCommand(name, args, issub := false) {
+		out := ""
+		issub := issub ? "" : "**"
+		for _, arg in args {
+			wraps := (arg.optional) ? ["[", "]"] : ["<", ">"]
+			out .= issub name issub " _" wraps[1] arg.name wraps[2] "_"
+		}
+		return out "`n"
 	}
 }

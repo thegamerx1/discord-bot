@@ -1,5 +1,5 @@
 #Include <base64>
-class command_ahk extends command_ {
+class command_ahk extends DiscoBot.command {
 	static cooldown := 5
 	, info := "Runs code through CloudAHK"
 	, args := [{optional: false, name: "code"}]
@@ -35,25 +35,27 @@ class command_ahk extends command_ {
 
 	gotCodeResponse(ctx, id, http) {
 		if http.status != 200
-			return ctx.reply("Error getting code")
+			this.except(ctx, "Error getting code")
 
 		if StrLen(http.text) > 100000
-			return ctx.reply("What the fuck does that link contain??")
+			this.except(ctx, "What the fuck does that link contain??")
+
 		this.pasteCache[id] := http.text
 		this.gotCode(ctx, http.text)
 	}
 
 	gotCode(ctx, code) {
 		static API := "https://cloudahk.com/api/v1/language/ahk/run"
+		cont := new Counter(, true)
 		http := new requests("post", API,, true)
 		http.headers["Authorization"] := this.auth
-		http.onFinished := ObjBindMethod(this, "response", ctx)
+		http.onFinished := ObjBindMethod(this, "response", ctx, cont)
 		http.send("`n" code)
 	}
 
-	response(ctx, http) {
+	response(ctx, cont, http) {
 		if http.status != 200
-			return ctx.reply("Something went wrong")
+			this.except(ctx, "Something went wrong")
 
 		hjson := http.json()
 		data := {}
@@ -64,12 +66,12 @@ class command_ahk extends command_ {
 			data.time := "Timed Out"
 
 		if (data.length > 1850 || data.lines > 14) {
-			if (data.length > 8000) {
-				return ctx.reply(ctx.author.mention "`nwhy the fuck is the output " data.length  " characters?")
-			}
+			if (data.length > 8000)
+				this.except(ctx, "why the fuck is the output " data.length  " characters?")
+
 			http := new requests("POST", "https://p.ahkscript.org/",, true)
 			http.headers["Content-Type"] := "application/x-www-form-urlencoded"
-			http.onFinished := ObjBindMethod(this, "toolongreply", ctx, data)
+			http.onFinished := ObjBindMethod(this, "toolongreply", ctx, data, cont)
 			http.send(requests.encode({code: hjson.stdout}))
 			return
 		}
@@ -77,28 +79,28 @@ class command_ahk extends command_ {
 		if (hjson.stdout = "" || hjson.stdout = "`n") {
 			data.content := "No output"
 		} else {
-			data.content := "``````autoit`n" discord.utils.sanitize(hjson.stdout) "``````"
+			data.content := discord.utils.codeblock("autoit", hjson.stdout)
 		}
-		this.reply(ctx, data)
+		this.reply(ctx, data, cont)
 	}
 
-	toolongreply(ctx, data, http) {
+	toolongreply(ctx, data, cont, http) {
 		if (http.status != 200 || !http.headers["ahk-location"])
-			return ctx.reply("Uploading file went wrong")
+			this.except(ctx, "Uploading file went wrong")
 
 
 		data.content := http.headers["ahk-location"]
-		this.reply(ctx, data, true)
+		this.reply(ctx, data, cont, true)
 	}
 
-	reply(ctx, data, isPaste := false) {
+	reply(ctx, data, cont, isPaste := false) {
 		embed := new discord.embed(,isPaste ? data.content : "", 0x21633F)
 		if !isPaste
 			embed.setContent(data.content)
 
-		embed.addField("Run time", data.time, true)
 		embed.addField("Characters", data.length, true)
 		embed.addField("Lines", data.lines, true)
+		embed.addField("Time", Round(cont.get()/1000, 2) "s", true)
 		ctx.reply(embed)
 	}
 }

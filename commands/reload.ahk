@@ -1,4 +1,4 @@
-﻿class command_reload extends command_ {
+﻿class command_reload extends DiscoBot.command {
 	static owneronly := true
 	, info := "Restarts the bot"
 	, aliases := ["restart"]

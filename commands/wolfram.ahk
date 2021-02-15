@@ -1,8 +1,8 @@
-﻿class command_wolfram extends command_ {
+﻿class command_wolfram extends DiscoBot.command {
 	static cooldown := 4
-	, info := "Queries the wolfram API"
+	, info := "Queries wolfram"
 	, aliases := ["w", "wa"]
-	, args := [{optional: false, name: "query"}]
+	, args := [{name: "query"}]
 	, category := "Search"
 
 	start() {
@@ -50,7 +50,7 @@
 
 	response(ctx, query, http) {
 		if http.status != 200
-			return ctx.reply("Error in query")
+			this.except(ctx, "Error in query")
 
 		ojson := http.json().queryresult
 		obj := {fields: []}

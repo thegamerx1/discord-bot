@@ -1,4 +1,4 @@
-class command_exit extends command_ {
+class command_exit extends DiscoBot.command {
 	static owneronly := true
 	, info := "Exits the bot safely"
 	, category := "Owner"

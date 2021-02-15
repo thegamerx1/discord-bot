@@ -1,4 +1,4 @@
-class command_xkcd extends command_ {
+class command_xkcd extends DiscoBot.command {
 	static cooldown := 3
 	, info := "Gets xkcd post"
 	, args := [{name: "id"}]
@@ -19,7 +19,7 @@ class command_xkcd extends command_ {
 
 	explainResponse(ctx, http) {
 		if http.status != 200
-			Throw Exception("Error in request",, 400)
+			this.except(ctx, "Error in request")
 
 		html := new HtmlFile(http.text)
 		titles := html.qsa("h2")
@@ -51,7 +51,7 @@ class command_xkcd extends command_ {
 
 	response(ctx, http) {
 		if http.status != 200
-			Throw Exception("Error in request", -1, 400)
+			this.except(ctx, "Error in request")
 		out := http.json()
 		this.cache[out.num] := out
 		this.reply(ctx, out.num)

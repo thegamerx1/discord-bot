@@ -1,4 +1,4 @@
-class command_google extends command_ {
+class command_google extends DiscoBot.command {
 	static cooldown := 4
 	, info := "Prints google"
 	, aliases := ["notaprank"]

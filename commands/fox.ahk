@@ -1,4 +1,4 @@
-class command_fox extends command_ {
+class command_fox extends DiscoBot.command {
 	static cooldown := 1
 	, info := "Gets a cat for you"
 	, aliases := ["foxy", "floof"]
@@ -15,7 +15,7 @@ class command_fox extends command_ {
 
 	response(ctx, http) {
 		if http.status != 200
-			return ctx.reply("Error " http.status)
+			this.except(ctx, "Error " http.status)
 		ctx.reply(http.json().image)
 	}
 }

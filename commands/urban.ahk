@@ -1,5 +1,5 @@
 #Include <HtmlFile>
-class command_urban extends command_ {
+class command_urban extends DiscoBot.command {
 	static cooldown := 2
 	, info := "Gets word definition from urban dictionary"
 	, args := [{optional: false, name: "word"}]

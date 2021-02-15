@@ -1,7 +1,6 @@
-class command_server extends command_ {
+class command_server extends DiscoBot.command {
 	static  cooldown := 2
 	, info := "Gets info about the server"
-
 	, category := "Fun"
 
 

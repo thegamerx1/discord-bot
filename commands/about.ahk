@@ -1,12 +1,12 @@
 #Include <Process>
-class command_about extends command_ {
+class command_about extends DiscoBot.command {
 	static cooldown := 5
 	, info := "Gets bot info"
 	, category := "Bot"
 
 	start() {
 		this.pid := DllCall("GetCurrentProcessId")
-		this.uptime := new Counter(2, true)
+		this.uptime := new Counter(, true)
 	}
 
 	call(ctx, args) {

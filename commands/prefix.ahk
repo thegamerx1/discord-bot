@@ -1,4 +1,4 @@
-﻿class command_prefix extends command_ {
+﻿class command_prefix extends DiscoBot.command {
 	static cooldown := 3
 	, info := "Sets server prefix for the bot"
 	, args := [{optional: false, name: "prefix"}]

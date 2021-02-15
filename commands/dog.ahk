@@ -1,4 +1,4 @@
-class command_dog extends command_ {
+class command_dog extends DiscoBot.command {
 	static cooldown := 1
 	, info := "Gets a cat for you"
 	, aliases := ["woof", "doggo"]

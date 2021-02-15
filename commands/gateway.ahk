@@ -1,5 +1,5 @@
 #include <dataframe>
-class command_gateway extends command_ {
+class command_gateway extends DiscoBot.command {
 	static owneronly := true
 	, info := "Gets gateway log"
 	, category := "Owner"

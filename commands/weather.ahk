@@ -1,4 +1,4 @@
-class command_weather extends command_ {
+class command_weather extends DiscoBot.command {
 	static cooldown := 2
 	, info := "Gets the weather"
 	, args := [{optional: false, name: "site"}]
@@ -16,7 +16,7 @@ class command_weather extends command_ {
 		static iconurl := "http://openweathermap.org/img/wn/{}@2x.png"
 		static url := "https://openweathermap.org/city/{}"
 		if http.status != 200
-			return ctx.react("bot_no")
+			this.except(ctx, "Error in request")
 
 		data := http.json()
 		http := ""

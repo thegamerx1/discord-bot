@@ -1,4 +1,4 @@
-class command_nick extends command_ {
+class command_nick extends DiscoBot.command {
 	static info := "Changes bot nickname"
 	, args := [{optional: true, name: "nick"}]
 	, userperms := ["MANAGE_NICKNAMES"]

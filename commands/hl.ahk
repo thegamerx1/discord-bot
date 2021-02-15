@@ -1,4 +1,4 @@
-﻿class command_hl extends command_ {
+﻿class command_hl extends DiscoBot.command {
 	static cooldown := 5
 	, info := "Highlights your text"
 	, args := [{optional: false, name: "code"}]

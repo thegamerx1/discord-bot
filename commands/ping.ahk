@@ -1,4 +1,4 @@
-﻿class command_ping extends command_ {
+﻿class command_ping extends DiscoBot.command {
 	static cooldown := 1
 	, info := "Checks the ping of the bot"
 	, category := "Fun"

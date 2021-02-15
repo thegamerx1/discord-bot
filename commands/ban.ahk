@@ -1,10 +1,10 @@
-class command_ban extends command_ {
+class command_ban extends DiscoBot.command {
 	static cooldown := 1
 	, info := "Bans a user"
 	, permissions := ["BAN_MEMBERS"]
 	, userperms := ["BAN_MEMBERS"]
 	, args := [{optional: false, name: "user"}
-				,{optional: true, name: "reason"}]
+				,{optional: true, name: "reason", type: "str"}]
 	, category := "Moderation"
 
 
@@ -19,9 +19,7 @@ class command_ban extends command_ {
 		try {
 			ctx.api.AddBan(ctx.guild.id, id, args[2], 0)
 		} catch e {
-			embed := new discord.embed("Error", e.message)
-			ctx.reply(embed)
-			return
+			this.except(ctx, e.message)
 		}
 		ctx.react("bot_ok")
 

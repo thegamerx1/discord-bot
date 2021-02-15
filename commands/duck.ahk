@@ -1,4 +1,4 @@
-class command_duck extends command_ {
+class command_duck extends DiscoBot.command {
 	static cooldown := 1
 	, info := "Gets a duck for you"
 	, aliases := ["quack", "ducky", "duckling"]
@@ -15,7 +15,7 @@ class command_duck extends command_ {
 
 	response(ctx, http) {
 		if http.status != 200
-			return ctx.reply("Error " http.status)
+			this.except(ctx, "Error " http.status)
 		ctx.reply(http.json().url)
 	}
 }

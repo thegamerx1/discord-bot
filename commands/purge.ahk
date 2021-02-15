@@ -1,10 +1,10 @@
-class command_purge extends command_ {
+class command_purge extends DiscoBot.command {
 	static info := "Deletes messages"
 	, permissions := ["MANAGE_MESSAGES", "VIEW_CHANNEL"]
 	, userperms := ["MANAGE_MESSAGES"]
 	, args := [{optional: false, name: "count"}]
 	, category := "Moderation"
-	, commands := [{name: "until", args: {name: "id"}}]
+	, commands := [{name: "until", args: [{name: "id"}]}]
 
 
 	C_until(ctx, args) {
@@ -21,7 +21,7 @@ class command_purge extends command_ {
 
 	call(ctx, args) {
 		if (args[1] > 100 || args[1] < 2)
-			return ctx.reply("Invalid amount")
+			this.except(ctx, "Invalid amount")
 
 		try {
 			ids := this.getMessages(ctx, {limit: args[1], before: ctx.id})

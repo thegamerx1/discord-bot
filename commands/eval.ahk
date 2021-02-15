@@ -1,4 +1,4 @@
-class command_eval extends command_ {
+class command_eval extends DiscoBot.command {
 	static owneronly := true
 	, args := [{optional: false, name: "query"}]
 	, aliases := ["print"]
@@ -24,7 +24,7 @@ class command_eval extends command_ {
 		}
 		pages := new discord.paginator(output)
 		for _, page in pages.pages {
-			ctx.reply("``````json`n" page  "``````")
+			ctx.reply(discord.utils.codeblock("json", page, false))
 		}
 	}
 }

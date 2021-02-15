@@ -1,4 +1,4 @@
-﻿class command_code extends command_ {
+﻿class command_code extends DiscoBot.command {
 	static cooldown := 2
 	, info := "Gets code of a command"
 	, aliases := ["source"]
@@ -21,8 +21,8 @@
 
 		try {
 			code := FileOpen("commands\" command ".ahk", "r", "UTF-8").read()
-		} catch {
-			Throw Exception("File read failed to", command)
+		} catch e {
+			this.except(ctx, "Command not found")
 		}
 		page := new discord.paginator(code)
 		for _, value in page.pages

@@ -96,143 +96,151 @@ class DiscoBot {
 			try {
 				this.executeCommand(command, "called", ctx, command, data[2])
 			} catch e {
-				return this.printError(ctx, e)
+				embed := new discord.embed("Oops!", "An error ocurred on the command and my developer has been notified.`n`nYou can you the support server [here](" this.bot.SUPPORT_SERVER ")", 0xAC3939)
+				embed.setFooter("Error ID: " e.errorid)
+				ctx.reply(embed)
+				this.printError(ctx, e)
 			}
 		}
 	}
 
 	printError(ctx, e) {
-		channel := this.api.CreateDM(this.bot.OWNER_ID)
+		static source := "**{}:** {} ({})"
+		static source1 := "**{}:** {}"
 		embed := new discord.embed("Error on command", ctx.message, 0xFF5959)
-		embed.addField("On Guild", ctx.guild.name " (" ctx.author.id ")")
-		embed.addField("Issued by", ctx.author.name " (" ctx.author.id ")")
-		embed.addField("Message", e.message)
-		embed.addField("What", e.what)
-		embed.addField("Extra", e.extra)
+		embed.addField("Source", format(source, "Guild", ctx.guild.name, ctx.guild.id) "`n" format(source, "User", ctx.author.mention, ctx.author.id))
+		embed.addField("Error", format(source1, "Message", e.message) "`n" format(source1, "What", e.what) "`n" format(source1, "Extra", e.extra))
 		embed.addField("File", "``" e.file "`` (" e.line ")")
-		this.api.SendMessage(channel.id, embed)
-	}
-}
-
-class command_ {
-	__New(bot) {
-		if !this.permissions
-			this.permissions := []
-		this.permissions.push("ADD_REACTIONS")
-		this.bot := bot
-		this.cooldowns := {}
+		embed.addField("Error ID", "`" e.errorid "`")
+		discord.utils.sendWebhook(embed, this.bot.ERROR_WEBHOOK)
 	}
 
-	_event(event, data) {
-		fn := this["E_" event]
-		%fn%(this, data)
-	}
+	class command {
+		__New(bot) {
+			if !this.permissions
+				this.permissions := []
+			this.permissions.push("ADD_REACTIONS")
+			this.bot := bot
+			this.cooldowns := {}
+		}
 
-	_parseArgs(str) {
-		static regex := "[^\s""']+|""([^""]+)"""
-		out := []
-		loops := 0
-		while match := regex(str, regex)
-		{
-			loops++
-			if (loops >= this.args.length()) {
-				out.push(str)
-				break
+		_event(event, data) {
+			fn := this["E_" event]
+			%fn%(this, data)
+		}
+
+		_parseArgs(byref args, byref cmdargs) {
+			static regex := "[^\s""']+|""([^""]+)"""
+			out := []
+			while match := regex(args, regex) {
+				if (A_Index >= this.args.length()) {
+					out.push(args)
+					break
+				}
+				args := StrReplace(args, match.value,,, 1)
+				out.push(match[1] ? match[1] : match[0])
 			}
-			str := StrReplace(str, match.value,,, 1)
-			out.push(match[1] ? match[1] : match[0])
-		}
-		return out
-	}
+			args := out
 
-	called(ctx, command, args := "") {
-		author := ctx.author.id
-		if !contains("SEND_MESSAGES", ctx.self.permissions)
-			return
-
-		if !contains("EMBED_LINKS", ctx.self.permissions) {
-			ctx.reply("I need ``EMBED_LINKS`` to function!")
-			return
-		}
-
-		neededperms := ""
-		for _, value in this.permissions {
-			if !contains(value, ctx.self.permissions) {
-				neededperms .= Chr(8226) " " value "`n"
+			for _, cmd in this.commands {
+				if StartsWith(args[1], cmd.name) {
+					cmdargs := cmd.args
+					cmdspace := cmd.name " "
+					if StartsWith(args[1], cmdspace) {
+						args[1] := temp := SubStr(args[1], StrLen(cmdspace)+1)
+					} else {
+						temp := args.RemoveAt(1)
+					}
+					return "C_" cmd.name
+				}
 			}
+			return "call"
 		}
 
-		for _, value in this.userperms {
-			if !contains(value, ctx.author.permissions) {
-				ctx.reply(new discord.embed(, "You don't have permissions to do that!"))
+		called(ctx, command, args := "") {
+			author := ctx.author.id
+			if !contains("SEND_MESSAGES", ctx.self.permissions)
+				return
+
+			if !contains("EMBED_LINKS", ctx.self.permissions) {
+				ctx.reply("I need ``EMBED_LINKS`` to function!")
 				return
 			}
-		}
 
-		if neededperms {
-			embed := new discord.embed("I need the following permissions for that", neededperms)
-			ctx.reply(embed)
-			return
-		}
-
-		if (this.owneronly && this.bot.bot.OWNER_ID != author)
-			return ctx.react("bot_notallowed")
-
-		args := this._parseArgs(args)
-		func := "call"
-		cmdargs := this.args
-		for i, cmd in this.commands {
-			if StartsWith(args[1], cmd.name) {
-				cmdargs := cmd.args
-				cmdspace := cmd.name " "
-				if StartsWith(args[1], cmdspace) {
-					args[1] := temp := SubStr(args[1], StrLen(cmdspace)+1)
-				} else {
-					temp := args.RemoveAt(1)
+			neededperms := ""
+			for _, value in this.permissions {
+				if !contains(value, ctx.self.permissions) {
+					neededperms .= Chr(8226) " " value "`n"
 				}
-				func := "C_" cmd.name
-				break
 			}
-		}
 
-
-		for i, arg in cmdargs {
-			if (args[1] = "") {
-				if (arg.optional && arg.default != "")
-					args[i] := arg.default
-
-				if !arg.optional {
-					this.bot.executeCommand("help", "call", ctx, [command], i)
+			for _, value in this.userperms {
+				if !contains(value, ctx.author.permissions) {
+					ctx.reply(new discord.embed(, "You don't have permissions to do that!"))
 					return
 				}
 			}
-		}
-		if (this.cooldown && author != this.bot.bot.OWNER_ID) {
-			if (this.cooldowns[author].time > A_TickCount) {
-				if !this.cooldowns[author].reacted {
-					this.cooldowns[author].reacted := true
-					ctx.react("bot_cooldown")
-				}
+
+			if neededperms {
+				embed := new discord.embed("I need the following permissions for that", neededperms)
+				ctx.reply(embed)
 				return
 			}
 
-			this.setCooldown(author)
-		}
+			if (this.owneronly && this.bot.bot.OWNER_ID != author)
+				return ctx.react("bot_notallowed")
 
-		try {
-			this[func](ctx, args)
-		} catch e {
-			if (e.extra = 400) {
-				ctx.reply(new discord.embed("Error", e.message))
-			} else {
-				Throw e
+			cmdargs := this.args
+			func := this._parseArgs(args, cmdargs)
+
+			for _, arg in cmdargs {
+				if (args[1] = "") {
+					if (arg.optional && arg.default != "")
+						args[i] := arg.default
+
+					if !arg.optional {
+						this.bot.executeCommand("help", "call", ctx, [command], "Argument missing: " arg.name, cmdargs)
+						return
+					}
+				} else if (arg.type && arg.type != typeof(args[1])) {
+					this.bot.executeCommand("help", "call", ctx, [command], "Argument ``" arg.name "`` requires type ``" arg.type "``" , cmdargs)
+					return
+				}
+			}
+			if (this.cooldown && author != this.bot.bot.OWNER_ID) {
+				if (this.cooldowns[author].time > A_TickCount) {
+					if !this.cooldowns[author].reacted {
+						this.cooldowns[author].reacted := true
+						ctx.react("bot_cooldown")
+					}
+					return
+				}
+
+				this.setCooldown(author)
+			}
+
+			try {
+				this[func](ctx, args)
+			} catch e {
+				if (e = -99)
+					return
+				if !IsObject(e)
+					e := Exception(e, "Not specified")
+
+				e.errorid := RandomString(52)
+				throw e
 			}
 		}
-	}
 
-	setCooldown(author, time := "") {
-		if !time
-			time := this.cooldown
-		this.cooldowns[author] := {time: A_TickCount + time * 1000, reacted: false}
+		except(ctx, message) {
+			ctx.reply(new discord.embed(, ctx.getEmoji("bot_no") " " message, 0xAC3939))
+			throw -99
+		}
+
+		setCooldown(author, time := "") {
+			if !time
+				time := this.cooldown
+			this.cooldowns[author] := {time: A_TickCount + time * 1000, reacted: false}
+		}
 	}
 }
