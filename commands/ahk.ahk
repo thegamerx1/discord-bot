@@ -21,7 +21,7 @@ class command_ahk extends DiscoBot.command {
 		if !match
 			code := args[1]
 
-		ctx.typing()
+		; ctx.typing()
 		if match := regex(code, pasteRegex, "i") {
 			if this.pasteCache[match.id]
 				return this.gotCode(ctx, this.pasteCache[match.id])
