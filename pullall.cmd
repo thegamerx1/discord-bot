@@ -1,8 +1,8 @@
 @echo off
 set asda=%~dp0
-git reset --hard origin/master
-git pull origin master
+git fetch --all
+git reset --hard
 cd %userprofile%\Documents\AutoHotkey\lib
 git fetch --all
-git reset --hard origin/master
+git reset --hard
 cd /D %asda%
