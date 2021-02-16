@@ -1,7 +1,8 @@
 class command_8ball extends DiscoBot.command {
-	static cooldown := 60
+	static cooldown := 60*5
 	, info := "Asks the magic 8 Ball!"
 	, aliases := ["8"]
+	, args := [{name: "question"}]
 	, category := "Fun"
 
 	call(ctx, args) {
@@ -13,5 +14,9 @@ class command_8ball extends DiscoBot.command {
 
 		msg := ctx.reply(new discord.embed(, "Shaking.."))
 		TimeOnce(ObjBindMethod(msg, "edit", new discord.embed(, "***:8ball:  " random(BALL_RESPONSES) "***")), 3000)
+	}
+
+	onCooldown(ctx) {
+		ctx.reply(new discord.embed(, "**You may only ask the magic 8 Ball every 5 minutes!**"))
 	}
 }
