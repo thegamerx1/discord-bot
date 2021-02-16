@@ -5,6 +5,8 @@ class command_devmode extends DiscoBot.command {
 	, args := [{name: "enable", type: "bool"}]
 
 	call(ctx, args) {
+		if this.SET.release
+			this.except(ctx, "Dev mode is always disabled on release!")
 		status := args[1] ? "enabled" : "disabled"
 		if (args[1] = this.bot.settings.data.dev)
 			this.except(ctx, "Dev mode already " status "!")

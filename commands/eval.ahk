@@ -1,30 +1,41 @@
 class command_eval extends DiscoBot.command {
 	static owneronly := true
-	, args := [{optional: false, name: "query"}]
+	, args := [{name: "query"}]
 	, aliases := ["print"]
 	, category := "Owner"
+	, commands := [{name: "msg", args: [{name: "msg", type: "int"}, {name: "query"}]}]
 
 	call(ctx, args) {
 		if !this.SET.release
 			clipboard := ctx.message
-		msg := ctx.referenced_msg ? ctx.referenced_msg : ctx
-		data := msg[StrSplit(args[1], ".")*]
+		data := eval(args[1], [{name: "ctx", val: ctx}, {name: "reply", val: ctx.referenced_msg}])
 		if IsObject(data) {
-			output := JSON.dump(data,0,1)
-			if (StrLen(output) > 1400) {
-				temp := ""
-				for key, value in data {
-					temp .= (IsObject(key) ? "{}" : key) ": " (IsObject(value) ? "{}" : value)  "`n"
-				}
-				output := temp
+			deep := ObjectDeep(data, 500)
+			if (deep > 50) {
+				if deep > 190
+					this.except(ctx, "Result is too deep!")
+
+				output := this.beutifolObj(data)
+			} else {
+				output := JSON.dump(data,0,1)
+				if (StrLen(output) > 1400)
+					output := this.beutifolObj(data)
 			}
 		} else {
 			output := data
 		}
+
 		pages := new discord.paginator(output)
 		for _, page in pages.pages {
-			; debug.print(page)
-			ctx.reply(discord.utils.codeblock("json", page, false))
+			ctx.reply(discord.utils.codeblock("json", page, false, "No output bu"))
 		}
+	}
+
+	beutifolObj(obj) {
+		temp := ""
+		for key, value in obj {
+			temp .= (IsObject(key) ? "{}" : key) ": " (IsObject(value) ? "{}" : value)  "`n"
+		}
+		return temp
 	}
 }
