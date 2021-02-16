@@ -1,6 +1,6 @@
 @echo off
-git reset --hard origin/master
-git pull origin master
+git fetch --all
+git reset --hard
 cd %userprofile%\Documents\AutoHotkey\lib
-git reset --hard origin/master
-git pull origin master
+git fetch --all
+git reset --hard
