@@ -217,11 +217,11 @@ class DiscoBot {
 					return
 				}
 			}
-			if (this.cooldown && !author.isBotOwner) {
+			if (this.cooldown && !(author.isBotOwner && this.bot.settings.data.dev)) {
 				if (this.cooldowns[author.id].time > A_TickCount) {
 					if !this.cooldowns[author.id].reacted {
 						this.cooldowns[author.id].reacted := true
-						ctx.reply(new discord.embed("You are on cooldown!", ctx.getEmoji("bot_cooldown") " Wait for " Round((this.cooldowns[author.id].time-A_TickCount)/1000, 2) "s"))
+						this.onCooldown(ctx, author)
 					}
 					return
 				}
@@ -240,6 +240,11 @@ class DiscoBot {
 				e.errorid := RandomString(52)
 				throw e
 			}
+		}
+
+
+		onCooldown(ctx, author) {
+			ctx.reply(new discord.embed("You are on cooldown!", ctx.getEmoji("bot_cooldown") " Wait for " Round((this.cooldowns[author.id].time-A_TickCount)/1000, 2) "s"))
 		}
 
 		except(ctx, message) {
