@@ -1,8 +1,6 @@
 @echo off
 set asda=%~dp0
-git fetch --all
-git reset --hard
+git pull -f
 cd %userprofile%\Documents\AutoHotkey\lib
-git fetch --all
-git reset --hard
+git pull -f
 cd /D %asda%
