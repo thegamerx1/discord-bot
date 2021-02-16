@@ -1,7 +1,7 @@
 #Include %A_ScriptDir%
 #Include <mustExec>
 #NoTrayIcon
-SingleInstance()
+
 includer.init("commands")
 debug.init({console: !A_DebuggerName, stamp: true})
 
@@ -12,6 +12,7 @@ Return
 #Include <Discord>
 #Include <Includer>
 #Include <Counter>
+#Include <Unicode>
 #Include <debug>
 #Include <configLoader>
 #include *i commands/_includer.ahk
