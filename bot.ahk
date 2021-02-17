@@ -253,7 +253,7 @@ class DiscoBot {
 				if !IsObject(e)
 					e := Exception(e, "Not specified")
 
-				e.errorid := SHA1(ctx.message.timestamp)
+				e.errorid := SHA1(ctx.data.timestamp)
 				throw e
 			}
 		}
