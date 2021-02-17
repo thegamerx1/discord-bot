@@ -18,6 +18,7 @@ class command_suggestion extends DiscoBot.command {
 		discord.utils.webhook(embed, this.SET.webhooks.suggest)
 		response := new discord.embed("Thank you", ctx.author.mention " your suggestion has been sent")
 		response.setFooter("Suggestion ID: " id)
+		ctx.delete()
 		ctx.reply(response)
 	}
 }
