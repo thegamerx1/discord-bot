@@ -45,7 +45,7 @@ class command_eval extends DiscoBot.command {
 		}
 
 		pages := new discord.paginator(output)
-		for _, page in pages.pages {
+		for _, page in pages.get() {
 			ctx.reply(discord.utils.codeblock("json", page, false, "No output"))
 		}
 	}

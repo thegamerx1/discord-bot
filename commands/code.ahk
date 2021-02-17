@@ -24,7 +24,7 @@
 			this.except(ctx, "Error reading file")
 		}
 		page := new discord.paginator(code)
-		for _, value in page.pages
+		for _, value in page.get()
 			ctx.reply("``````autoit`n" value  "``````")
 	}
 }

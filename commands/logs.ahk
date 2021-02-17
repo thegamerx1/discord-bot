@@ -5,8 +5,11 @@ class command_logs extends DiscoBot.command {
 	category := "Owner"
 
 	call(ctx, args) {
-		pag := new discord.paginator(strGetLast(debug.log, args[1]))
-		for _, page in pag {
+		logs := strGetLast(debug.log, args[1])
+		if !logs
+			this.except(ctx, "Logs brokey")
+		pag := new discord.paginator(logs)
+		for _, page in pag.get() {
 			ctx.reply(discord.utils.codeblock("prolog", page))
 		}
 	}
