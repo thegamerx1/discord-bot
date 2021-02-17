@@ -1,10 +1,9 @@
 ﻿class command_code extends DiscoBot.command {
-	static cooldown := 2
-	, info := "Gets code of a command"
-	, aliases := ["source"]
-	, args := [{optional: true, name: "command"}]
-	, category := "Code"
-
+	cooldown := 4
+	info := "Gets code of a command"
+	aliases := ["source"]
+	args := [{optional: true, name: "command"}]
+	category := "Code"
 
 	call(ctx, args) {
 		if !args[1] {

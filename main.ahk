@@ -11,6 +11,7 @@ Return
 #Include bot.ahk
 #Include <Discord>
 #Include <Includer>
+#Include <SHA1>
 #Include <Counter>
 #Include <Unicode>
 #Include <debug>

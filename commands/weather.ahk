@@ -1,8 +1,8 @@
 class command_weather extends DiscoBot.command {
-	static cooldown := 2
-	, info := "Gets the weather"
-	, args := [{optional: false, name: "site"}]
-	, category := "Search"
+	cooldown := 2
+	info := "Gets the weather"
+	args := [{optional: false, name: "site"}]
+	category := "Search"
 
 
 	call(ctx, args) {

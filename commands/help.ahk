@@ -1,11 +1,12 @@
 class command_help extends DiscoBot.command {
-	static cooldown := 4
-	, args := [{optional: true, name: "command", type: "str"}]
+	cooldown := 4
+	args := [{optional: true, name: "command", type: "str"}]
+	category := "hidden"
 
 	start() {
 		this.categories := {}
 		for name, cmd in this.bot.commands {
-			if !cmd.category
+			if (cmd.category = "hidden")
 				continue
 			if !this.categories[cmd.category]
 				this.categories[cmd.category] := []
@@ -40,7 +41,7 @@ class command_help extends DiscoBot.command {
 			}
 			embed.addField("Usage", usage)
 
-			embed.setFooter((aliases ? "Aliases: " aliases " " Chr(8226) " " : "") "Have questions? Join the support server with the support command!")
+			embed.setFooter((aliases ? "Aliases: " aliases " " Chr(8226) " " : "") "Have questions? Join the support server with " ctx.prefix "support")
 		} else {
 			embed := new discord.embed("Commands")
 			for category, cmd in this.categories {
@@ -48,13 +49,12 @@ class command_help extends DiscoBot.command {
 					continue
 				out := ""
 				for i, value in cmd {
-					; out .= "*" value.name "* "
 					out .= "**[" value.name "](https://github.com/thegamerx1/discord-bot """ value.info """)**  "
 				}
 				embed.addField(category, out, true)
 			}
+			embed.setFooter("Hover over the commands for description! " chr(8226) " Alternatively you can " ctx.prefix "help <command>!")
 		}
-		embed.setFooter("Hover over the commands for description! " chr(8226) " Alternatively you can " ctx.prefix "help <command>!")
 		ctx.reply(embed)
 	}
 

@@ -1,8 +1,8 @@
 class command_dict extends DiscoBot.command {
-	static cooldown := 2
-	, info := "Gets definition of a word"
-	, args := [{optional: false, name: "word", type: "str"}]
-	, category := "Search"
+	cooldown := 3
+	info := "Gets definition of a word"
+	args := [{optional: false, name: "word", type: "str"}]
+	category := "Search"
 
 	start() {
 		this.cache := {}

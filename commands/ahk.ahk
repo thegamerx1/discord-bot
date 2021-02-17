@@ -1,10 +1,10 @@
 #Include <base64>
 class command_ahk extends DiscoBot.command {
-	static cooldown := 5
-	, info := "Runs code through CloudAHK"
-	, args := [{optional: false, name: "code"}]
-	, category := "Code"
-
+	cooldown := 2
+	cooldownper := 15
+	info := "Runs code through CloudAHK"
+	args := [{optional: false, name: "code"}]
+	category := "Code"
 
 	start() {
 		this.auth := "Basic " this.SET.keys.cloudahk
@@ -13,15 +13,9 @@ class command_ahk extends DiscoBot.command {
 
 	call(ctx, args) {
 		static API := "https://p.ahkscript.org/?r={}"
-		static regex := "^``+(?<lang>\w+)?\n(?<code>.*?)``+$"
 		static pasteRegex := "p\.ahkscript\.org\/\?\w\=(?<id>\w+)"
+		code := discord.utils.getCodeblock(args[1]).code
 
-		match := regex(args[1], regex, "sm")
-		code := match.code
-		if !match
-			code := args[1]
-
-		; ctx.typing()
 		if match := regex(code, pasteRegex, "i") {
 			if this.pasteCache[match.id]
 				return this.gotCode(ctx, this.pasteCache[match.id])
@@ -61,7 +55,8 @@ class command_ahk extends DiscoBot.command {
 		data := {}
 		data.length := StrLen(hjson.stdout)
 		data.lines := StrSplit(hjson.stdout, "`n", "`r").length()
-		data.time := round(hjson.time,2) "s"
+		; data.time := round(hjson.time,2) "s"
+		data.time := Round(cont.get()/1000,2) "s"
 		if (data.time = "0.00s")
 			data.time := "Timed Out"
 
@@ -96,7 +91,7 @@ class command_ahk extends DiscoBot.command {
 
 		embed.addField("Chars", data.length, true)
 		embed.addField("Lines", data.lines, true)
-		embed.addField("User wait", Round(cont.get()/1000, 2) "s", true)
+		embed.addField("Response", data.time, true)
 		ctx.reply(embed)
 	}
 }

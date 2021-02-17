@@ -1,10 +1,11 @@
 class command_purge extends DiscoBot.command {
-	static info := "Deletes messages"
-	, permissions := ["MANAGE_MESSAGES", "VIEW_CHANNEL"]
-	, userperms := ["MANAGE_MESSAGES"]
-	, args := [{optional: false, name: "count", type: "int"}]
-	, category := "Moderation"
-	, commands := [{name: "until", args: [{name: "id", type: "int"}]}]
+	cooldown := 3
+	info := "Deletes messages"
+	permissions := ["MANAGE_MESSAGES", "VIEW_CHANNEL"]
+	userperms := ["MANAGE_MESSAGES"]
+	args := [{optional: false, name: "count", type: "int"}]
+	category := "Moderation"
+	commands := [{name: "until", args: [{name: "id", type: "int"}]}]
 
 
 	C_until(ctx, args) {
@@ -15,7 +16,7 @@ class command_purge extends DiscoBot.command {
 			this.except(ctx, e.message)
 		}
 
-		ctx.react("bot_ok")
+		ctx.react("success")
 		TimeOnce(ObjBindMethod(ctx, "delete"), 500)
 	}
 
@@ -30,7 +31,7 @@ class command_purge extends DiscoBot.command {
 			this.except(ctx, e.message)
 		}
 
-		ctx.react("bot_ok")
+		ctx.react("success")
 		TimeOnce(ObjBindMethod(ctx, "delete"), 500)
 	}
 

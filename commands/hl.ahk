@@ -1,8 +1,8 @@
 ﻿class command_hl extends DiscoBot.command {
-	static cooldown := 5
-	, info := "Highlights your text"
-	, args := [{optional: false, name: "code"}]
-	, category := "Code"
+	cooldown := 3
+	info := "Highlights your text"
+	args := [{optional: false, name: "code"}]
+	category := "Code"
 
 	call(ctx, args) {
 		static regex := "^``+(?<lang>\w+)?\n(?<code>.*?)``+$"

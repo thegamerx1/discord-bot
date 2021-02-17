@@ -1,8 +1,8 @@
 class command_invite extends DiscoBot.command {
-	static cooldown := 10
-	, info := "Gets a invite for the bot to join your server"
-	, category := "Bot"
-	, aliases := ["add"]
+	cooldown := 2
+	info := "Gets a invite for the bot to join your server"
+	category := "Bot"
+	aliases := ["add"]
 
 	E_ready() {
 		static base := "https://discord.com/api/oauth2/authorize?client_id={}&permissions={}&scope=bot"

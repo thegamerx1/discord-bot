@@ -1,9 +1,10 @@
 class command_8ball extends DiscoBot.command {
-	static cooldown := 60*5
-	, info := "Asks the magic 8 Ball!"
-	, aliases := ["8"]
-	, args := [{name: "question"}]
-	, category := "Fun"
+	cooldown := 1
+	cooldownper := 30
+	info := "Asks the magic 8 Ball!"
+	aliases := ["8"]
+	args := [{name: "question"}]
+	category := "Fun"
 
 	call(ctx, args) {
 		static BALL_RESPONSES := ["It is certain", "It is decidedly so", "Without a doubt", "Yes definitely", "You may rely on it"
@@ -17,6 +18,6 @@ class command_8ball extends DiscoBot.command {
 	}
 
 	onCooldown(ctx) {
-		ctx.reply(new discord.embed(, "**You may only ask the magic 8 Ball every 5 minutes!**"))
+		ctx.reply(new discord.embed(, "**You may only ask the magic 8 Ball every 30 seconds!**"))
 	}
 }

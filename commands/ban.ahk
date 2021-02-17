@@ -1,17 +1,16 @@
 class command_ban extends DiscoBot.command {
-	static cooldown := 1
-	, info := "Bans a user"
-	, permissions := ["BAN_MEMBERS"]
-	, userperms := ["BAN_MEMBERS"]
-	, args := [{optional: false, name: "user"}
+	cooldown := 3
+	info := "Bans a user"
+	permissions := ["BAN_MEMBERS"]
+	userperms := ["BAN_MEMBERS"]
+	args := [{optional: false, name: "user"}
 				,{optional: true, name: "reason", type: "str"}]
-	, category := "Moderation"
-
+	category := "Moderation"
 
 	call(ctx, args) {
 		id := discord.utils.getId(args[1])
 		if (id = ctx.api.self.id) {
-			ctx.react("bot_ok")
+			ctx.react("success")
 			ctx.api.LeaveGuild(ctx.guild.id)
 			return
 		}
@@ -21,7 +20,7 @@ class command_ban extends DiscoBot.command {
 		} catch e {
 			this.except(ctx, e.message)
 		}
-		ctx.react("bot_ok")
+		ctx.react("success")
 
 	}
 }

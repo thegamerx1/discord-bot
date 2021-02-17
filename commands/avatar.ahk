@@ -1,9 +1,8 @@
 class command_avatar extends DiscoBot.command {
-	static cooldown := 1
-	, info := "Shows 4k pfp of user"
-	, args := [{optional: true, name: "user"}]
-	, category := "Fun"
-
+	cooldown := 2
+	info := "Shows 4k pfp of user"
+	args := [{optional: true, name: "user"}]
+	category := "Fun"
 
 	call(ctx, args) {
 		try {

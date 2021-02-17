@@ -1,13 +1,11 @@
 class command_cat extends DiscoBot.command {
-	static cooldown := 2
-	, info := "Gets a cat for you"
-	, aliases := ["meow"]
-	, category := "Fun"
-
+	cooldown := 2
+	info := "Gets a cat for you"
+	aliases := ["meow"]
+	category := "Fun"
 
 	call(ctx, args) {
 		static API := "https://api.thecatapi.com/v1/images/search"
-		ctx.typing()
 		http := new requests("get", API,, true)
 		http.headers["x-api-key"] := this.SET.keys.catapi
 		http.OnFinished := ObjBindMethod(this, "response", ctx)

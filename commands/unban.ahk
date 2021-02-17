@@ -1,10 +1,10 @@
 class command_unban extends DiscoBot.command {
-	static cooldown := 1
-	, info := "Unbans a user"
-	, permissions := ["BAN_MEMBERS"]
-	, userperms := ["BAN_MEMBERS"]
-	, args := [{optional: false, name: "user"}]
-	, category := "Moderation"
+	cooldown := 5
+	info := "Unbans a user"
+	permissions := ["BAN_MEMBERS"]
+	userperms := ["BAN_MEMBERS"]
+	args := [{optional: false, name: "user"}]
+	category := "Moderation"
 
 
 	call(ctx, args) {
@@ -13,6 +13,6 @@ class command_unban extends DiscoBot.command {
 		} catch e {
 			this.except(ctx, e.message)
 		}
-		ctx.react("bot_ok")
+		ctx.react(this.bot.randomCheck())
 	}
 }

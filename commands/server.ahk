@@ -1,11 +1,9 @@
 class command_server extends DiscoBot.command {
-	static  cooldown := 2
-	, info := "Gets info about the server"
-	, category := "Fun"
-
+	cooldown := 3
+	info := "Gets info about the server"
+	category := "Fun"
 
 	call(ctx, args) {
-		ctx.typing()
 		embed := new discord.embed(ctx.guild.name, "**ID**: " ctx.guild.id)
 		embed.addField("Owner", ctx.author.get(ctx.guild.owner).mention, true)
 		embed.addField("Region", ctx.guild.data.region, true)
@@ -20,7 +18,7 @@ class command_server extends DiscoBot.command {
 					channels.no++
 			}
 		}
-		embed.addField("Channels", ctx.getEmoji("text_channel") channels.text "`n" ctx.getEmoji("voice_channel") channels.voice "`n" ctx.getEmoji("bot_duckwhat") channels.no, true)
+		embed.addField("Channels", ctx.getEmoji("text_channel") channels.text "`n" ctx.getEmoji("voice_channel") channels.voice "`n" ctx.getEmoji("duckwhat") channels.no, true)
 		fet := ""
 		for _, value in ctx.guild.data.features {
 			fet .= Chr(8226) " " format("{:T}", StrReplace(value, "_", " ")) "`n"

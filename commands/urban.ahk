@@ -1,9 +1,9 @@
 #Include <HtmlFile>
 class command_urban extends DiscoBot.command {
-	static cooldown := 2
-	, info := "Gets word definition from urban dictionary"
-	, args := [{optional: false, name: "word"}]
-	, category := "Search"
+	cooldown := 3
+	info := "Gets word definition from urban dictionary"
+	args := [{optional: false, name: "word"}]
+	category := "Search"
 
 	static API := "https://www.urbandictionary.com/define.php?term="
 

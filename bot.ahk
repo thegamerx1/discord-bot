@@ -19,8 +19,8 @@ class DiscoBot {
 		for key, value in this.commands
 			if this.executeCommand(key, "_event", event, data)
 				capture := true
-		if !fn
-			debug.print("|Event not handled " event)
+		; if !fn
+		; 	debug.print("|Event not handled " event)
 
 		if !capture
 			%fn%(this, data)
@@ -79,8 +79,25 @@ class DiscoBot {
 		this.resume := ""
 	}
 
+	printError(ctx, e) {
+		static source := "**{}:** {} ({})"
+		static source1 := "**{}:** {}"
+		embed := new discord.embed("Exception", discord.utils.codeblock("js", ctx.message), 0xFF5959)
+		out := format(source, "Guild", ctx.guild.name, ctx.guild.id) "`n" format(source, "User", ctx.author.mention, ctx.author.id)
+		out .= "`n" format(source1, "Message", e.message) "`n" format(source1, "What", e.what) "`n" format(source1, "Extra", e.extra)
+		embed.addField("Exception", out)
+		embed.addField("File", "``" e.file "`` (" e.line ")")
+		embed.setFooter("Error ID: " e.errorid)
+		discord.utils.webhook(embed, this.bot.webhooks.error)
+	}
+
+	randomCheck() {
+		static checks := ["check", "success", Unicode.get("white_check_mark"), Unicode.get("check_box_with_check")]
+		return random(checks)
+	}
+
 	E_MESSAGE_CREATE(ctx) {
-		static bot_what := ["bot_question", "bot_what", "bot_angry"]
+		static bot_what := ["question", "what", "angry", Unicode.get("question"), "blobpeek", "confuseddog"]
 		static pingPrefix := "My prefix is ``{1}```n***{1}help*** for help menu!`n***{1}help*** **<command>** for command description!"
 		if ctx.author.bot
 			return
@@ -113,21 +130,17 @@ class DiscoBot {
 		}
 	}
 
-	printError(ctx, e) {
-		static source := "**{}:** {} ({})"
-		static source1 := "**{}:** {}"
-		embed := new discord.embed("Error on command", ctx.message, 0xFF5959)
-		embed.addField("Source", format(source, "Guild", ctx.guild.name, ctx.guild.id) "`n" format(source, "User", ctx.author.mention, ctx.author.id))
-		embed.addField("Error", format(source1, "Message", e.message) "`n" format(source1, "What", e.what) "`n" format(source1, "Extra", e.extra))
-		embed.addField("File", "``" e.file "`` (" e.line ")")
-		embed.addField("Error ID", "`" e.errorid "`")
-		discord.utils.sendWebhook(embed, this.bot.owner.webhook)
-	}
-
 	class command {
+		cooldownper := 10
+		category := "Other"
+		cooldown := 1
+		info := "Does the unkown"
+
 		__New(byref bot) {
 			if !this.permissions
 				this.permissions := []
+			if this.owneronly
+				this.cooldown := 0
 			this.permissions.push("ADD_REACTIONS")
 			this.bot := bot
 			this.SET := bot.bot
@@ -141,30 +154,30 @@ class DiscoBot {
 
 		_parseArgs(byref args, byref cmdargs) {
 			static regex := "[^\s""']+|""([^""]+)"""
-			out := []
-			while match := regex(args, regex) {
-				if (A_Index >= this.args.length()) {
-					out.push(args)
-					break
-				}
-				args := StrReplace(args, match.value,,, 1)
-				out.push(match[1] ? match[1] : match[0])
-			}
-			args := out
-
+			name := ""
 			for _, cmd in this.commands {
-				if StartsWith(args[1], cmd.name) {
+				if StartsWith(args, cmd.name) {
 					cmdargs := cmd.args
 					cmdspace := cmd.name " "
-					if StartsWith(args[1], cmdspace) {
-						args[1] := temp := SubStr(args[1], StrLen(cmdspace)+1)
+					if StartsWith(args, cmdspace) {
+						args := temp := SubStr(args, StrLen(cmdspace)+1)
 					} else {
 						temp := args.RemoveAt(1)
 					}
-					return cmd.name
+					name := cmd.name
 				}
 			}
-			return
+			out := []
+			while match := regex(args, regex) {
+				if (A_Index >= cmdargs.length()) {
+					out.push(args)
+					break
+				}
+				args := StrReplace(args, match.0 " ",,, 1)
+				out.push(match.1 ? match.1 : match.0)
+			}
+			args := out
+			return name
 		}
 
 		called(ctx, command, args := "") {
@@ -198,15 +211,17 @@ class DiscoBot {
 			}
 
 			if (this.owneronly && !author.isBotOwner)
-				return ctx.react("bot_notallowed")
+				return ctx.react("police")
 
 			cmdargs := this.args
 			func := this._parseArgs(args, cmdargs)
 
+
+			; TODO: subcommand aliase
 			for _, arg in cmdargs {
 				if (args[1] = "") {
 					if (arg.optional && arg.default != "")
-						args[i] := arg.default
+						args[A_Index] := arg.default
 
 					if !arg.optional {
 						this.bot.executeCommand("help", "call", ctx, [command], "Argument missing: " arg.name, cmdargs, func)
@@ -218,15 +233,16 @@ class DiscoBot {
 				}
 			}
 			if (this.cooldown && !(author.isBotOwner && this.bot.settings.data.dev)) {
-				if (this.cooldowns[author.id].time > A_TickCount) {
-					if !this.cooldowns[author.id].reacted {
-						this.cooldowns[author.id].reacted := true
-						this.onCooldown(ctx, author)
+				cooldown := this.getCooldown(author.id)
+				cool := cooldown.get()
+				if cool.cooldown {
+					if !cooldown.reacted {
+						cooldown.reacted := true
+						this.onCooldown(ctx, author, cool.wait)
 					}
 					return
 				}
-
-				this.setCooldown(author.id)
+				cooldown.add()
 			}
 
 			try {
@@ -237,25 +253,60 @@ class DiscoBot {
 				if !IsObject(e)
 					e := Exception(e, "Not specified")
 
-				e.errorid := RandomString(52)
+				e.errorid := SHA1(ctx.message.timestamp)
 				throw e
 			}
 		}
 
 
-		onCooldown(ctx, author) {
-			ctx.reply(new discord.embed("You are on cooldown!", ctx.getEmoji("bot_cooldown") " Wait for " Round((this.cooldowns[author.id].time-A_TickCount)/1000, 2) "s"))
+		onCooldown(ctx, author, time) {
+			ctx.reply(new discord.embed("You are on cooldown!", ctx.getEmoji("cooldown") " Wait for " time "s"))
 		}
 
 		except(ctx, message) {
-			ctx.reply(new discord.embed(, ctx.getEmoji("bot_no") " " message, 0xAC3939))
+			ctx.reply(new discord.embed(, ctx.getEmoji("no") " " message, 0xAC3939))
 			throw -99
 		}
 
-		setCooldown(author, time := "") {
+		setCooldown(user, time := "") {
 			if !time
 				time := this.cooldown
-			this.cooldowns[author] := {time: A_TickCount + time * 1000, reacted: false}
+			this.cooldowns[user] := {time: A_TickCount + time * 1000, reacted: false}
+		}
+
+		getCooldown(byref user) {
+			if !this.cooldowns[user]
+				this.cooldowns[user] := new DiscoBot.cooldown(user, this.cooldown, this.cooldownper)
+			return this.cooldowns[user]
+		}
+	}
+
+
+	Class cooldown {
+		__New(userid, cooldown, per) {
+			this.user := userid
+			this.cooldown := cooldown
+			this.per := per
+			this.list := []
+		}
+
+		get() {
+			total := wait := 0
+			for _, count in this.list {
+				if (count < A_TickCount) {
+					this.reacted := false
+					this.list.RemoveAt(A_Index)
+					continue
+				}
+				wait += count-A_TickCount
+				total += this.per/this.cooldown
+			}
+			debug.print("[Cooldown] " total "/" this.per " " wait "ms")
+			return {cooldown: total >= this.per, wait: Round(wait/1000,2)}
+		}
+
+		add() {
+			this.list.push(A_TickCount+this.per/this.cooldown*1000+500)
 		}
 	}
 }

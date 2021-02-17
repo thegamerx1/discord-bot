@@ -1,8 +1,8 @@
 #include <dataframe>
 class command_gateway extends DiscoBot.command {
-	static owneronly := true
-	, info := "Gets gateway log"
-	, category := "Owner"
+	owneronly := true
+	info := "Gets gateway log"
+	category := "Owner"
 
 	start() {
 		this.events := {}
@@ -10,8 +10,7 @@ class command_gateway extends DiscoBot.command {
 
 	call(ctx, args) {
 		frame := new dataframe(dataframe.fromObj(this.events, ["EVENT", "CALLS"]))
-		total := 0
-		unique := 0
+		total := unique := 0
 		for _, count in this.events {
 			total += count
 			unique++

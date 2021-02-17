@@ -1,9 +1,9 @@
 ﻿class command_wolfram extends DiscoBot.command {
-	static cooldown := 4
-	, info := "Queries wolfram"
-	, aliases := ["w", "wa"]
-	, args := [{name: "query"}]
-	, category := "Search"
+	cooldown := 2
+	info := "Queries wolfram"
+	aliases := ["w", "wa"]
+	args := [{name: "query"}]
+	category := "Search"
 
 	start() {
 		this.cache := {}
