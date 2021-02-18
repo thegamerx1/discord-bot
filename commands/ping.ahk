@@ -6,8 +6,7 @@
 	call(ctx, args) {
 		time := new Counter(,false)
 		msg := ctx.reply("Ping")
-		embed := new discord.embed(, "Ping " time.get() "ms")
-		embed.setContent("Pong.")
+		embed := new discord.embed("Pong", "Ping " Round((msg.timestamp-ctx.timestamp)*1000, 2) "ms")
 		msg.edit(embed)
 	}
 }
