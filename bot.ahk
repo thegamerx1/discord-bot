@@ -97,7 +97,7 @@ class DiscoBot {
 	}
 
 	E_MESSAGE_CREATE(ctx) {
-		static bot_what := ["what", "angry", Unicode.get("question"), "blobpeek", "confuseddog"]
+		static bot_what := ["what", "angry", Unicode.get("question"), Unicode.get("grey_question"), "blobpeek", "confuseddog"]
 		static pingPrefix := "My prefix is ``{1}```n***{1}help*** for help menu!`n***{1}help*** **<command>** for command description!"
 		if ctx.author.bot
 			return
@@ -309,6 +309,10 @@ class DiscoBot {
 
 		add() {
 			this.list.push(A_TickCount+this.per/this.cooldown*1000+500)
+		}
+
+		reset() {
+			this.list := []
 		}
 	}
 }
