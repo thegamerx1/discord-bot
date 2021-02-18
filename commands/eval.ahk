@@ -14,7 +14,7 @@ class command_eval extends DiscoBot.command {
 	}
 
 	call(ctx, args) {
-		this.printee(ctx, eval(discord.utils.getCodeBlock(args[1]).code, [{name: "ctx", val: ctx}, {name: "reply", val: ctx.referenced_msg}]))
+		this.printee(ctx, eval(discord.utils.getCodeBlock(args[1]).code, [{name: "ctx", val: ctx}, {name: "reply", val: ctx.referenced_msg}, {name: "bot", val: this.bot}]))
 	}
 
 	printee(ctx, data) {
