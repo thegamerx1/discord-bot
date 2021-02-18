@@ -97,7 +97,7 @@ class DiscoBot {
 	}
 
 	E_MESSAGE_CREATE(ctx) {
-		static bot_what := ["question", "what", "angry", Unicode.get("question"), "blobpeek", "confuseddog"]
+		static bot_what := ["what", "angry", Unicode.get("question"), "blobpeek", "confuseddog"]
 		static pingPrefix := "My prefix is ``{1}```n***{1}help*** for help menu!`n***{1}help*** **<command>** for command description!"
 		if ctx.author.bot
 			return
@@ -173,7 +173,8 @@ class DiscoBot {
 					out.push(args)
 					break
 				}
-				args := StrReplace(args, match.0 " ",,, 1)
+
+				args := RegExReplace(args, match.0 "\s*",,, 1)
 				out.push(match.1 ? match.1 : match.0)
 			}
 			args := out
@@ -227,7 +228,7 @@ class DiscoBot {
 						this.bot.executeCommand("help", "call", ctx, [command], "Argument missing: " arg.name, cmdargs, func)
 						return
 					}
-				} else if (arg.type && arg.type != typeof(args[1])) {
+				} else if (arg.type && arg.type != typeof(args[1]) && !arg.optional) {
 					this.bot.executeCommand("help", "call", ctx, [command], "Argument ``" arg.name "`` requires type ``" arg.type "``" , cmdargs, func)
 					return
 				}
