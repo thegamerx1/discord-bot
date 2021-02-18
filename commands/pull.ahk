@@ -6,8 +6,8 @@ class command_pull extends DiscoBot.command {
 	commands := [{name: "restart"}]
 
 	c_restart(ctx) {
-		this.call(ctx, args)
-		this.bot.executeCommand("reload", "call", ctx, args)
+		msg := this.call(ctx, args)
+		this.bot.executeCommand("reload", "call", msg, args)
 	}
 
 	call(ctx) {
@@ -15,6 +15,6 @@ class command_pull extends DiscoBot.command {
 			this.except(ctx, "pull only works on release mode!")
 		ctx.typing()
 		output := RunCMD("pullall.cmd")
-		msg := ctx.reply(discord.utils.codeblock("git", output,, "No changes"))
+		return ctx.reply(discord.utils.codeblock("git", output,, "No changes"))
 	}
 }
