@@ -1,3 +1,4 @@
+#include <base64>
 class command_ahk extends DiscoBot.command {
 	cooldown := 2
 	cooldownper := 15
@@ -6,12 +7,12 @@ class command_ahk extends DiscoBot.command {
 	category := "Code"
 
 	start() {
-		this.auth := "Basic " this.SET.keys.cloudahk
+		this.auth := "Basic " base64Enc(this.SET.keys.cloudahk)
 		this.pasteCache := {}
 	}
 
 	call(ctx, args) {
-		static API := "https://p.ahkscript.org/?r={}"
+		static API := "https://p.ahkscript.org/?r="
 		static pasteRegex := "p\.ahkscript\.org\/\?\w\=(?<id>\w+)"
 		static langs := [{names: ["bash", "sh"], head: "bin/bash"}
 						,{names: ["py2"], head: "usr/bin/env python"}
@@ -20,6 +21,7 @@ class command_ahk extends DiscoBot.command {
 						,{names: ["node"], head: "usr/bin/env bide"}
 						,{names: ["perl"], head: "usr/bin/env perl"}
 						,{names: ["php"], head: "usr/bin/env php"}]
+
 		code := discord.utils.getCodeblock(args[1])
 		if (code.lang)
 			for _, value in langs
@@ -32,7 +34,7 @@ class command_ahk extends DiscoBot.command {
 		if match := regex(code.code, pasteRegex, "i") {
 			if this.pasteCache[match.id]
 				return this.gotCode(ctx, this.pasteCache[match.id])
-			http := new requests("get", format(API, match.id),, true)
+			http := new requests("get", API match.id,, true)
 			http.onFinished := ObjBindMethod(this, "gotCodeResponse", ctx, match.id)
 			http.send()
 			return
