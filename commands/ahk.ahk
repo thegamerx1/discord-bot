@@ -1,4 +1,3 @@
-#Include <base64>
 class command_ahk extends DiscoBot.command {
 	cooldown := 2
 	cooldownper := 15
