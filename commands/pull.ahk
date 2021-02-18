@@ -4,6 +4,11 @@ class command_pull extends DiscoBot.command {
 	info := "Gets code from github"
 	category := "Owner"
 
+	c_restart(ctx, args) {
+		this.call(ctx, args)
+		this.bot.executeCommand("reload", "call", ctx, args)
+	}
+
 	call(ctx, args) {
 		if !this.SET.release
 			this.except(ctx, "pull only works on release mode!")
