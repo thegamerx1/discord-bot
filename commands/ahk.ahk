@@ -24,7 +24,7 @@ class command_ahk extends DiscoBot.command {
 		code := discord.utils.getCodeblock(args[1])
 		if (code.lang)
 			for _, value in langs
-				for _, lang in value
+				for _, lang in value.names
 					if code.lang = lang {
 						code.code := "#!/" value.head "`n" code.code
 						break
