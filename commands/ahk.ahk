@@ -18,9 +18,9 @@ class command_ahk extends DiscoBot.command {
 						,{names: ["py2"], head: "usr/bin/env python"}
 						,{names: ["py", "python"], head: "usr/bin/env python3"}
 						,{names: ["fish"], head: "usr/bin/env fish"}
-						,{names: ["node", "js", "nodejs"], head: "usr/bin/env php"}
+						,{names: ["node", "js", "nodejs"], head: "usr/bin/env bide"}
 						,{names: ["perl", "js", "nodejs"], head: "usr/bin/env perl"}
-						,{names: ["php"], head: "usr/bin/env node"}]
+						,{names: ["php"], head: "usr/bin/env php"}]
 		code := discord.utils.getCodeblock(args[1])
 		if (code.lang)
 			for _, value in langs
