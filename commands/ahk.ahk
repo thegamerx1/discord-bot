@@ -14,9 +14,23 @@ class command_ahk extends DiscoBot.command {
 	call(ctx, args) {
 		static API := "https://p.ahkscript.org/?r={}"
 		static pasteRegex := "p\.ahkscript\.org\/\?\w\=(?<id>\w+)"
-		code := discord.utils.getCodeblock(args[1]).code
+		static langs := [{names: ["bash", "sh"], head: "bin/bash"}
+						,{names: ["py2"], head: "usr/bin/env python"}
+						,{names: ["py", "python"], head: "usr/bin/env python3"}
+						,{names: ["fish"], head: "usr/bin/env fish"}
+						,{names: ["node", "js", "nodejs"], head: "usr/bin/env php"}
+						,{names: ["perl", "js", "nodejs"], head: "usr/bin/env perl"}
+						,{names: ["php"], head: "usr/bin/env node"}]
+		code := discord.utils.getCodeblock(args[1])
+		if (code.lang)
+			for _, value in langs
+				for _, lang in value
+					if code.lang = lang {
+						code.code := "#!/" value.head "`n" code.code
+						break
+					}
 
-		if match := regex(code, pasteRegex, "i") {
+		if match := regex(code.code, pasteRegex, "i") {
 			if this.pasteCache[match.id]
 				return this.gotCode(ctx, this.pasteCache[match.id])
 			http := new requests("get", format(API, match.id),, true)
@@ -24,7 +38,7 @@ class command_ahk extends DiscoBot.command {
 			http.send()
 			return
 		}
-		this.gotCode(ctx, code)
+		this.gotCode(ctx, code.code)
 	}
 
 	gotCodeResponse(ctx, id, http) {
