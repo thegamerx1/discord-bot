@@ -301,7 +301,8 @@ class DiscoBot {
 				wait += count-A_TickCount
 				total += this.per/this.cooldown
 			}
-			debug.print("[Cooldown] " total "/" this.per " " wait "ms")
+
+			; debug.print("[Cooldown] " total "/" this.per " " wait "ms")
 			return {cooldown: total >= this.per, wait: Round(wait/1000,2)}
 		}
 
