@@ -54,7 +54,7 @@ class command_ahk extends DiscoBot.command {
 	}
 
 	gotCode(ctx, code) {
-		static API := "https://cloudahk.com/api/v1/language/ahk/run"
+		static API := "https://cloudahk.com/api/v1/ahk/run"
 		cont := new Counter(, true)
 		http := new requests("post", API,, true)
 		http.headers["Authorization"] := this.auth
