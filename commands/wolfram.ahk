@@ -23,6 +23,7 @@
 
 		http.headers["Content-Type"] := "application/json"
 		http.onFinished := ObjBindMethod(this, "response", ctx, args[1])
+		http.timeout := 10
 		http.send()
 	}
 
@@ -73,7 +74,7 @@
                     obj.image := imagesource
 			}
 
-            if obj.fields.length() > 3
+            if obj.fields.length() > 2
                 continue
 
             if (id = "input") {
