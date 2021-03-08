@@ -1,10 +1,11 @@
 #include <base64>
-class command_ahk extends DiscoBot.command {
+class command_run extends DiscoBot.command {
 	cooldown := 2
 	cooldownper := 15
 	info := "Runs code through CloudAHK"
 	args := [{optional: false, name: "code"}]
 	category := "Code"
+	aliases := ["ahk"]
 
 	start() {
 		this.auth := "Basic " base64Enc(this.SET.keys.cloudahk)
@@ -54,7 +55,7 @@ class command_ahk extends DiscoBot.command {
 	}
 
 	gotCode(ctx, code) {
-		static API := "https://cloudahk.com/api/v1/ahk/run"
+		static API := "https://cloudahk.com/api/v0/ahk/run"
 		cont := new Counter(, true)
 		http := new requests("post", API,, true)
 		http.headers["Authorization"] := this.auth
