@@ -13,14 +13,19 @@ class DiscoBot {
 		OnExit(ObjBindMethod(this, "save"))
 	}
 
+	E_READY() {
+		this.api.SetPresence("online", "@me for prefix")
+	}
+
 	_event(event, data) {
 		fn := this["E_" event]
 		capture := false
 		for key, value in this.commands
 			if this.executeCommand(key, "_event", event, data)
 				capture := true
-		; if !fn
-		; 	debug.print("|Event not handled " event)
+
+		if !fn
+			debug.print("|Event not handled " event)
 
 		if !capture
 			%fn%(this, data)
@@ -32,7 +37,7 @@ class DiscoBot {
 			command := "Command_" value
 			this.commands[value] := new Command_%value%(this)
 		}
-		for name in this.commands {
+		for name, cmd in this.commands {
 			this.executeCommand(name, "start")
 		}
 		this.cache.aliases := {}
@@ -72,11 +77,6 @@ class DiscoBot {
 	executeCommand(command, func, args*) {
 		fn := this.commands[command][func]
 		return %fn%(this.commands[command], args*)
-	}
-
-	E_ready(args*) {
-		this.api.SetPresence("online", "@me for prefix")
-		this.resume := ""
 	}
 
 	printError(ctx, e) {
@@ -183,10 +183,10 @@ class DiscoBot {
 
 		called(ctx, command, args := "") {
 			author := ctx.author
-			if !contains("SEND_MESSAGES", ctx.self.permissions)
+			if (!ctx.isInteraction && !contains("SEND_MESSAGES", ctx.self.permissions))
 				return
 
-			if !contains("EMBED_LINKS", ctx.self.permissions) {
+			if (!ctx.isInteraction && !contains("EMBED_LINKS", ctx.self.permissions)) {
 				ctx.reply("I need ``EMBED_LINKS`` to function!")
 				return
 			}
