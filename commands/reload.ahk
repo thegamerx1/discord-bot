@@ -20,6 +20,6 @@ class command_reload extends DiscoBot.command {
 		if this.SET.release {
 			Run schtasks /end /tn "Servers\Discobot"
 		}
-		Reload("-reload " ctx.channel.id "," ctx.data.id)
+		Reload("-reload " ctx.channel.id "," ctx.id)
 	}
 }
