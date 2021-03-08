@@ -14,7 +14,6 @@ class command_dict extends DiscoBot.command {
 		if this.cache[args[1]]
 			return this.reply(ctx, args[1])
 
-		ctx.typing()
 		http := new requests("GET", format(API, args[1]),, true)
 		http.OnFinished := ObjBindMethod(this, "response", ctx, args[1])
 		http.send()

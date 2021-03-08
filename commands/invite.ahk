@@ -5,7 +5,7 @@ class command_invite extends DiscoBot.command {
 	aliases := ["add"]
 
 	E_ready() {
-		static base := "https://discord.com/api/oauth2/authorize?client_id={}&permissions={}&scope=&bot"
+		static base := "https://discord.com/api/oauth2/authorize?client_id={}&permissions={}&scope=bot"
 		this.link := format(base, this.bot.api.self.id, this.SET.permissions)
 	}
 
