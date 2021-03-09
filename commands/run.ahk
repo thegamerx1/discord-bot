@@ -23,6 +23,7 @@ class command_run extends DiscoBot.command {
 						,{names: ["perl"], head: "usr/bin/env perl"}
 						,{names: ["php"], head: "usr/bin/env php"}]
 
+		ctx.typing()
 		code := discord.utils.getCodeblock(args[1])
 		if (code.lang)
 			for _, value in langs
