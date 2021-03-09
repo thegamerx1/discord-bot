@@ -54,7 +54,7 @@ class command_help extends DiscoBot.command {
 				}
 				embed.addField(category, out, true)
 			}
-			embed.setFooter("Hover over the commands for description! " chr(8226) " Alternatively you can " ctx.prefix "help <command>!")
+			embed.setFooter("Hover over the commands for description! " chr(8226) " Alternatively you can " ctx.data.prefix "help <command>!")
 		}
 		ctx.reply(embed)
 	}
