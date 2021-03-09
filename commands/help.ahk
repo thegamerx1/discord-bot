@@ -30,7 +30,7 @@ class command_help extends DiscoBot.command {
 			}
 
 			cmdargs := cmdargs ? cmdargs : cmd.args
-			embed := new discord.embed(, message cmd.info)`
+			embed := new discord.embed(message, cmd.info (cmd.infolong ? "`n" cmd.infolong : ""))
 			if message {
 				usage := this.getCommand(args[1], cmdargs, subname)
 			} else {
@@ -42,7 +42,7 @@ class command_help extends DiscoBot.command {
 			embed.addField("Usage", usage)
 			embed.addField("Aliases", aliases)
 
-			embed.setFooter("Have questions? Join the support server with " ctx.data.prefix "support")
+			embed.setFooter("Have questions? Join the support server with """ ctx.data.prefix "support""")
 		} else {
 			embed := new discord.embed("Commands")
 			for category, cmd in this.categories {
@@ -54,7 +54,7 @@ class command_help extends DiscoBot.command {
 				}
 				embed.addField(category, out, true)
 			}
-			embed.setFooter("Hover over the commands for description! " chr(8226) " Alternatively you can " ctx.data.prefix "help <command>!")
+			embed.setFooter("Hover over the commands for description! " chr(8226) " Alternatively you can """ ctx.data.prefix "help <command>!""")
 		}
 		ctx.reply(embed)
 	}

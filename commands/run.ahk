@@ -3,7 +3,8 @@ class command_run extends DiscoBot.command {
 	cooldown := 2
 	cooldownper := 15
 	info := "Runs code through CloudAHK"
-	args := [{optional: false, name: "code"}]
+	infolong := "Supports multiple languages: bash, python, fish, node, perl, php"
+	args := [{optional: false, name: "codeblock"}]
 	category := "Code"
 	aliases := ["ahk"]
 
