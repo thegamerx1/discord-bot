@@ -12,7 +12,6 @@ Return
 #Include <Discord>
 #Include <Includer>
 #Include <SHA1>
-#Include <ping>
 #Include <Counter>
 #Include <Unicode>
 #Include <debug>

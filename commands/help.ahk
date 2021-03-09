@@ -26,7 +26,7 @@ class command_help extends DiscoBot.command {
 
 			aliases := ""
 			for _, alias in cmd.aliases {
-				aliases .= (aliases ? ", " : "") alias
+				aliases .= (aliases ? "`n" : "") Chr(8226) " " alias
 			}
 
 			cmdargs := cmdargs ? cmdargs : cmd.args
@@ -40,8 +40,9 @@ class command_help extends DiscoBot.command {
 				}
 			}
 			embed.addField("Usage", usage)
+			embed.addField("Aliases", aliases)
 
-			embed.setFooter((aliases ? "Aliases: " aliases " " Chr(8226) " " : "") "Have questions? Join the support server with " ctx.prefix "support")
+			embed.setFooter("Have questions? Join the support server with " ctx.data.prefix "support")
 		} else {
 			embed := new discord.embed("Commands")
 			for category, cmd in this.categories {

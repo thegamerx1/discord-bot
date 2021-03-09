@@ -32,14 +32,11 @@
 		embed := new discord.embed(,, 0xFF6600)
 		embed.setAuthor("Wolfram|Alpha", "https://i.imgur.com/KFppH69.png")
 		if !data.success {
+			; TODO: CHECK
 			embed.embed.description := "Wolfram wasn't able to parse your request"
 
-			mean := ""
-			for _, value in data.means {
-				mean .= value.val "`n"
-			}
-            embed.addField("Did you mean?", mean)
-            embed.addField("Wolfram's tips", data.tips)
+            embed.addField("Wolfram has issues with", data.means.val)
+            embed.addField("Wolfram's tips", data.tips.text)
 			ctx.reply(embed)
 			return
 		}

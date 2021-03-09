@@ -21,6 +21,5 @@ class command_ban extends DiscoBot.command {
 			this.except(ctx, e.message)
 		}
 		ctx.react("success")
-
 	}
 }

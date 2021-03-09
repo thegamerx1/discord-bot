@@ -1,20 +1,25 @@
 class DiscoBot {
 	init() {
-		this.guilds := this.commands := this.cache := {}
-		this.bot := new configLoader("settings.json").data
-		this.settings := new configLoader("global.json")
+		this.commands := this.cache := {}
+		this.bot := new configLoader("data/settings.json").data
+		this.defaultconf := new configLoader("data/default.json").data
+		this.settings := new configLoader("data/global.json")
+		this.guilds := new configLoader("data/guilds.json")
+
 		if this.bot.release
 			debug.attachFile := "log.log"
 
 		this.loadCommands()
+		this.loadGuilds()
 		if (A_Args[1] = "-reload")
 			this.resume := StrSplit(A_Args[2], ",")
  		this.api := new Discord(this, this.bot.token, this.bot.intents, this.bot.owner.guild, this.bot.owner.id)
 		OnExit(ObjBindMethod(this, "save"))
+		SetTimer(ObjBindMethod(this, "save"), 60*5*1000)
 	}
 
 	E_READY() {
-		this.api.SetPresence("online", "@me for prefix")
+		this.api.SetPresence("online", "ahk help")
 	}
 
 	_event(event, data) {
@@ -31,11 +36,27 @@ class DiscoBot {
 			%fn%(this, data)
 	}
 
+	getGuild(id) {
+		if !contains(id, this.guilds.data)
+			this.guilds.data[id] := this.defaultconf
+		return this.guilds.data[id]
+	}
+
+	loadGuilds() {
+		debug.print(">Loading guilds")
+		for id, data in this.guilds.data {
+			this.guild.data[id] := EzConf(data, this.defaultconf)
+		}
+	}
+
 	loadCommands() {
 		debug.print(">Loading commands")
 		for _, value in includer.list {
+			rawcmd := new Command_%value%(this)
+			if rawcmd.disabled
+				continue
 			command := "Command_" value
-			this.commands[value] := new Command_%value%(this)
+			this.commands[value] := rawcmd
 		}
 		for name, cmd in this.commands {
 			this.executeCommand(name, "start")
@@ -51,15 +72,10 @@ class DiscoBot {
 		}
 	}
 
-	E_GUILD_CREATE(data) {
-		this.guilds[data.id] := new configLoader("guildData/" data.id ".json", {prefix: this.bot.prefix})
-	}
-
 	E_GUILD_DELETE(data) {
 		if data.unavailable
 			return
-		this.guilds[data.id] := ""
-		FileDelete % "guildData/" data.id ".json"
+		this.guilds.data.delete(data.id)
 	}
 
 
@@ -68,9 +84,7 @@ class DiscoBot {
 	}
 
 	save() {
-		for key, value in this.guilds {
-			value.save()
-		}
+		this.guilds.save()
 		this.settings.save()
 	}
 
@@ -97,15 +111,15 @@ class DiscoBot {
 	}
 
 	E_MESSAGE_CREATE(ctx) {
-		static bot_what := ["what", "angry", Unicode.get("question"), Unicode.get("grey_question"), "blobpeek", "confuseddog"]
+		static bot_what := ["what", "angry", Unicode.get("question"), Unicode.get("grey_question"), "blobpeek", "confuseddog", Unicode.get("eyes")]
 		static pingPrefix := "My prefix is ``{1}```n***{1}help*** for help menu!`n***{1}help*** **<command>** for command description!"
 		if ctx.author.bot
 			return
 
-		ctx.prefix := this.guilds[ctx.guild.id].data.prefix
+		ctx.data := this.getGuild(ctx.guild.id)
 		isPing := StartsWith(ctx.message, "<@!" this.api.self.id ">")
-		if (isPing || StartsWith(ctx.message, ctx.prefix)) {
-			data := StrSplit(SubStr(ctx.message, StrLen(ctx.prefix)+1), [" ", "`n"],, 2+isPing)
+		if (isPing || StartsWith(ctx.message, ctx.data.prefix)) {
+			data := StrSplit(SubStr(ctx.message, StrLen(ctx.data.prefix)+1), [" ", "`n"],, 2+isPing)
 
 			if isPing
 				data.RemoveAt(1)
@@ -113,7 +127,7 @@ class DiscoBot {
 			command := this.getAlias(data[1])
 
 			if (!command && isPing)
-				return ctx.reply(new discord.embed(, format(pingPrefix, ctx.prefix)))
+				return ctx.reply(new discord.embed(, format(pingPrefix, ctx.data.prefix)))
 
 			if (!command && contains("ADD_REACTIONS", ctx.self.permissions))
 				return ctx.react(random(bot_what))
@@ -218,7 +232,7 @@ class DiscoBot {
 			func := this._parseArgs(args, cmdargs)
 
 
-			; TODO: subcommand aliase
+			; TODO: subcommand aliases
 			for _, arg in cmdargs {
 				if (args[1] = "") {
 					if (arg.optional && arg.default != "")
@@ -254,14 +268,16 @@ class DiscoBot {
 				if !IsObject(e)
 					e := Exception(e, "Not specified")
 
-				e.errorid := SHA1(ctx.data.timestamp)
+				e.errorid := SHA1(ctx.timestamp)
 				throw e
 			}
 		}
 
 
 		onCooldown(ctx, author, time) {
-			ctx.reply(new discord.embed("You are on cooldown!", ctx.getEmoji("cooldown") " Wait for " time "s"))
+			embed := new discord.embed("You are on cooldown!", ctx.getEmoji("cooldown") " Wait for " time "s")
+			embed.setFooter("Commands will be ignored until cooldown is released")
+			ctx.reply(embed)
 		}
 
 		except(ctx, message) {

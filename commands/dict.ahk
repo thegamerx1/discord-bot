@@ -21,7 +21,7 @@ class command_dict extends DiscoBot.command {
 
 	response(ctx, query, http) {
 		if (http.status != 200 && http.status != 404)
-			return ctx.reply("Error " http.status)
+			this.except(ctx, "Request error: " http.status)
 
 		data := http.json()
 		obj := {}
@@ -34,7 +34,11 @@ class command_dict extends DiscoBot.command {
 
 		means := phonetics := examples := ""
 		for _, value in data.meanings {
+			if A_Index > 3
+				break
 			for _, def in value.definitions {
+				if A_Index > 2
+					break
 				means .= Chr(8226) " " def.definition "`n"
 				if def.example
 					examples .= Chr(8226) " " def.example "`n"`

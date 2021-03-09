@@ -11,7 +11,7 @@ class command_suggestion extends DiscoBot.command {
 		static source := "**{}:** {} ({})"
 		if !(this.SET.release || !this.bot.settings.data.dev)
 			this.except(ctx, "Only enabled on release!")
-		id := SHA1(ctx.data.timestamp)
+		id := SHA1(ctx.timestamp)
 		body := format(source, "Guild", ctx.guild.name, ctx.guild.id) "`n" format(source, "User", ctx.author.mention, ctx.author.id)
 		embed := new discord.embed("Suggestion", body discord.utils.codeblock("text", args[1]))
 		embed.setFooter("Suggestion ID: " id)

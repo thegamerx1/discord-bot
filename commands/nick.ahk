@@ -2,7 +2,7 @@ class command_nick extends DiscoBot.command {
 	cooldown := 2
 	info := "Changes bot nickname"
 	args := [{optional: true, name: "nick"}]
-	userperms := ["MANAGE_NICKNAMES"]
+	owneronly := true
 	category := "Owner"
 
 	call(ctx, args) {

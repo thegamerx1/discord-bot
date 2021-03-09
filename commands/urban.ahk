@@ -45,10 +45,9 @@ class command_urban extends DiscoBot.command {
 			obj.contributor := value.querySelector(".contributor > a").textContent
 			most := obj
 		}
-		if !StrLen(most.word) {
-			clipboard := http.text
+		if !StrLen(most.word)
 			this.except(ctx, "Error in query")
-		}
+
 		this.cache[query] := most
 		this.reply(ctx, query)
 	}
