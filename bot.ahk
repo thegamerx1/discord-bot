@@ -111,7 +111,7 @@ class DiscoBot {
 	}
 
 	E_MESSAGE_CREATE(ctx) {
-		static bot_what := ["what", "angry", Unicode.get("question"), Unicode.get("grey_question"), "blobpeek", "confuseddog", Unicode.get("eyes")]
+		static bot_what := ["what", "angry", Unicode.get("question"), Unicode.get("grey_question"), "blobpeek", "happythonk", "confuseddog", Unicode.get("eyes")]
 		static pingPrefix := "My prefix is ``{1}```n***{1}help*** for help menu!`n***{1}help*** **<command>** for command description!"
 		if ctx.author.bot
 			return
