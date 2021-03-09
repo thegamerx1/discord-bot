@@ -1,8 +1,8 @@
 class DiscoBot {
 	init() {
 		this.commands := this.cache := {}
-		this.bot := new configLoader("data/settings.json").data
-		this.defaultconf := new configLoader("data/default.json").data
+		this.bot := new configLoader("data/settings.json",, true)
+		this.defaultconf := new configLoader("data/default.json",, true)
 		this.settings := new configLoader("data/global.json")
 		this.guilds := new configLoader("data/guilds.json")
 
