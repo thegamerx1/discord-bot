@@ -19,6 +19,7 @@ class command_urban extends DiscoBase.command {
 		http.onFinished := ObjBindMethod(this, "response", ctx, args[1])
 		http.send()
 	}
+
 	response(ctx, query, http) {
 		if http.status != 200
 			this.except(ctx, "Not found")
@@ -56,7 +57,7 @@ class command_urban extends DiscoBase.command {
 		embed := new discord.embed("Definition of " most.word, most.meaning)
 		embed.addField("Example", most.example)
 		embed.setUrl(this.API StrReplace(query, " ", "%20"))
-		embed.setFooter("Requested by " ctx.author.name, ctx.author.avatar)
+		embed.setFooter("Requested by " ctx.author.notMention, ctx.author.avatar)
 		embed.addField(":thumbsup:", most.likes, true)
 		embed.addField(":thumbsdown:", most.dislikes, true)
 		embed.addField("Sent by", most.contributor)
