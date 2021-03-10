@@ -9,6 +9,7 @@ DiscoBot.init()
 Return
 
 #Include bot.ahk
+#Include base.ahk
 #Include <Discord>
 #Include <Includer>
 #Include <SHA1>

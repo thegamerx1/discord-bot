@@ -1,6 +1,7 @@
 class DiscoBot {
 	init() {
 		this.commands := this.cache := {}
+		FileCreateDir data
 		this.bot := new configLoader("data/settings.json",, true)
 		this.defaultconf := new configLoader("data/default.json",, true)
 		this.settings := new configLoader("data/global.json")
@@ -13,6 +14,7 @@ class DiscoBot {
 		this.loadGuilds()
 		if (A_Args[1] = "-reload")
 			this.resume := StrSplit(A_Args[2], ",")
+
  		this.api := new Discord(this, this.bot.token, this.bot.intents, this.bot.owner.guild, this.bot.owner.id)
 		OnExit(ObjBindMethod(this, "save"))
 		SetTimer(ObjBindMethod(this, "save"), 60*30*1000)
@@ -20,6 +22,7 @@ class DiscoBot {
 
 	E_READY() {
 		this.api.SetPresence("online", "ahk help")
+		debug.print("READY!")
 	}
 
 	_event(event, data) {
@@ -43,20 +46,23 @@ class DiscoBot {
 	}
 
 	loadGuilds() {
-		debug.print(">Loading guilds")
+		debug.print("|Loading guilds")
 		for id, data in this.guilds.data {
 			this.guild.data[id] := EzConf(data, this.defaultconf)
 		}
+		debug.print("Loaded " this.guilds.data.count() " guilds")
 	}
 
 	loadCommands() {
-		debug.print(">Loading commands")
-		for _, value in includer.list {
-			rawcmd := new Command_%value%(this)
+		debug.print("|Loading commands")
+		for _, file in includer.list {
+			name := file.name
+			rawcmd := new Command_%name%(this)
 			if rawcmd.disabled
 				continue
-			command := "Command_" value
-			this.commands[value] := rawcmd
+			command := "Command_" name
+			rawcmd.category := file.folder
+			this.commands[name] := rawcmd
 		}
 		for name, cmd in this.commands {
 			this.executeCommand(name, "start")
@@ -70,6 +76,7 @@ class DiscoBot {
 				this.cache.aliases[aname] := cname
 			}
 		}
+		debug.print("Loaded " this.commands.count() " commands")
 	}
 
 	E_GUILD_DELETE(data) {
@@ -141,194 +148,6 @@ class DiscoBot {
 				ctx.reply(embed)
 				this.printError(ctx, e)
 			}
-		}
-	}
-
-	class command {
-		cooldownper := 10
-		category := "Other"
-		cooldown := 1
-		info := "Does the unkown"
-
-		__New(byref bot) {
-			if !this.permissions
-				this.permissions := []
-			if this.owneronly
-				this.cooldown := 0
-			this.permissions.push("ADD_REACTIONS")
-			this.bot := bot
-			this.SET := bot.bot
-			this.cooldowns := {}
-		}
-
-		_event(event, data) {
-			fn := this["E_" event]
-			return %fn%(this, data)
-		}
-
-		_parseArgs(byref args, byref cmdargs) {
-			static regex := "[^\s""']+|""([^""]+)"""
-			name := ""
-			for _, cmd in this.commands {
-				if StartsWith(args, cmd.name) {
-					cmdargs := cmd.args
-					cmdspace := cmd.name " "
-					if StartsWith(args, cmdspace) {
-						args := temp := SubStr(args, StrLen(cmdspace)+1)
-					} else {
-						temp := args.RemoveAt(1)
-					}
-					name := cmd.name
-				}
-			}
-			out := []
-			while match := regex(args, regex) {
-				if (A_Index >= cmdargs.length()) {
-					out.push(args)
-					break
-				}
-
-				args := RegExReplace(args, match.0 "\s*",,, 1)
-				out.push(match.1 ? match.1 : match.0)
-			}
-			args := out
-			return name
-		}
-
-		called(ctx, command, args := "") {
-			author := ctx.author
-			if (!ctx.isInteraction && !contains("SEND_MESSAGES", ctx.self.permissions))
-				return
-
-			if (!ctx.isInteraction && !contains("EMBED_LINKS", ctx.self.permissions)) {
-				ctx.reply("I need ``EMBED_LINKS`` to function!")
-				return
-			}
-
-			neededperms := ""
-			for _, value in this.permissions {
-				if !contains(value, ctx.self.permissions) {
-					neededperms .= Chr(8226) " " value "`n"
-				}
-			}
-
-			for _, value in this.userperms {
-				if !contains(value, author.permissions) {
-					ctx.reply(new discord.embed(, "You don't have permissions to do that!"))
-					return
-				}
-			}
-
-			if neededperms {
-				embed := new discord.embed("I need the following permissions for that", neededperms)
-				ctx.reply(embed)
-				return
-			}
-
-			if (this.owneronly && !author.isBotOwner)
-				return ctx.react("police")
-
-			cmdargs := this.args
-			func := this._parseArgs(args, cmdargs)
-
-
-			; TODO: subcommand aliases
-			for _, arg in cmdargs {
-				if (args[1] = "") {
-					if (arg.optional && arg.default != "")
-						args[A_Index] := arg.default
-
-					if !arg.optional {
-						this.bot.executeCommand("help", "call", ctx, [command], "Argument missing: " arg.name, cmdargs, func)
-						return
-					}
-				} else if (arg.type && arg.type != typeof(args[1]) && !arg.optional) {
-					this.bot.executeCommand("help", "call", ctx, [command], "Argument ``" arg.name "`` requires type ``" arg.type "``" , cmdargs, func)
-					return
-				}
-			}
-			if (this.cooldown && !(author.isBotOwner && this.bot.settings.data.dev)) {
-				cooldown := this.getCooldown(author.id)
-				cool := cooldown.get()
-				if cool.cooldown {
-					if !cooldown.reacted {
-						cooldown.reacted := true
-						this.onCooldown(ctx, author, cool.wait)
-					}
-					return
-				}
-				cooldown.add()
-			}
-
-			try {
-				this[func ? "C_" func : "call"](ctx, args)
-			} catch e {
-				if (e = -99)
-					return
-				if !IsObject(e)
-					e := Exception(e, "Not specified")
-
-				e.errorid := SHA1(ctx.timestamp)
-				throw e
-			}
-		}
-
-
-		onCooldown(ctx, author, time) {
-			embed := new discord.embed("You are on cooldown!", ctx.getEmoji("cooldown") " Wait for " time "s")
-			embed.setFooter("Commands will be ignored until cooldown is released")
-			ctx.reply(embed)
-		}
-
-		except(ctx, message) {
-			ctx.reply(new discord.embed(, ctx.getEmoji("no") " " message, 0xAC3939))
-			throw -99
-		}
-
-		setCooldown(user, time := "") {
-			if !time
-				time := this.cooldown
-			this.cooldowns[user] := {time: A_TickCount + time * 1000, reacted: false}
-		}
-
-		getCooldown(byref user) {
-			if !this.cooldowns[user]
-				this.cooldowns[user] := new DiscoBot.cooldown(user, this.cooldown, this.cooldownper)
-			return this.cooldowns[user]
-		}
-	}
-
-
-	Class cooldown {
-		__New(userid, cooldown, per) {
-			this.user := userid
-			this.cooldown := cooldown
-			this.per := per
-			this.list := []
-		}
-
-		get() {
-			total := wait := 0
-			for _, count in this.list {
-				if (count < A_TickCount) {
-					this.reacted := false
-					this.list.RemoveAt(A_Index)
-					continue
-				}
-				wait += count-A_TickCount
-				total += this.per/this.cooldown
-			}
-
-			; debug.print("[Cooldown] " total "/" this.per " " wait "ms")
-			return {cooldown: total >= this.per, wait: Round(wait/1000,2)}
-		}
-
-		add() {
-			this.list.push(A_TickCount+this.per/this.cooldown*1000+500)
-		}
-
-		reset() {
-			this.list := []
 		}
 	}
 }
