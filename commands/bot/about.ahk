@@ -11,7 +11,7 @@ class command_about extends DiscoBase.command {
 
 	call(ctx, args) {
 		embed := new discord.embed("About")
-		embed.setFooter("Made by " ctx.author.get(ctx.api.owner.id).notMention() " " Chr(8226) " https://github.com/thegamerx1/discord-bot")
+		embed.setFooter("Made by " ctx.author.get(ctx.api.owner.id).notMention " " Chr(8226) " https://github.com/thegamerx1/discord-bot")
 		data := [{name: "Bot", content: [{name:"Uptime"
 				,value: niceDate(this.uptime.get())}
 				,{name: "Guilds", value: this.bot.api.cache.guild.Count()}
