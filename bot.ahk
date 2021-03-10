@@ -15,7 +15,7 @@ class DiscoBot {
 		if (A_Args[1] = "-reload")
 			this.resume := StrSplit(A_Args[2], ",")
 
- 		this.api := new Discord(this, this.bot.token, this.bot.intents, this.bot.owner.guild, this.bot.owner.id)
+ 		this.api := new Discord(this, this.bot.token, this.bot.intents, this.bot.owner.guild, this.bot.owner.id, !this.bot.release)
 		OnExit(ObjBindMethod(this, "save"))
 		SetTimer(ObjBindMethod(this, "save"), 60*30*1000)
 	}
