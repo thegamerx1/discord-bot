@@ -3,7 +3,7 @@ class command_exit extends DiscoBase.command {
 	info := "Exits the bot safely"
 
 	call(ctx, args) {
-		ctx.api.disconnect()
+		ctx.api.delete()
 		exitapp 0
 	}
 }

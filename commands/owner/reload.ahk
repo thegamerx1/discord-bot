@@ -21,7 +21,7 @@ class command_reload extends DiscoBase.command {
 	call(ctx, args) {
 		critical
 		ctx.react("loading")
-		ctx.api.disconnect()
+		ctx.api.delete()
 		Reload("-reload " ctx.channel.id "," ctx.id)
 	}
 }

@@ -21,7 +21,7 @@ class DiscoBot {
 	}
 
 	E_READY() {
-		this.api.SetPresence("online", "ahk help")
+		this.api.SetPresence("online", "ahk help", 2)
 		debug.print("READY!")
 	}
 
