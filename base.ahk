@@ -52,6 +52,9 @@ class DiscoBase {
 
 		called(ctx, command, args := "") {
 			author := ctx.author
+			if (this.owneronly && !author.isBotOwner)
+				return
+
 			if (!ctx.isInteraction && !contains("SEND_MESSAGES", ctx.self.permissions))
 				return
 
@@ -79,9 +82,6 @@ class DiscoBase {
 				ctx.reply(embed)
 				return
 			}
-
-			if (this.owneronly && !author.isBotOwner)
-				return ctx.react("police")
 
 			cmdargs := this.args
 			func := this._parseArgs(args, cmdargs)
