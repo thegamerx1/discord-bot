@@ -88,7 +88,7 @@ class command_run extends DiscoBase.command {
 			return
 		}
 
-		data.content := discord.utils.codeblock("autoit", hjson.stdout)
+		data.content := discord.utils.codeblock("ahk", hjson.stdout)
 		this.reply(ctx, data, cont)
 	}
 
