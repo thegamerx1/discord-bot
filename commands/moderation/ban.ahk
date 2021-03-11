@@ -15,7 +15,7 @@ class command_ban extends DiscoBase.command {
 		}
 
 		try {
-			ctx.api.AddBan(ctx.guild.id, id, args[2], 0)
+			ctx.guild.ban(id, args[2], 0)
 		} catch e {
 			this.except(ctx, e.message)
 		}

@@ -18,7 +18,7 @@
 			this.except(ctx, "Command not found")
 
 		try {
-			code := FileOpen("commands\" command ".ahk", "r", "UTF-8").read()
+			code := FileOpen(includer.list[command ".ahk"].path, "r", "UTF-8").read()
 		} catch e {
 			this.except(ctx, "Error reading file")
 		}

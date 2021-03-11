@@ -97,7 +97,7 @@ class DiscoBase {
 						this.bot.executeCommand("help", "call", ctx, [command], "Argument missing: " arg.name, cmdargs, func)
 						return
 					}
-				} else if (arg.type && arg.type != typeof(args[1]) && !arg.optional) {
+				} else if (arg.type && !contains(arg.type, typeof(args[1])) && !arg.optional) {
 					this.bot.executeCommand("help", "call", ctx, [command], "Argument ``" arg.name "`` requires type ``" arg.type "``" , cmdargs, func)
 					return
 				}

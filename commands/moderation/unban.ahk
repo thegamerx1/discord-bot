@@ -7,7 +7,7 @@ class command_unban extends DiscoBase.command {
 
 	call(ctx, args) {
 		try {
-			ctx.api.RemoveBan(ctx.guild.id, discord.utils.getId(args[1]))
+			ctx.guild.unban(discord.utils.getId(args[1]))
 		} catch e {
 			this.except(ctx, e.message)
 		}

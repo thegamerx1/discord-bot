@@ -20,11 +20,10 @@
 	E_MESSAGE_REACTION_ADD(ctx) {
 		if ctx.emoji != this.emoji
 			return
-		msg := ctx.api.GetMessage(ctx.channel, ctx.message)
 
-		if (msg.author.id = ctx.api.self.id)
-			if (ctx.author.id = discord.utils.getId(msg.embeds[1].description))
-				msg.delete()
+		if (ctx.message.author.id = ctx.api.self.id)
+			if (ctx.author.id = discord.utils.getId(ctx.message.embeds[1].description))
+				ctx.message.delete()
 
 	}
 }

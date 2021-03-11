@@ -15,7 +15,7 @@ class DiscoBot {
 		if (A_Args[1] = "-reload")
 			this.resume := StrSplit(A_Args[2], ",")
 
- 		this.api := new Discord(this, this.bot.token, this.bot.intents, this.bot.owner.guild, this.bot.owner.id, !this.bot.release)
+ 		this.api := new Discord(this, this.bot.token, this.bot.intents, this.bot.owner.guild, this.bot.owner.id)
 		OnExit(ObjBindMethod(this, "save"))
 		SetTimer(ObjBindMethod(this, "save"), 60*30*1000)
 	}
@@ -31,9 +31,6 @@ class DiscoBot {
 		for key, value in this.commands
 			if this.executeCommand(key, "_event", event, data)
 				capture := true
-
-		if !fn
-			debug.print("|Event not handled " event)
 
 		if !capture
 			%fn%(this, data)
@@ -84,7 +81,6 @@ class DiscoBot {
 			return
 		this.guilds.data.delete(data.id)
 	}
-
 
 	getAlias(name) {
 		return this.cache.aliases[name]

@@ -4,10 +4,10 @@ class command_server extends DiscoBase.command {
 
 	call(ctx, args) {
 		embed := new discord.embed(ctx.guild.name, "**ID**: " ctx.guild.id)
-		embed.addField("Owner", ctx.author.get(ctx.guild.owner).mention, true)
-		embed.addField("Region", ctx.guild.data.region, true)
+		embed.addField("Owner", ctx.author.get(ctx.guild.owner_id).mention, true)
+		embed.addField("Region", ctx.guild.region, true)
 		channels := {voice:0,text:0,no:0}
-		for _, value in ctx.guild.data.channels {
+		for _, value in ctx.guild.channels {
 			switch value.type {
 				case 0:
 					channels.text++
@@ -19,11 +19,25 @@ class command_server extends DiscoBase.command {
 		}
 		embed.addField("Channels", ctx.getEmoji("text_channel") channels.text "`n" ctx.getEmoji("voice_channel") channels.voice "`n" ctx.getEmoji("duckwhat") channels.no, true)
 		fet := ""
-		for _, value in ctx.guild.data.features {
-			fet .= Chr(8226) " " format("{:T}", StrReplace(value, "_", " ")) "`n"
+		for _, value in ctx.guild.features {
+			fet .= Chr(8226) " " title(StrReplace(value, "_", " ")) "`n"
+		}
+
+		prescen := {}
+		for _, mem in ctx.guild.presences {
+			if !prescen[mem.status]
+				prescen[mem.status] := 0
+			prescen[mem.status]++
+		}
+		prescen["offline"] := ctx.guild.members.length() - ctx.guild.presences.length()
+		presences := ""
+		for status, count in prescen {
+			presences .= ctx.getEmoji(status) " " count
 		}
 		embed.addField("Features", fet)
-		embed.setFooter("Created " Chr(8226) " " ctx.guild.data.joined_at)
+		embed.addField("Users", presences)
+		embed.setFooter("Created")
+		embed.setTimestamp(ctx.guild.created_at)
 		ctx.reply(embed)
 	}
 }

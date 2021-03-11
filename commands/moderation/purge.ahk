@@ -20,12 +20,12 @@ class command_purge extends DiscoBase.command {
 	}
 
 	call(ctx, args) {
-		if (Between(args[1], 2, 100))
-			this.except(ctx, "Count must be between 2 and 100!")
+		if (Between(args[1], 1, 100))
+			this.except(ctx, "Count must be between 1 and 100!")
 
 		try {
 			ids := this.getMessages(ctx, {limit: args[1], before: ctx.id})
-			ctx.api.BulkDelete(ctx.channel.id, ids)
+			ctx.channel.deleteMessage(ids)
 		} catch e {
 			this.except(ctx, e.message)
 		}
@@ -35,15 +35,13 @@ class command_purge extends DiscoBase.command {
 	}
 
 	getMessages(ctx, opt) {
-		messages := ctx.api.GetMessages(ctx.channel.id, opt)
+		messages := ctx.channel.GetMessages(opt)
 		ids := []
-		for _, value in messages {
-			if value.id = ctx.id
+		for _, msg in messages {
+			if msg.id = ctx.id
 				continue
-			ids.push(value.id)
+			ids.push(msg.id)
 		}
-		if (ids.length() < 2)
-			this.except(ctx, "Error getting messages")
 		return ids
 	}
 }

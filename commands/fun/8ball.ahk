@@ -12,6 +12,10 @@ class command_8ball extends DiscoBase.command {
 			,"Cannot predict now", "Concentrate and ask again"
 			,"Don't count on it", "My reply is no", "My sources say no", "Outlook not so good", "Very doubtful"]
 
+		if !InStr(ctx.message, "?")
+			this.except(ctx, "8 Ball didn't find the question")
+
+
 		msg := ctx.reply(new discord.embed(, "Shaking.."))
 		TimeOnce(ObjBindMethod(msg, "edit", new discord.embed(, "***:8ball:  " random(BALL_RESPONSES) "***")), 3000)
 	}

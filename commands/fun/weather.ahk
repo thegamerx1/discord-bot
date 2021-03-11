@@ -20,7 +20,7 @@ class command_weather extends DiscoBase.command {
 		data := http.json()
 		http := ""
 
-		embed := new discord.embed("Weather for " data.name ", " data.sys.country, format("{:T}", data.weather[1].description))
+		embed := new discord.embed("Weather for " data.name ", " data.sys.country, title(data.weather[1].description))
 		embed.setUrl(format(url, data.id))
 		embed.addField("Temperature", data.main.temp Chr(176) "C", true)
 		embed.addField("Feels like", data.main.feels_like Chr(176) "C", true)
