@@ -77,7 +77,7 @@ class command_run extends DiscoBase.command {
 		if (data.time = "0.00s")
 			data.time := "Timed Out"
 
-		if (data.length > 1850 || data.lines > 14) {
+		if (data.length > 1400 || data.lines > 21) {
 			if (data.length > 8000)
 				this.except(ctx, "why the fuck is the output " data.length  " characters?")
 
