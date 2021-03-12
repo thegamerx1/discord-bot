@@ -21,7 +21,7 @@ class DiscoBot {
 	}
 
 	E_READY() {
-		this.api.SetPresence("online", "ahk help", 2)
+		this.api.SetPresence("online", this.settings.data.prefix " help", 2)
 		debug.print("READY!")
 	}
 
@@ -37,7 +37,7 @@ class DiscoBot {
 	}
 
 	getGuild(id) {
-		if !contains(id, this.guilds.data)
+		if !contains(id, this.guilds.data, 1)
 			this.guilds.data[id] := this.defaultconf
 		return this.guilds.data[id]
 	}
@@ -45,7 +45,7 @@ class DiscoBot {
 	loadGuilds() {
 		debug.print("|Loading guilds")
 		for id, data in this.guilds.data {
-			this.guild.data[id] := EzConf(data, this.defaultconf)
+			this.guilds.data[id] := EzConf(data, this.defaultconf)
 		}
 		debug.print("Loaded " this.guilds.data.count() " guilds")
 	}
@@ -99,7 +99,7 @@ class DiscoBot {
 	printError(ctx, e) {
 		static source := "**{}:** {} ({})"
 		static source1 := "**{}:** {}"
-		embed := new discord.embed("Exception", discord.utils.codeblock("js", ctx.message), 0xFF5959)
+		embed := new discord.embed("Exception", discord.utils.codeblock("js", ctx.message), "error")
 		out := format(source, "Guild", ctx.guild.name, ctx.guild.id) "`n" format(source, "User", ctx.author.mention, ctx.author.id)
 		out .= "`n" format(source1, "Message", e.message) "`n" format(source1, "What", e.what) "`n" format(source1, "Extra", e.extra)
 		embed.addField("Exception", out)
@@ -116,10 +116,13 @@ class DiscoBot {
 	E_MESSAGE_CREATE(ctx) {
 		static bot_what := ["what", "angry", Unicode.get("question"), Unicode.get("grey_question"), "blobpeek", "happythonk", "confuseddog", Unicode.get("eyes")]
 		static pingPrefix := "My prefix is ``{1}```n***{1}help*** for help menu!`n***{1}help*** **<command>** for command description!"
+
 		if ctx.author.bot
 			return
 
 		ctx.data := this.getGuild(ctx.guild.id)
+		ctx.data.prefix := this.settings.data.prefix
+
 		isPing := StartsWith(ctx.message, "<@!" this.api.self.id ">")
 		if (isPing || StartsWith(ctx.message, ctx.data.prefix)) {
 			data := StrSplit(SubStr(ctx.message, StrLen(ctx.data.prefix)+1), [" ", "`n"],, 2+isPing)
@@ -139,7 +142,7 @@ class DiscoBot {
 			try {
 				this.executeCommand(command, "called", ctx, command, data[2])
 			} catch e {
-				embed := new discord.embed("Oops!", "An error ocurred on the command and my developer has been notified.`n`nYou can you join the support server [here](" this.bot.owner.server_invite ")!", 0xAC3939)
+				embed := new discord.embed("Oops!", "An error ocurred on the command and my developer has been notified.`n`nYou can you join the support server [here](" this.bot.owner.server_invite ")!", "error")
 				embed.setFooter("Error ID: " e.errorid)
 				ctx.reply(embed)
 				this.printError(ctx, e)

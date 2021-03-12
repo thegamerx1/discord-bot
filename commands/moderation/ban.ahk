@@ -9,8 +9,8 @@ class command_ban extends DiscoBase.command {
 	call(ctx, args) {
 		id := discord.utils.getId(args[1])
 		if (id = ctx.api.self.id) {
-			ctx.react("success")
-			ctx.api.LeaveGuild(ctx.guild.id)
+			ctx.reply("kbye")
+			ctx.guild.leave()
 			return
 		}
 

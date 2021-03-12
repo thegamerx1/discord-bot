@@ -10,12 +10,11 @@ class command_purge extends DiscoBase.command {
 	C_until(ctx, args) {
 		try {
 			ids := this.getMessages(ctx, {limit: 100, after: args[1]})
-			ctx.api.BulkDelete(ctx.channel.id, ids)
+			ctx.channel.deleteMessage(ids)
 		} catch e {
 			this.except(ctx, e.message)
 		}
 
-		ctx.react("success")
 		TimeOnce(ObjBindMethod(ctx, "delete"), 500)
 	}
 
@@ -30,7 +29,6 @@ class command_purge extends DiscoBase.command {
 			this.except(ctx, e.message)
 		}
 
-		ctx.react("success")
 		TimeOnce(ObjBindMethod(ctx, "delete"), 500)
 	}
 

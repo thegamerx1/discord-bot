@@ -9,7 +9,7 @@ class command_invite extends DiscoBase.command {
 	}
 
 	call(ctx, args) {
-		embed := new discord.embed("Invite link",, 0x65C85B)
+		embed := new discord.embed("Invite link",, "success")
 		embed.setUrl(this.link)
 		ctx.reply(embed)
 	}

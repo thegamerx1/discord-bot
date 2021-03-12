@@ -27,9 +27,8 @@ class DiscoBase {
 			for _, cmd in this.commands {
 				if StartsWith(args, cmd.name) {
 					cmdargs := cmd.args
-					cmdspace := cmd.name " "
-					if StartsWith(args, cmdspace) {
-						args := temp := SubStr(args, StrLen(cmdspace)+1)
+					if StartsWith(args, cmd.name) {
+						args := SubStr(args, StrLen(cmd.name)+2)
 					} else {
 						temp := args.RemoveAt(1)
 					}
@@ -72,13 +71,13 @@ class DiscoBase {
 
 			for _, value in this.userperms {
 				if !contains(value, author.permissions) {
-					ctx.reply(new discord.embed(, "You don't have permissions to do that!"))
+					ctx.reply(new discord.embed(, "You don't have permissions to do that!", "error"))
 					return
 				}
 			}
 
 			if neededperms {
-				embed := new discord.embed("I need the following permissions for that", neededperms)
+				embed := new discord.embed("I need the following permissions for that", neededperms, "error")
 				ctx.reply(embed)
 				return
 			}
@@ -89,7 +88,7 @@ class DiscoBase {
 
 			; TODO: subcommand aliases
 			for _, arg in cmdargs {
-				if (args[1] = "") {
+				if (args[A_Index] = "") {
 					if (arg.optional && arg.default != "")
 						args[A_Index] := arg.default
 
@@ -97,7 +96,7 @@ class DiscoBase {
 						this.bot.executeCommand("help", "call", ctx, [command], "Argument missing: " arg.name, cmdargs, func)
 						return
 					}
-				} else if (arg.type && !contains(arg.type, typeof(args[1])) && !arg.optional) {
+				} else if (arg.type && !contains(arg.type, typeof(args[A_Index])) && !arg.optional) {
 					this.bot.executeCommand("help", "call", ctx, [command], "Argument ``" arg.name "`` requires type ``" arg.type "``" , cmdargs, func)
 					return
 				}
@@ -136,7 +135,7 @@ class DiscoBase {
 		}
 
 		except(ctx, message) {
-			ctx.reply(new discord.embed(, ctx.getEmoji("no") " " message, 0xAC3939))
+			ctx.reply(new discord.embed(, ctx.getEmoji("no") " " message, "error"))
 			throw -99
 		}
 
