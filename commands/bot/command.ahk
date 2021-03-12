@@ -12,6 +12,7 @@ class command_command extends DiscoBase.command {
 	}
 
 	c_disable(ctx, args) {
+		static blacklist := ["bot", "owner"]
 		command := this.bot.getAlias(args[1])
 		if !command
 			this.except(ctx, "Command not found!")
@@ -19,8 +20,9 @@ class command_command extends DiscoBase.command {
 		if contains(command, ctx.guild.data.disabled_commands)
 			this.except(ctx, "Already disabled!")
 
-		if (this.bot.commands[command].category = "bot")
-			this.except(ctx, "You can't disable that command!")
+		for _, black in blacklist
+			if (this.bot.commands[command].category = black)
+				this.except(ctx, "You can't disable that command!")
 
 		ctx.guild.data.disabled_commands.push(command)
 		ctx.react(this.bot.randomCheck())
