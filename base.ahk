@@ -24,15 +24,13 @@ class DiscoBase {
 		_parseArgs(byref args, byref cmdargs) {
 			static regex := "[^\s""']+|""([^""]+)"""
 			name := ""
+			temp := StrSplit(args, " ")
 			for _, cmd in this.commands {
-				if StartsWith(args, cmd.name) {
+				if (temp[1] = cmd.name) {
 					cmdargs := cmd.args
-					if StartsWith(args, cmd.name) {
-						args := SubStr(args, StrLen(cmd.name)+2)
-					} else {
-						temp := args.RemoveAt(1)
-					}
+					args := SubStr(args, StrLen(cmd.name)+(StartsWith(args, cmd.name " ") ? 2 : 1))
 					name := cmd.name
+					break
 				}
 			}
 			out := []

@@ -4,15 +4,35 @@ class command_command extends DiscoBase.command {
 	aliases := ["cmd"]
 	userperms := ["ADMINISTRATOR"]
 	commands := [{name: "disable", args: [{name: "command"}]}
-				,{name: "enable", args: [{name: "command"}]}]
+				,{name: "enable", args: [{name: "command"}]}
+				,{name: "enableall"}
+				,{name: "disableall"}]
 
+	static blacklist := ["bot", "owner"]
 	E_COMMAND_EXECUTE(data) {
 		if contains(data.command, data.ctx.guild.data.disabled_commands)
 			return 1
 	}
 
+	c_disableall(ctx) {
+		for name, command in this.bot.commands {
+			if contains(command.category, this.blacklist)
+				continue
+			ctx.guild.data.disabled_commands.push(name)
+		}
+		ctx.react(this.bot.randomCheck())
+	}
+
+	c_enableall(ctx) {
+		for name, command in this.bot.commands {
+			if contains(command.category, this.blacklist)
+				continue
+			ctx.guild.data.disabled_commands := []
+		}
+		ctx.react(this.bot.randomCheck())
+	}
+
 	c_disable(ctx, args) {
-		static blacklist := ["bot", "owner"]
 		command := this.bot.getAlias(args[1])
 		if !command
 			this.except(ctx, "Command not found!")
@@ -20,9 +40,8 @@ class command_command extends DiscoBase.command {
 		if contains(command, ctx.guild.data.disabled_commands)
 			this.except(ctx, "Already disabled!")
 
-		for _, black in blacklist
-			if (this.bot.commands[command].category = black)
-				this.except(ctx, "You can't disable that command!")
+		if contains(this.bot.commands[command].category, this.blacklist)
+			this.except(ctx, "You can't disable that command!")
 
 		ctx.guild.data.disabled_commands.push(command)
 		ctx.react(this.bot.randomCheck())
