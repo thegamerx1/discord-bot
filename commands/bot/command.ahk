@@ -27,7 +27,11 @@ class command_command extends DiscoBase.command {
 	}
 
 	c_enable(ctx, args) {
-		if !(index := contains(args[1], ctx.guild.data.disabled_commands))
+		command := this.bot.getAlias(args[1])
+		if !command
+			this.except(ctx, "Command not found!")
+
+		if !(index := contains(command, ctx.guild.data.disabled_commands))
 			this.except(ctx, "Already enabled!")
 
 		ctx.guild.data.disabled_commands.RemoveAt(index)
