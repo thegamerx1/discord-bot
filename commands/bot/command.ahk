@@ -16,7 +16,7 @@ class command_command extends DiscoBase.command {
 	}
 
 	c_disableall(ctx) {
-		for name, command in this.bot.commands {
+		for name in this.bot.commands {
 			if this.isInBlacklist(name)
 				continue
 			ctx.guild.data.disabled_commands.push(name)
@@ -25,7 +25,7 @@ class command_command extends DiscoBase.command {
 	}
 
 	c_enableall(ctx) {
-		for name, command in this.bot.commands {
+		for name in this.bot.commands {
 			if this.isInBlacklist(name)
 				continue
 			ctx.guild.data.disabled_commands := []
@@ -61,18 +61,17 @@ class command_command extends DiscoBase.command {
 	}
 
 	call(ctx, args) {
-		embed := new discord.embed("Commands")
 		disabled := ""
 		for _, cmd in ctx.guild.data.disabled_commands {
-			disabled .= cmd "`n"
+			disabled .= (disabled ? ", " : "") "``" cmd "``"
 		}
-		embed.addField("Disabled", disabled)
+		embed := new discord.embed("Disabled commands", disabled ? disabled : "No disabled commands")
 		ctx.reply(embed)
 	}
 
 	isInBlacklist(str) {
 		static blacklist := ["bot", "owner"]
 
-		return contains(str, blacklist)
+		return contains(this.bot.commands[str].category, blacklist)
 	}
 }
