@@ -1,2 +1,4 @@
-data
+data/guilds.json
+data/settings.json
+data/global.json
 commands/_includer.ahk
