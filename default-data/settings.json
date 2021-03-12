@@ -1,0 +1,20 @@
+{
+	"permissions": 322624,
+	"token": "",
+	"intents": 5891,
+	"webhooks": {
+		"error": "",
+		"suggest": ""
+	},
+	"owner": {
+		"id": "",
+		"guild": "",
+		"server_invite": ""
+	},
+	"keys": {
+		"wolfram": "",
+		"cloudahk": "",
+		"catapi": "",
+		"weather": ""
+	}
+}
