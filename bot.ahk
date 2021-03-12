@@ -39,6 +39,7 @@ class DiscoBot {
 	getGuild(id) {
 		if !contains(id, this.guilds.data, 1)
 			this.guilds.data[id] := this.defaultconf
+
 		return this.guilds.data[id]
 	}
 
@@ -120,12 +121,11 @@ class DiscoBot {
 		if ctx.author.bot
 			return
 
-		ctx.data := this.getGuild(ctx.guild.id)
-		ctx.data.prefix := this.settings.data.prefix
+		ctx.guild.data := this.getGuild(ctx.guild.id)
 
 		isPing := StartsWith(ctx.message, "<@!" this.api.self.id ">")
-		if (isPing || StartsWith(ctx.message, ctx.data.prefix)) {
-			data := StrSplit(SubStr(ctx.message, StrLen(ctx.data.prefix)+1), [" ", "`n"],, 2+isPing)
+		if (isPing || StartsWith(ctx.message, this.settings.data.prefix)) {
+			data := StrSplit(SubStr(ctx.message, StrLen(this.settings.data.prefix)+1), [" ", "`n"],, 2+isPing)
 
 			if isPing
 				data.RemoveAt(1)
@@ -133,7 +133,7 @@ class DiscoBot {
 			command := this.getAlias(data[1])
 
 			if (!command && isPing)
-				return ctx.reply(new discord.embed(, format(pingPrefix, ctx.data.prefix)))
+				return ctx.reply(new discord.embed(, format(pingPrefix, this.settings.data.prefix)))
 
 			if (!command && contains("ADD_REACTIONS", ctx.self.permissions))
 				return ctx.react(random(bot_what))
