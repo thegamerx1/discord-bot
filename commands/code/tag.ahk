@@ -15,7 +15,7 @@ class command_tag extends DiscoBase.command {
 		this.createTag(ctx, args[1], args[2])
 		ctx.delete()
 		this.this := this
-		ctx.reply(new discord.embed(, ctx.getEmoji(this.bot.randomCheck()) " " args[1] " succesfully created " ctx.author.mention))
+		ctx.reply(new discord.embed(, ctx.getEmoji(this.bot.randomCheck()) " """ args[1] """ succesfully created " ctx.author.mention))
 	}
 
 	c_delete(ctx, args) {

@@ -138,15 +138,18 @@ class DiscoBot {
 			if (!command && contains("ADD_REACTIONS", ctx.self.permissions))
 				return ctx.react(random(bot_what))
 
+			this._event("COMMAND_EXECUTE", {command: command, ctx: ctx, data: data})
+		}
+	}
 
-			try {
-				this.executeCommand(command, "called", ctx, command, data[2])
-			} catch e {
-				embed := new discord.embed("Oops!", "An error ocurred on the command and my developer has been notified.`n`nYou can you join the support server [here](" this.bot.owner.server_invite ")!", "error")
-				embed.setFooter("Error ID: " e.errorid)
-				ctx.reply(embed)
-				this.printError(ctx, e)
-			}
+	E_COMMAND_EXECUTE(data) {
+		try {
+			this.executeCommand(data.command, "called", data.ctx, data.command, data.data[2])
+		} catch e {
+			embed := new discord.embed("Oops!", "An error ocurred on the command and my developer has been notified.`n`nYou can you join the support server [here](" this.bot.owner.server_invite ")!", "error")
+			embed.setFooter("Error ID: " e.errorid)
+			ctx.reply(embed)
+			this.printError(ctx, e)
 		}
 	}
 }
