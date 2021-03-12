@@ -38,7 +38,7 @@ class DiscoBot {
 
 	getGuild(id) {
 		if !contains(id, this.guilds.data, 1)
-			this.guilds.data[id] := this.defaultconf
+			this.guilds.data[id] := clone(this.defaultconf)
 
 		return this.guilds.data[id]
 	}
@@ -122,6 +122,7 @@ class DiscoBot {
 			return
 
 		ctx.guild.data := this.getGuild(ctx.guild.id)
+		debug.print(ctx.guild.data)
 
 		isPing := StartsWith(ctx.message, "<@!" this.api.self.id ">")
 		if (isPing || StartsWith(ctx.message, this.settings.data.prefix)) {

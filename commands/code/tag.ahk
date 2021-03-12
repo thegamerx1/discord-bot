@@ -44,9 +44,10 @@ class command_tag extends DiscoBase.command {
 	c_list(ctx) {
 		out := ""
 		for i, tag in ctx.guild.data.tags {
-			out .= i " - " tag.name
+			out .= tag.name "`n"
 		}
-		ctx.reply(!out ? "No tags" : out)
+		embed := new discord.embed("Tag list", !out ? "No tags" : out)
+		ctx.reply(embed)
 	}
 
 	call(ctx, args) {
