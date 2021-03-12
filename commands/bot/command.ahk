@@ -8,15 +8,16 @@ class command_command extends DiscoBase.command {
 				,{name: "enableall"}
 				,{name: "disableall"}]
 
-	static blacklist := ["bot", "owner"]
 	E_COMMAND_EXECUTE(data) {
-		if contains(data.command, data.ctx.guild.data.disabled_commands)
+		if contains(data.command, data.ctx.guild.data.disabled_commands) {
+			this.except(data.ctx, "That command is disabled on this guild!", false)
 			return 1
+		}
 	}
 
 	c_disableall(ctx) {
 		for name, command in this.bot.commands {
-			if contains(command.category, this.blacklist)
+			if this.isInBlacklist(name)
 				continue
 			ctx.guild.data.disabled_commands.push(name)
 		}
@@ -25,7 +26,7 @@ class command_command extends DiscoBase.command {
 
 	c_enableall(ctx) {
 		for name, command in this.bot.commands {
-			if contains(command.category, this.blacklist)
+			if this.isInBlacklist(name)
 				continue
 			ctx.guild.data.disabled_commands := []
 		}
@@ -40,7 +41,7 @@ class command_command extends DiscoBase.command {
 		if contains(command, ctx.guild.data.disabled_commands)
 			this.except(ctx, "Already disabled!")
 
-		if contains(this.bot.commands[command].category, this.blacklist)
+		if this.isInBlacklist(command)
 			this.except(ctx, "You can't disable that command!")
 
 		ctx.guild.data.disabled_commands.push(command)
@@ -67,5 +68,11 @@ class command_command extends DiscoBase.command {
 		}
 		embed.addField("Disabled", disabled)
 		ctx.reply(embed)
+	}
+
+	isInBlacklist(str) {
+		static blacklist := ["bot", "owner"]
+
+		return contains(str, blacklist)
 	}
 }

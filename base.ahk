@@ -132,9 +132,10 @@ class DiscoBase {
 			ctx.reply(embed)
 		}
 
-		except(ctx, message) {
+		except(ctx, message, throw := true) {
 			ctx.reply(new discord.embed(, ctx.getEmoji("no") " " message, "error"))
-			throw -99
+			if throw
+				throw -99
 		}
 
 		setCooldown(user, time := "") {

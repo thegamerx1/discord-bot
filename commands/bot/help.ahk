@@ -23,7 +23,11 @@ class command_help extends DiscoBase.command {
 			if !args[1]
 				this.except(ctx, "Command not found")
 
+			if contains(args[1], ctx.guild.data.disabled_commands)
+				this.except(ctx, "That command is disabled on this guild!")
+
 			cmd := this.bot.commands[args[1]]
+
 
 			aliases := ""
 			for _, alias in cmd.aliases {
@@ -51,6 +55,8 @@ class command_help extends DiscoBase.command {
 					continue
 				out := ""
 				for i, value in cmd {
+					if contains(value.name, ctx.guild.data.disabled_commands)
+						continue
 					out .= "**[" value.name "](https://github.com/thegamerx1/discord-bot """ value.info """)**  "
 				}
 				embed.addField(category, out, true)
