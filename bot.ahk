@@ -3,21 +3,21 @@ class DiscoBot {
 		this.commands := this.cache := {}
 		FileCreateDir data
 		this.bot := new configLoader("data/settings.json",, true)
-		this.defaultconf := new configLoader("data/default.json",, true)
+		this.default := new configLoader("data/default.json",, true)
 		this.settings := new configLoader("data/global.json")
-		this.guilds := new configLoader("data/guilds.json")
+		this.data := new configLoader("data/data.json")
 
 		if this.bot.release
 			debug.attachFile := "log.log"
 
+		this.loadData()
 		this.loadCommands()
-		this.loadGuilds()
 		if (A_Args[1] = "-reload")
 			this.resume := StrSplit(A_Args[2], ",")
 
  		this.api := new Discord(this, this.bot.token, this.bot.intents, this.bot.owner.guild, this.bot.owner.id)
-		OnExit(ObjBindMethod(this, "save"))
-		SetTimer(ObjBindMethod(this, "save"), 60*30*1000)
+		save := ObjBindMethod(this.data, "save")
+		OnExit(save), SetTimer(save, 60*30*1000)
 	}
 
 	E_READY() {
@@ -37,22 +37,31 @@ class DiscoBot {
 	}
 
 	getGuild(id) {
-		if !contains(id, this.guilds.data, 1)
-			this.guilds.data[id] := clone(this.defaultconf)
+		if !contains(id, this.data.data.guild, 1)
+			this.data.data.guild[id] := clone(this.default.guild)
 
-		return this.guilds.data[id]
+		return this.data.data.guild[id]
 	}
 
-	loadGuilds() {
-		debug.print("|Loading guilds")
-		for id, data in this.guilds.data {
-			this.guilds.data[id] := EzConf(data, this.defaultconf)
+	getUser(id) {
+		if !contains(id, this.data.data.user, 1)
+			this.data.data.user[id] := clone(this.default.user)
+
+		return this.data.data.user[id]
+	}
+
+	loadData() {
+		for id, data in this.data.data.guild {
+			this.data.data.guild[id] := EzConf(data, this.default.guild)
 		}
-		debug.print("Loaded " this.guilds.data.count() " guilds")
+		debug.print("Loaded " this.data.data.guild.count() " guilds")
+		for id, data in this.data.data.user {
+			this.data.data.user[id] := EzConf(data, this.default.user)
+		}
+		debug.print("Loaded " this.data.data.user.count() " users")
 	}
 
 	loadCommands() {
-		debug.print("|Loading commands")
 		for _, file in includer.list {
 			name := file.name
 			rawcmd := new Command_%name%(this)
@@ -87,11 +96,6 @@ class DiscoBot {
 		return this.cache.aliases[name]
 	}
 
-	save() {
-		this.guilds.save()
-		this.settings.save()
-	}
-
 	executeCommand(command, func, args*) {
 		fn := this.commands[command][func]
 		return %fn%(this.commands[command], args*)
@@ -122,6 +126,7 @@ class DiscoBot {
 			return
 
 		ctx.guild.data := this.getGuild(ctx.guild.id)
+		ctx.author.data := this.getUser(ctx.author.id)
 
 		isPing := StartsWith(ctx.message, "<@!" this.api.self.id ">")
 		if (isPing || StartsWith(ctx.message, this.settings.data.prefix)) {

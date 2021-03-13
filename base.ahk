@@ -113,7 +113,11 @@ class DiscoBase {
 			}
 
 			try {
-				this[func ? "C_" func : "call"](ctx, args)
+				if (!func && this.isSubOnly) {
+					this.bot.executeCommand("help", "call", ctx, [command])
+					return
+				}
+				fn := this[func ? "C_" func : "call"](ctx, args)
 			} catch e {
 				if (e = -99)
 					return

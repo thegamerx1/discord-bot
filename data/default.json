@@ -1,4 +1,9 @@
 {
-	"tags": [],
-	"disabled_commands": []
+	"guild": {
+		"tags": [],
+		"disabled_commands": []
+	},
+	"user": {
+		"reminds": []
+	}
 }

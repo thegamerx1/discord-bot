@@ -39,7 +39,8 @@ class command_help extends DiscoBase.command {
 			if message {
 				usage := this.getCommand(args[1], cmdargs, subname)
 			} else {
-				usage := this.getCommand(args[1], cmd.args)
+				if !cmd.isSubOnly
+					usage := this.getCommand(args[1], cmd.args)
 				for _, command in cmd.commands {
 					usage .= this.getCommand(args[1], command.args, command.name)
 				}
