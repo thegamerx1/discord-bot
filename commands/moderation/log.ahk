@@ -1,7 +1,7 @@
 class command_log extends DiscoBase.command {
 	cooldown := 3
 	info := "Manages the logging system"
-	infolong := "Available types: ``join`` and ``edits``"
+	infolong := "Available types: ``joins`` and ``edits``"
 	permissions := ["MANAGE_MESSAGES"]
 	userperms := ["ADMINISTRATOR"]
 	commands := [{name: "set", args: [{name: "type"}, {name: "channel", optional: true}]}]
@@ -25,18 +25,41 @@ class command_log extends DiscoBase.command {
 		this.messageEdit(data, 1)
 	}
 
+	E_MESSAGE_DELETE_BULK(ctx) {
+		data := this.bot.getGuild(ctx.guild.id)
+		if !(data.logging.edits || ctx.author.bot)
+			return
+
+		channel := ctx.guild.getChannel(data.logging.edits)
+
+		if channel.canI(["SEND_MESSAGES", "EMBED_LINKS"]) {
+			embed := new discord.embed("Message bulk delete", "Messages deleted: ``" ctx.count "```nIn Channel: " ctx.channel.mention)
+			channel.send(embed)
+		}
+	}
+
 	messageEdit(ctx, isDelet) {
 		data := this.bot.getGuild(ctx.guild.id)
 		if !(data.logging.edits || ctx.author.bot)
 			return
+
 		channel := ctx.guild.getChannel(data.logging.edits)
 
 		if channel.canI(["SEND_MESSAGES", "EMBED_LINKS"]) {
 			embed := new discord.embed("Message " (isDelet ? "deleted" : "edited"))
 			embed.setThumbnail(ctx.author.avatar)
-			embed.addField("User", ctx.author.notMention " (" ctx.author.id ")")
-			embed.addField("Old message", ctx.edits[1] ? ctx.edits[1].content : "Not logged")
-			embed.addField("New message", ctx.content)
+			embed.addField("User", ctx.author.mention "`n" ctx.author.notMention " (" ctx.author.id ")")
+			if !isDelet {
+				embed.addField("Old message", ctx.edits[1] ? discord.utils.codeblock("text",ctx.edits[1].content) : "Not logged")
+				embed.setDescription("[Jump to message](" ctx.link ")")
+			}
+
+			embed.addField(isDelet ? "Message" : "New message", discord.utils.codeblock("text", ctx.content))
+			attach := []
+			for _, att in ctx.attachments {
+				attach.push("[" att.content_type "](" att.url ")")
+			}
+			embed.addField("Attachments", Array2String(attach))
 			channel.send(embed)
 		}
 	}
@@ -55,8 +78,10 @@ class command_log extends DiscoBase.command {
 				for _, role in ctx.user.roles {
 					roles.push(ctx.guild.getRole(role).name)
 				}
+				embed.addField("Roles", Array2String(roles, ", ", "``"))
+				; embed.addField("Joined in", Miss2Text(discord.utils.ISODATE(ctx.user.joined_at, true)))
 			}
-			embed.addField("Roles", Array2String(roles, ", ", "``"))
+			embed.addField("Account created at", Miss2Text(discord.utils.snowflakeTime(ctx.user.id) "UTC"))
 			channel.send(embed)
 		}
 	}

@@ -4,7 +4,7 @@ class command_ban extends DiscoBase.command {
 	permissions := ["BAN_MEMBERS"]
 	userperms := ["BAN_MEMBERS"]
 	args := [{optional: false, name: "user"}
-				,{optional: true, name: "reason", type: "str"}]
+			,{optional: true, name: "reason", type: "str"}]
 
 	call(ctx, args) {
 		id := discord.utils.getId(args[1])
