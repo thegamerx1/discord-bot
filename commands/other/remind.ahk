@@ -1,5 +1,6 @@
 class command_remind extends DiscoBase.command {
 	cooldown := 3
+	disabled := true
 	info := "Creates and manages reminds"
 	permissions := ["MANAGE_MESSAGES"]
 	commands := [{name: "create", args: [{name: "when"}, {name: "message"}]}

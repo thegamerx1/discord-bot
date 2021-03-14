@@ -5,6 +5,7 @@
 		"logging": {}
 	},
 	"user": {
-		"reminds": []
+		"todos": [],
+		"todos_done": []
 	}
 }
