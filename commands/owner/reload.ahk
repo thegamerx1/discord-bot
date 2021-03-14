@@ -14,6 +14,8 @@ class command_reload extends DiscoBase.command {
 			} catch e {
 				debug.print("Error reloading")
 				debug.print(e)
+			} finally {
+				this.bot.delete("resume")
 			}
 		}
 	}

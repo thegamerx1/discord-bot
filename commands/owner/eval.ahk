@@ -5,20 +5,15 @@ class command_eval extends DiscoBase.command {
 	commands := [{name: "msg", args: [{name: "msg", type: "int"}, {name: "query"}]}]
 
 	c_msg(ctx, args) {
-		if !this.SET.release
-			clipboard := ctx.message
-
 		msg := ctx.api.GetMessage(ctx.channel.id, args[1])
 		this.printee(ctx, eval(discord.utils.getCodeBlock(args[2]).code, [{name: "ctx", val: msg}]))
 	}
 
 	call(ctx, args) {
-		this.printee(ctx, eval(discord.utils.getCodeBlock(args[1]).code, [{name: "ctx", val: ctx}, {name: "reply", val: ctx.referenced_msg}, {name: "bot", val: this.bot}]))
+		this.printee(ctx, eval(discord.utils.getCodeBlock(args[1]).code, [{name: "ctx", val: ctx}, {name: "reply", val: ctx.reply_msg}, {name: "bot", val: this.bot}]))
 	}
 
 	printee(ctx, data) {
-		if !this.SET.release
-			clipboard := ctx.message
 		if IsObject(data) {
 			deep := ObjectDeep(data, 200)
 			if (deep > 60) {

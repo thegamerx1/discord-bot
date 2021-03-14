@@ -4,7 +4,7 @@
 	aliases := ["pong"]
 
 	call(ctx, args) {
-		reply := InStr(ctx.message, "pong") ? "Ping" : "Pong"
+		reply := InStr(ctx.content, "pong") ? "Ping" : "Pong"
 		msg := ctx.reply(reply)
 		embed := new discord.embed()
 		embed.setContent(reply)

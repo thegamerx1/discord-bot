@@ -12,7 +12,7 @@ class command_8ball extends DiscoBase.command {
 			,"Cannot predict now", "Concentrate and ask again"
 			,"Don't count on it", "My reply is no", "My sources say no", "Outlook not so good", "Very doubtful"]
 
-		if !InStr(ctx.message, "?")
+		if !InStr(ctx.content, "?")
 			this.except(ctx, "8 Ball didn't find the question")
 
 

@@ -104,7 +104,7 @@ class DiscoBot {
 	printError(ctx, e) {
 		static source := "**{}:** {} ({})"
 		static source1 := "**{}:** {}"
-		embed := new discord.embed("Exception", discord.utils.codeblock("js", ctx.message), "error")
+		embed := new discord.embed("Exception", discord.utils.codeblock("js", ctx.content), "error")
 		out := format(source, "Guild", ctx.guild.name, ctx.guild.id) "`n" format(source, "User", ctx.author.mention, ctx.author.id)
 		out .= "`n" format(source1, "Message", e.message) "`n" format(source1, "What", e.what) "`n" format(source1, "Extra", e.extra)
 		embed.addField("Exception", out)
@@ -128,9 +128,9 @@ class DiscoBot {
 		ctx.guild.data := this.getGuild(ctx.guild.id)
 		ctx.author.data := this.getUser(ctx.author.id)
 
-		isPing := StartsWith(ctx.message, "<@!" this.api.self.id ">")
-		if (isPing || StartsWith(ctx.message, this.settings.data.prefix)) {
-			data := StrSplit(SubStr(ctx.message, StrLen(this.settings.data.prefix)+1), [" ", "`n"],, 2+isPing)
+		isPing := StartsWith(ctx.content, "<@!" this.api.self.id ">")
+		if (isPing || StartsWith(ctx.content, this.settings.data.prefix)) {
+			data := StrSplit(SubStr(ctx.content, StrLen(this.settings.data.prefix)+1), [" ", "`n"],, 2+isPing)
 
 			if isPing
 				data.RemoveAt(1)
@@ -151,6 +151,7 @@ class DiscoBot {
 		try {
 			this.executeCommand(data.command, "called", data.ctx, data.command, data.data[2])
 		} catch e {
+			ctx := data.ctx
 			embed := new discord.embed("Oops!", "An error ocurred on the command and my developer has been notified.`n`nYou can you join the support server [here](" this.bot.owner.server_invite ")!", "error")
 			embed.setFooter("Error ID: " e.errorid)
 			ctx.reply(embed)
