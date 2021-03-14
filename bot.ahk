@@ -128,9 +128,9 @@ class DiscoBot {
 		ctx.guild.data := this.getGuild(ctx.guild.id)
 		ctx.author.data := this.getUser(ctx.author.id)
 
-		isPing := regex(ctx.content, "\<@!?" this.api.self.id ">")
+		isPing := regex(ctx.content, "\<@!?" this.api.self.id "\>")
 		if (isPing || StartsWith(ctx.content, this.settings.data.prefix)) {
-			data := StrSplit(SubStr(ctx.content, StrLen(this.settings.data.prefix)+1), [" ", "`n"],, 2+isPing)
+			data := StrSplit(SubStr(ctx.content, StrLen(this.settings.data.prefix)+1), [" ", "`n"], 2+isPing)
 
 			if isPing
 				data.RemoveAt(1)
