@@ -88,8 +88,8 @@ class command_log extends DiscoBase.command {
 
 	call(ctx, args) {
 		embed := new discord.embed("Logging status")
-		embed.addField("Message edits/deletes: ``" this.types[2] "``", ifNull(ctx.guild.data.logging.edits, "Not set"))
-		embed.addField("User join/leaves: ``" this.types[1] "``", ifNull(ctx.guild.data.logging.joins, "Not set"))
+		embed.addField("Message edits/deletes: ``" this.types[2] "``", ifNull(ctx.guild.getChannel(ctx.guild.data.logging.edits).name, "Not set"))
+		embed.addField("User join/leaves: ``" this.types[1] "``", ifNull(ctx.guild.getChannel(ctx.guild.data.logging.joins).name, "Not set"))
 		ctx.reply(embed)
 	}
 }

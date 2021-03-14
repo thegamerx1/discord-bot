@@ -48,7 +48,7 @@ class command_help extends DiscoBase.command {
 			embed.addField("Usage", usage)
 			embed.addField("Aliases", aliases)
 
-			embed.setFooter("Have questions? Join the support server with """ ctx.data.prefix "support""")
+			embed.setFooter("Have questions? Join the support server with """ this.bot.settings.data.prefix "support""")
 		} else {
 			embed := new discord.embed("Commands")
 			for category, cmd in this.categories {
@@ -62,7 +62,7 @@ class command_help extends DiscoBase.command {
 				}
 				embed.addField(category, out, true)
 			}
-			embed.setFooter("Hover over the commands for description! " chr(8226) " Alternatively you can """ ctx.data.prefix "help <command>!""")
+			embed.setFooter("Hover over the commands for description! " chr(8226) " Alternatively you can """ this.bot.settings.data.prefix "help <command>!""")
 		}
 		ctx.reply(embed)
 	}
