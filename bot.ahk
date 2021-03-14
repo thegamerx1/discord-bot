@@ -137,10 +137,10 @@ class DiscoBot {
 
 			command := this.getAlias(data[1])
 
-			if (!command && isPing)
+			if (!command && isPing && ctx.channel.canI(["SEND_MESSAGES"]))
 				return ctx.reply(new discord.embed(, format(pingPrefix, this.settings.data.prefix)))
 
-			if (!command && contains("ADD_REACTIONS", ctx.self.permissions))
+			if (!command && ctx.channel.canI(["ADD_REACTIONS"]))
 				return ctx.react(random(bot_what))
 
 			this._event("COMMAND_EXECUTE", {command: command, ctx: ctx, data: data})

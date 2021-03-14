@@ -35,7 +35,7 @@ class command_eval extends DiscoBase.command {
 			output := data
 		}
 
-		if !output
+		if (output = "")
 			return ctx.react("empty")
 
 		if StrLen(output) < 100 {

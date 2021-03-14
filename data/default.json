@@ -1,7 +1,8 @@
 {
 	"guild": {
 		"tags": [],
-		"disabled_commands": []
+		"disabled_commands": [],
+		"logging": {}
 	},
 	"user": {
 		"reminds": []

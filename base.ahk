@@ -52,17 +52,17 @@ class DiscoBase {
 			if (this.owneronly && !author.isBotOwner)
 				return
 
-			if (!ctx.isInteraction && !contains("SEND_MESSAGES", ctx.self.permissions))
+			if (!ctx.isInteraction && !ctx.channel.canI(["SEND_MESSAGES"]))
 				return
 
-			if (!ctx.isInteraction && !contains("EMBED_LINKS", ctx.self.permissions)) {
+			if (!ctx.isInteraction && !ctx.channel.canI(["EMBED_LINKS"])) {
 				ctx.reply("I need ``EMBED_LINKS`` to function!")
 				return
 			}
 
 			neededperms := ""
 			for _, value in this.permissions {
-				if !contains(value, ctx.self.permissions) {
+				if !ctx.channel.canI([value]) {
 					neededperms .= Chr(8226) " " value "`n"
 				}
 			}

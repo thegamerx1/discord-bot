@@ -8,7 +8,7 @@
 		if !args[1] {
 			embed := new discord.embed("", "", 0x3E4BBB)
 			embed.addField("Source code", "https://github.com/thegamerx1/discord-bot")
-			embed.addField("Made with Discord.ahk", "https://github.com/thegamerx1/ahk-libs")
+			embed.addField("Made with Discord.ahk", "https://github.com/thegamerx1/ahk-libs/blob/master/Discord.ahk")
 			ctx.reply(embed)
 			return
 		}
