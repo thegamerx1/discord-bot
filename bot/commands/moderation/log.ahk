@@ -46,7 +46,7 @@ class command_log extends DiscoBase.command {
 		channel := ctx.guild.getChannel(data.logging.edits)
 
 		if channel.canI(["SEND_MESSAGES", "EMBED_LINKS"]) {
-			embed := new discord.embed("Message " (isDelet ? "deleted" : "edited"))
+			embed := new discord.embed("Message " (isDelet ? "deleted" : "edited"),, isDelet ? "error" : "blue")
 			embed.setThumbnail(ctx.author.avatar)
 			embed.addField("User", ctx.author.mention "`n" ctx.author.notMention " (" ctx.author.id ")")
 			if !isDelet {

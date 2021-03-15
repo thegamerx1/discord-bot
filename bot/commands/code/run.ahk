@@ -84,7 +84,7 @@ class command_run extends DiscoBase.command {
 			http := new requests("POST", "https://p.ahkscript.org/",, true)
 			http.headers["Content-Type"] := "application/x-www-form-urlencoded"
 			http.onFinished := ObjBindMethod(this, "toolongreply", ctx, data, cont)
-			http.send(requests.encode({code: hjson.stdout}))
+			http.send(urlCode.encodeParams({code: hjson.stdout}))
 			return
 		}
 
