@@ -1,1 +1,5 @@
 .vscode
+bot/data/data.json
+bot/data/settings.json
+bot/data/global.json
+bot/commands/_includer.ahk
