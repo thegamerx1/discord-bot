@@ -1,8 +1,8 @@
 @echo off
-echo BOT
+cd ..
 git reset --hard
 git pull -f
-echo LIB
+
 cd %userprofile%/documents/Autohotkey/lib
 git reset --hard
 git pull -f
