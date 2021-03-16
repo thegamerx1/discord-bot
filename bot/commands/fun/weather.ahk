@@ -1,8 +1,7 @@
 class command_weather extends DiscoBase.command {
 	cooldown := 2
 	info := "Gets the weather"
-	args := [{optional: false, name: "site"}]
-
+	args := [{optional: false, name: "location"}]
 
 	call(ctx, args) {
 		static API := "https://api.openweathermap.org/data/2.5/weather?q={}&appid={}&units=metric"
