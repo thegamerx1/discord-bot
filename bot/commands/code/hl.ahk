@@ -12,7 +12,7 @@
 
 		ctx.delete()
 		embed := new discord.embed(,"_Paste by " ctx.author.mention "_")
-		embed.setContent(discord.utils.codeblock(code.lang, code.code))
+		embed.setContent(discord.utils.codeblock(code.lang ? code.lang : "ahk" , code.code))
 		msg := ctx.reply(embed)
 		msg.react(this.emoji)
 	}
