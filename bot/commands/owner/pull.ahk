@@ -7,7 +7,7 @@ class command_pull extends DiscoBase.command {
 		if !this.SET.release
 			this.except(ctx, "Pull only works on release mode!")
 		ctx.typing()
-		output := RunCMD("pullall.cmd")
+		output := RunCMD("../pullall.cmd")
 		ctx.reply(discord.utils.codeblock("git", output))
 	}
 }
