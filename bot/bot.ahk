@@ -128,7 +128,7 @@ class DiscoBot {
 		ctx.guild.data := this.getGuild(ctx.guild.id)
 		ctx.author.data := this.getUser(ctx.author.id)
 
-		isPing := !!regex(ctx.content, "\<@!?" this.api.self.id "\>")
+		isPing := !!regex(ctx.content, "^\<@!?" this.api.self.id "\>")
 		if (isPing || StartsWith(ctx.content, this.settings.data.prefix)) {
 			data := StrSplit(SubStr(ctx.content, StrLen(this.settings.data.prefix)+1), [" ", "`n"],, 2+isPing)
 
@@ -137,7 +137,7 @@ class DiscoBot {
 
 			command := this.getAlias(data[1])
 
-			if (!command && isPing && ctx.channel.canI(["SEND_MESSAGES"]))
+			if (!command && isPing && ctx.channel.canI(["SEND_MESSAGES", "EMBED_LINKS"]))
 				return ctx.reply(new discord.embed(, format(pingPrefix, this.settings.data.prefix)))
 
 			if (!command && ctx.channel.canI(["ADD_REACTIONS"]))
