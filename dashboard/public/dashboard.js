@@ -16,6 +16,13 @@ $.get("/guilds", (data) => {
 	setTimeout(() => {
 		$("#initLoadProgress").parent().hide()
 	}, 50)
+}).fail( () => {
+	halfmoon.initStickyAlert({
+		content: "Error connecting to server.",
+		title: "Server error",
+		alertType: "alert-danger",
+		fillType: "filled"
+	})
 })
 
 
@@ -37,6 +44,13 @@ function setDashboard(btn) {
 		$.each(data.form, (key, value) => {
 			console.log(value.toString())
 			dashboard.find("[name=\"" + key +"\"]").val(value.toString())
+		})
+	}).fail( () => {
+		halfmoon.initStickyAlert({
+			content: "Error connecting to server.",
+			title: "Server error",
+			alertType: "alert-danger",
+			fillType: "filled"
 		})
 	})
 }

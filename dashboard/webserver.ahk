@@ -20,8 +20,6 @@ class dashboard {
 
 	logout(response, request) {
 		request.session.delete("user")
-		; if request.headers["Referer"]
-		; 	return response.redirect(request.headers["Referer"])
 		return response.redirect("/")
 	}
 
@@ -55,11 +53,11 @@ class dashboard {
 		for _, guild in guilds {
 			if (guild.owner || Discord.checkFlag(guild.permissions, "administrator")) {
 				try {
-					data := dashboardClient.query({query: "isIn", id: request.session.user.id, guild: guild.id})
+					if dashboardClient.query("isIn", {guild.id: guild.id, user: request.session["user"].id})
+						out.push({name: guild.name, id: guild.id, icon: guild.icon})
 				} catch e {
 					return response.error(503)
 				}
-				out.push({name: guild.name, id: guild.id, icon: guild.icon})
 			}
 		}
 		response.send(JSON.dump(out))
@@ -70,7 +68,7 @@ class dashboard {
 			return response.error(400)
 		debug.print(request.params.id)
 		try {
-			data := dashboardClient.query({query: "guild", id: request.params.id})
+			data := dashboardClient.query("guild", {id: request.params.id})
 		} catch e {
 			return response.error(503)
 		}

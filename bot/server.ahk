@@ -13,14 +13,16 @@ class dashboardServer {
 		sock := serv.Accept()
 		text := Sock.RecvText()
 		query := JSON.load(text)
+		request := query.data
+		query := query.query
 		api := DiscoBot.api
 		code := 200
 		data := ""
-		switch query.query {
+		switch query {
 			case "guild":
-				guild := api.getGuild(query.id)
+				guild := api.getGuild(request.id)
 				if guild {
-					guilddata := DiscoBot.getGuild(query.id)
+					guilddata := DiscoBot.getGuild(request.id)
 					channels := []
 					for _, val in guild.channels {
 						if (val.type = 0)
@@ -30,6 +32,9 @@ class dashboardServer {
 				} else {
 					code := 404
 				}
+			case "isIn":
+				guild := api.getGuild(request.id)
+				data := {isIn: !!guild.getMember(request.user)}
 			default:
 				code := 400
 		}

@@ -27,8 +27,8 @@
 			<template id="login-template">
 				{{#if username}}
 					<div class="dropdown with-arrow ml-auto h-full">
-						<button class="btn h-full d-inline-flex align-items-center " data-toggle="dropdown" type="button">
-							{{username}}
+						<button class="btn h-full d-inline-flex align-items-center" data-toggle="dropdown" type="button">
+							<span class="pr-5">{{username}}</span>
 							<img class="img-fluid rounded h-half" src="https://cdn.discordapp.com/avatars/{{id}}/{{avatar}}" alt="avatar">
 							<i class="fa fa-angle-down ml-5" aria-hidden="true"></i>
 						</button>
@@ -45,6 +45,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/halfmoon@1.1.1/js/halfmoon.min.js"></script>
 		<div class="content-wrapper">
+			<div class="sticky-alerts"></div>
 			{}
 		</div>
 	</div>
