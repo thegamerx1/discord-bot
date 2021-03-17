@@ -53,8 +53,14 @@ class dashboard {
 		guilds := request.session["token"].request("users/@me/guilds")
 		out := []
 		for _, guild in guilds {
-			if (guild.owner || Discord.checkFlag(guild.permissions, "administrator"))
+			if (guild.owner || Discord.checkFlag(guild.permissions, "administrator")) {
+				try {
+					data := dashboardClient.query({query: "isIn", id: request.session.user.id, guild: guild.id})
+				} catch e {
+					return response.error(503)
+				}
 				out.push({name: guild.name, id: guild.id, icon: guild.icon})
+			}
 		}
 		response.send(JSON.dump(out))
 	}

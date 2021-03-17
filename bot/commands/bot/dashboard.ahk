@@ -1,10 +1,10 @@
 class command_dashboard extends DiscoBase.command {
 	cooldown := 2
 	info := "Gets a link to the dashboard"
-	aliases := ["pong"]
+	aliases := ["dash"]
 
 	call(ctx, args) {
-		embed := new discord.embed(, "http://52.178.158.28/")
+		embed := new discord.embed(, "http://discobot.ml/")
 		ctx.reply(embed)
 	}
 }

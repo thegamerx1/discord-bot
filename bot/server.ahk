@@ -23,7 +23,8 @@ class dashboardServer {
 					guilddata := DiscoBot.getGuild(query.id)
 					channels := []
 					for _, val in guild.channels {
-						channels.push({name: val.name, id: val.id})
+						if (val.type = 0)
+							channels.push({name: val.name, id: val.id})
 					}
 					data := {channels: channels, form: {editchannel: guilddata.logging.edits ""}}
 				} else {
