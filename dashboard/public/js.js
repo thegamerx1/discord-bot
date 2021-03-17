@@ -1,9 +1,8 @@
-const login = document.getElementById("login-template")
-var userRenderer = Handlebars.compile(login.innerHTML)
-login.insertAdjacentHTML("beforebegin", userRenderer(DATA.user))
+const login = $("#login-template")
+var userRenderer = Handlebars.compile(login.html())
+$("#nav").append(userRenderer(DATA.user))
 
 let path = window.location.href
-let active = document.getElementById("nav").querySelector("a[href=\""+ path.substr(path.lastIndexOf("/")) + "\"]")
-
-active.parentElement.classList.add("active")
+let active = $("nav a[href=\""+ path.substr(path.lastIndexOf("/")) + "\"]")
+active.parent().addClass("active")
 active.href = "#"

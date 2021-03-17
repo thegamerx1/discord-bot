@@ -26,22 +26,28 @@
 			</ul>
 			<template id="login-template">
 				{{#if username}}
-					<div class="ml-auto text-right h-full row">
-						<p>{{username}}</p>
-						<img class="img-fluid rounded h-full" src="https://cdn.discordapp.com/avatars/{{id}}/{{avatar}}" alt="avatar">
+					<div class="dropdown with-arrow ml-auto h-full">
+						<button class="btn h-full d-inline-flex align-items-center " data-toggle="dropdown" type="button">
+							{{username}}
+							<img class="img-fluid rounded h-half" src="https://cdn.discordapp.com/avatars/{{id}}/{{avatar}}" alt="avatar">
+							<i class="fa fa-angle-down ml-5" aria-hidden="true"></i>
+						</button>
+						<div class="dropdown-menu">
+							<a class="dropdown-item" href="/logout">Logout</a>
+						</div>
 					</div>
 				{{else}}
 					<a class="btn btn-primary ml-auto" href="/login"><i class="fab fa-discord pr-5"></i> Login</a>
 				{{/if}}
 			</template>
 		</nav>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/halfmoon@1.1.1/js/halfmoon.min.js"></script>
 		<div class="content-wrapper">
 			{}
 		</div>
 	</div>
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/halfmoon@1.1.1/js/halfmoon.min.js"></script>
 	<script>DATA = {}</script>
 	<script src="js.js"></script>
 </body>
