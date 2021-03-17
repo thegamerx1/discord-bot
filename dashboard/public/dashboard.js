@@ -1,8 +1,5 @@
-const login = document.getElementById("login-template")
-var userRenderer = Handlebars.compile(login.innerHTML)
-login.insertAdjacentHTML("beforebegin", userRenderer(DATA.user))
-
-
+const progressBar = document.getElementById("initLoadProgress")
+progressBar.style.width = "0%"
 const dashboardContainer = document.getElementById("dashboard")
 const dashboardForm = document.getElementById("dashboardform")
 const serverSelector = document.getElementById("serverSelect")
@@ -13,10 +10,11 @@ var renderServer = Handlebars.compile(document.getElementById("server-template")
 
 if (DATA.guilds.length < 0) {
 	document.getElementById("addit").classList.remove("d-none")
+} else {
+	DATA.guilds.forEach((guild) => {
+		guildContainer.insertAdjacentHTML("beforeend", renderServer(guild))
+	})
 }
-DATA.guilds.forEach((guild) => {
-	guildContainer.insertAdjacentHTML("beforeend", renderServer(guild))
-})
 
 function setDashboard(btn) {
 	let id = btn["data-id"]
