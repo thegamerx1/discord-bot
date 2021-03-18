@@ -28,10 +28,15 @@ class dashboardServer {
 						if (val.type = 0)
 							channels.push({name: val.name, id: val.id})
 					}
-					data := {channels: channels, form: {editchannel: guilddata.logging.edits ""}}
+					data := {channels: channels, form: {editschannel: guilddata.logging.edits "", joinschannel: guilddata.logging.joins ""}, id: guild.id}
 				} else {
 					code := 404
 				}
+			case "save":
+				guild := DiscoBot.getGuild(request.id)
+				guild.logging.edits := request.editschannel
+				guild.logging.joins := request.joinschannel
+				; guilddata.disabled_commands := request.disabled_commands
 			case "isIn":
 				data := []
 				for i, guild in request.guilds {
@@ -41,6 +46,7 @@ class dashboardServer {
 			default:
 				code := 400
 		}
+
 		data := JSON.dump(data ? data : code)
 		Sock.SendText(data)
 		Sock.Disconnect()

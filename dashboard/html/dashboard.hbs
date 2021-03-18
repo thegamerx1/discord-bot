@@ -1,32 +1,28 @@
-<div id="serverSelect">
-	<div class="card row py-auto d-none" id="addit">
-		<h2 class="card-title">
-			You don't have the bot in any servers where you can manage it.
-		</h2>
-		<a target="_blank" class="btn btn-primary ml-auto" href="https://discord.com/oauth2/authorize?client_id=514110074931642376&permissions=322624&scope=bot"><i class="far fa-plus-square"></i> Add</a>
-	</div>
-	<div class="progress">
-		<div class="progress-bar" id="initLoadProgress"></div>
-	  </div>
-	<div class="d-flex align-content-start" id="guilds">
-		<template id="server-template">
-			<a class="card shadow flex-row border" href="#" onClick="setDashboard(this)" guild={{id}}>
-				<h5 class="card-title">{{name}}</h5>
-			</a>
-		</template>
-	</div>
-</div>
-
-<div id="dashboard" class="d-none content">
-	<form id="dashboardform" class="form">
-		<h1>Logs</h1>
-		<div class="input-group">
-			<div class="input-group-prepend">
-				<span class="input-group-text">Edits channel</span>
+<div id="dashboard" class="content">
+	<form id="dashboardform" class="form w-400">
+		<div class="form-group">
+			<label>Logs channel</label>
+			<div class="input-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Edits channel</span>
+				</div>
+				<select name="editschannel" class="form-control channelSelect">
+					<option value="0">None</option>
+				</select>
 			</div>
-			<select name="editchannel" class="form-control channelSelect"></select>
 		</div>
-		<button class="btn btn-primary">Enter</button>
+		<div class="form-group">
+			<label>Edits channel</label>
+			<div class="input-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Joins channel</span>
+				</div>
+				<select name="joinschannel" class="form-control channelSelect">
+					<option value="0">None</option>
+				</select>
+			</div>
+		</div>
+		<input class="btn btn-primary" type="submit" value="Save">
 	</form>
 </div>
-<script src="dashboard.js"></script>
+<script src="/dashboard.js"></script>
