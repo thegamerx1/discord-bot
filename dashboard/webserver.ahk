@@ -53,8 +53,10 @@ class dashboard {
 		for _, guild in guilds {
 			if (guild.owner || Discord.checkFlag(guild.permissions, "administrator")) {
 				try {
+					cont := new counter()
 					if dashboardClient.query("isIn", {guild: guild.id, user: request.session["user"].id}).isIn
 						out.push({name: guild.name, id: guild.id, icon: guild.icon})
+					debug.print("query took " cont.get() " ms")
 				} catch e {
 					return response.error(503)
 				}
