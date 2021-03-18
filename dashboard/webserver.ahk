@@ -104,7 +104,7 @@ class dashboard {
 	}
 
 	dashboard(response, request) {
-		if !request.session["token"].valid()
+		if (!request.session["token"].valid() || !request.session["user"])
 			return response.redirect("/login")
 
 		response.render("guilds", {user: request.session["user"]})
