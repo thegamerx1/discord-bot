@@ -7,10 +7,9 @@ class dashboard {
 				 ,{path: "/guilds", func: "getGuilds"}
 				 ,{path: "/logout", func: "logout"}]
 		this.http := new httpserver(this, paths, "public", true, !!A_DebuggerName)
-		data := new configLoader("data/settings.json",, true)
+		this.config := new configLoader("data/settings.json",, true)
 		this.http.setRender("html", "template")
-		this.http.serve(80, data.release ? "*" : "localhost")
-		this.release := data.release
+		this.http.serve(80, this.config.release ? "*" : "localhost")
 		this.oauth := new DiscordOauth(data.client_id, data.client_secret, data.redirect_uri, data.scopes)
 	}
 
@@ -83,7 +82,7 @@ class dashboard {
 	}
 
 	admin(response, request) {
-		if (request.session["user"].id != 373769618327601152)
+		if (request.session["user"].id != this.config.owner)
 			return response.redirect("/")
 
 		response.render("admin")
