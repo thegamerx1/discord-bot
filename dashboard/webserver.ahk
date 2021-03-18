@@ -49,18 +49,26 @@ class dashboard {
 
 
 		guilds := request.session["token"].request("users/@me/guilds")
+		request := []
+		equivalents := []
 		out := []
 		for _, guild in guilds {
 			if (guild.owner || Discord.checkFlag(guild.permissions, "administrator")) {
-				try {
-					cont := new counter()
-					if dashboardClient.query("isIn", {guild: guild.id, user: request.session["user"].id}).isIn
-						out.push({name: guild.name, id: guild.id, icon: guild.icon})
-					debug.print("query took " cont.get() " ms")
-				} catch e {
-					return response.error(503)
-				}
+				request.push(guild.id)
+				equivalents.push({name: guild.name, id: guild.id, icon: guild.icon})
 			}
+		}
+
+		try {
+			cont := new counter()
+			isIns := dashboardClient.query("isIn", {guilds: request})
+			debug.print("query took " cont.get() " ms")
+		} catch e {
+			return response.error(503)
+		}
+
+		for i, value in isIns {
+			out.push(equivalents[value])
 		}
 		response.send(JSON.dump(out))
 	}
