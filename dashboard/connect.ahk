@@ -4,16 +4,16 @@ class dashboardClient {
 		this.ip := ip
 	}
 
-	query(query, data) {
+	query(query, request) {
 		Sock := new SocketTCP()
 		Sock.Connect([this.ip, this.port])
-		Sock.SendText(JSON.dump({query: query, data: data}))
+		Sock.SendText(JSON.dump({query: query, data: request}))
 		try {
 			data := Sock.RecvText()
 		} catch e {
 			return data
 		}
 		Sock.Disconnect()
-		return data
+		return JSON.load(data)
 	}
 }

@@ -72,7 +72,7 @@ class dashboard {
 		} catch e {
 			return response.error(503)
 		}
-		response.send(data)
+		response.send(JSON.dump(data))
 	}
 
 	dashboard(response, request) {

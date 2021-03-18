@@ -5,9 +5,10 @@ $.get("/guilds", (data) => {
 	$("#initLoadProgress").width("90%")
 	data = JSON.parse(data)
 
-	if (data.length < 0) {
+	if (data.length < 0 || !Array.isArray(data)) {
 		$("#addit").removeClass("d-none")
 	} else {
+		console.log(data)
 		data.forEach((guild) => {
 			$("#guilds").append(renderServer(guild))
 		})

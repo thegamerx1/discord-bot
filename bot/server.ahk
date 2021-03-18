@@ -33,7 +33,7 @@ class dashboardServer {
 					code := 404
 				}
 			case "isIn":
-				guild := api.getGuild(request.id)
+				guild := api.getGuild(request.guild)
 				data := {isIn: !!guild.getMember(request.user)}
 			default:
 				code := 400
