@@ -8,7 +8,7 @@ class dashboard {
 				 ,{path: "/logout", func: "logout"}
 				 ,{path: "/admin", func: "admin"}]
 		this.http := new httpserver(this, paths, "public", true, !!A_DebuggerName)
-		this.config := new configLoader("data/settings.json",, true)
+		this.config := data := new configLoader("data/settings.json",, true)
 		this.http.setRender("html", "template")
 		this.http.serve(80, this.config.release ? "*" : "localhost")
 		this.oauth := new DiscordOauth(data.client_id, data.client_secret, data.redirect_uri, data.scopes)
