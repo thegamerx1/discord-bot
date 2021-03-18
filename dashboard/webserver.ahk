@@ -5,7 +5,8 @@ class dashboard {
 				 ,{path: "/dashboard", func: "dashboard"}
 				 ,{path: "/", func: "index"}
 				 ,{path: "/guilds", func: "getGuilds"}
-				 ,{path: "/logout", func: "logout"}]
+				 ,{path: "/logout", func: "logout"}
+				 ,{path: "/admin", func: "admin"}]
 		this.http := new httpserver(this, paths, "public", true, !!A_DebuggerName)
 		this.config := new configLoader("data/settings.json",, true)
 		this.http.setRender("html", "template")
@@ -52,7 +53,7 @@ class dashboard {
 		for _, guild in guilds {
 			if (guild.owner || Discord.checkFlag(guild.permissions, "administrator")) {
 				try {
-					if dashboardClient.query("isIn", {guild.id: guild.id, user: request.session["user"].id})
+					if dashboardClient.query("isIn", {guild: guild.id, user: request.session["user"].id}).isIn
 						out.push({name: guild.name, id: guild.id, icon: guild.icon})
 				} catch e {
 					return response.error(503)
@@ -65,7 +66,7 @@ class dashboard {
 	guild(response, request) {
 		if !request.params.id
 			return response.error(400)
-		debug.print(request.params.id)
+
 		try {
 			data := dashboardClient.query("guild", {id: request.params.id})
 		} catch e {
