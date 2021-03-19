@@ -1,4 +1,5 @@
-$("#dashboard").on("submit", (e) => {
+dashboard = $("#dashboard")
+dashboard.on("submit", (e) => {
 	e.preventDefault()
 	setProgress(5)
 	let data = new FormData(e.target)
@@ -7,7 +8,7 @@ $("#dashboard").on("submit", (e) => {
 		out[key] = value
 	})
 
-	$.post("/save/" + DATA.guild.id, out, () => {
+	$.post("/save/" + id, out, () => {
 		setProgress(100)
 		halfmoon.initStickyAlert({
 			content: "Succesfully sent data.",
@@ -25,11 +26,11 @@ $("#dashboard").on("submit", (e) => {
 	setProgress(80)
 })
 
-$("#dashboard .channelSelect").each((i ,e) => {
+dashboard.find(".channelSelector").each((i ,e) => {
 	channels.forEach(channel => {
 		e.append(new Option("#" + channel.name, channel.id))
 	})
 })
 $.each(form, (key, value) => {
-	$("#dashboard [name=\"" + key +"\"]").val(value.toString())
+	dashboard.find("[name=\"" + key +"\"]").val(value)
 })

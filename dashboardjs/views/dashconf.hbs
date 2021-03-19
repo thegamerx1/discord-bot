@@ -1,0 +1,36 @@
+{{#with guild}}
+<div class="content">
+	<form id="dashboard" class="form w-400">
+		<div class="form-group">
+			<label>Logs channel</label>
+			<div class="input-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Edits channel</span>
+				</div>
+				<select name="editschannel" class="form-control channelSelector">
+					<option value="0">None</option>
+				</select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label>Edits channel</label>
+			<div class="input-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Joins channel</span>
+				</div>
+				<select name="joinschannel" class="form-control channelSelector">
+					<option value="0">None</option>
+				</select>
+			</div>
+		</div>
+		<input class="btn btn-primary" type="submit" value="Save">
+	</form>
+</div>
+
+<script>
+	channels = {{{dump channels}}}
+	id = "{{id}}"
+	form = {{{dump form}}}
+</script>
+{{/with}}
+<script src="/js/dashboard.js" defer="true"></script>

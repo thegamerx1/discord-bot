@@ -1,0 +1,27 @@
+{{#if guilds}}
+	<div class="d-flex justify-content-center flex-wrap flex-row">
+		{{#each guilds}}
+			<a class="card shadow w-350 mw-full m-5 p-0 d-flex border" href="/dashboard/{{id}}">
+				<div class="d-flex w-50 h-50 m-10 align-self-center">
+					<div class="d-flex">
+						{{#if icon}}
+							<img src="https://cdn.discordapp.com/icons/{{id}}/{{icon}}.png" class="d-block w-50 h-50 rounded">
+						{{/if}}
+					</div>
+				</div>
+				<div class="flex-grow-1 overflow-y-hidden d-flex align-items-center position-relative h-120">
+					<div class="p-10 w-full m-auto">
+						<h5 class="card-title">{{name}}</h5>
+					</div>
+				</div>
+			</a>
+		{{/each}}
+	</div>
+{{else}}
+	<div class="card row py-auto d-none" id="addit">
+		<h2 class="card-title">
+			You don't have the bot in any servers where you can manage it.
+		</h2>
+		{{> addbot}}
+	</div>
+{{/if}}

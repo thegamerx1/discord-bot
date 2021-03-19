@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+	<meta name="viewport" content="width=device-width" />
+	<title>Discobot - {{title}}</title>
+	<link href="https://cdn.jsdelivr.net/npm/halfmoon@1.1.1/css/halfmoon-variables.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
+</head>
+<body class="dark-mode">
+	<div class="page-wrapper with-navbar">
+		<nav class="navbar" id="nav">
+			<a href="#" class="navbar-brand">
+				Discobot
+			</a>
+
+			<ul class="navbar-nav d-none d-md-flex">
+				<li class="nav-item {{#if (eq title "Home")}}active{{/if}}">
+					<a href="/" class="nav-link">Home</a>
+				</li>
+				<li class="nav-item {{#if (eq title "Dashboard")}}active{{/if}}">
+					<a href="/dashboard" class="nav-link">Dashboard</a>
+				</li>
+			</ul>
+			{{#if user}}
+				{{#with user}}
+				<div class="dropdown with-arrow ml-auto h-full">
+					<button class="btn h-full d-inline-flex align-items-center" data-toggle="dropdown" type="button">
+						<span class="pr-5">{{username}}</span>
+						<img class="img-fluid rounded h-half" src="https://cdn.discordapp.com/avatars/{{id}}/{{avatar}}" alt="avatar">
+						<i class="fa fa-angle-down ml-5" aria-hidden="true"></i>
+					</button>
+					<div class="dropdown-menu">
+						<a class="dropdown-item" href="/logout">Logout</a>
+						<a class="dropdown-item" href="/reloadguilds">Reload guilds</a>
+					</div>
+				</div>
+				{{/with}}
+			{{else}}
+				<a class="btn btn-primary ml-auto" href="/login"><i class="fab fa-discord pr-5"></i> Login</a>
+			{{/if}}
+		</nav>
+		<div class="sticky-alerts"></div>
+		<div class="content-wrapper">
+			<div class="progress rounded-0 d-none progress-bar-animated">
+				<div class="progress-bar" id="pageProgress"></div>
+	 		 </div>
+			{{{body}}}
+		</div>
+	</div>
+	<script src="/js.js" defer="true"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/halfmoon@1.1.1/js/halfmoon.min.js"></script>
+</body>
+</html>
