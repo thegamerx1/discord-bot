@@ -1,5 +1,6 @@
 const botTalk = require("./botTalk")
 const DiscordOauth2 = require("discord-oauth2")
+const Discord = require("discord.js")
 botTalk.init(21901, "localhost")
 
 const oauth = new DiscordOauth2({
@@ -89,8 +90,15 @@ module.exports.login = (req, res) => {
 				oauth.getUserGuilds(token.access_token)
 			])
 
+			let goodGuilds = []
+			for (const guild of guilds) {
+				if (new Discord.Permissions(guild.permissions).has("ADMINISTRATOR")) {
+					goodGuilds.push(guild)
+				}
+			}
+
 			try {
-				req.session.guilds = await botTalk.ask("IsIn", {guilds: guilds})
+				req.session.guilds = await botTalk.ask("IsIn", {guilds: goodGuilds})
 			} catch (e) {
 				res.status(500).send("")
 				return
