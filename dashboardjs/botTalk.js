@@ -7,7 +7,7 @@ class connect {
 	}
 
 	async ask(query, data) {
-		return await new Promise(resolve => {
+		return await new Promise((resolve, reject) => {
 			const socket = net.createConnection({ port: this.port, host: this.host }, () => {
 				socket.write(JSON.stringify({query: query, data: data}))
 			})
@@ -17,13 +17,13 @@ class connect {
 				try {
 					data = JSON.parse(data)
 				} catch {
-					throw data
+					reject(data)
 				}
 				resolve(data)
 			})
 
 			socket.on("error", err => {
-				throw err
+				reject(err)
 			})
 		})
 	}

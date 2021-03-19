@@ -92,7 +92,7 @@ module.exports.login = (req, res) => {
 			try {
 				req.session.guilds = await botTalk.ask("IsIn", {guilds: guilds})
 			} catch (e) {
-				res.statusCode(e)
+				res.status(500).send("")
 				return
 			}
 

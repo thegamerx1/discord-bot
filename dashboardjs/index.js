@@ -20,8 +20,17 @@ app.engine("hbs", Handlebars({
 
 app.use(express.static("public/"))
 app.use(compression())
-app.use(helmet())
-app.use(session({secret: process.env.secret}))
+app.use(helmet({
+	contentSecurityPolicy: false
+}))
+
+app.use(session({
+	secret: process.env.secret,
+	resave: true,
+	saveUninitialized: true,
+	store
+}))
+
 app.use(express.urlencoded({extended: true}))
 app.set("view engine", "hbs")
 
