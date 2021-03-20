@@ -9,3 +9,4 @@ dashboardjs/node_modules
 dashboardjs/.env
 dashboard
 dashboardjs/yarn.lock
+dashboardjs/nodemon.json

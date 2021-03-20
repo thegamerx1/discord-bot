@@ -49,6 +49,8 @@ class dashboardServer {
 					if api.getGuild(guild.id)
 						data.push(guild)
 				}
+			case "alive":
+				data := {alive: true}
 			default:
 				code := 400
 		}

@@ -10,14 +10,9 @@ dashboard.on("submit", (e) => {
 
 	$.post("/save/" + id, out, () => {
 		setProgress(100)
-		halfmoon.initStickyAlert({
-			content: "Succesfully sent data.",
-			title: "Sucess",
-			alertType: "alert-success"
-		})
 	}).fail(()=>{
 		halfmoon.initStickyAlert({
-			content: "Error sending data.",
+			content: "Error saving data.",
 			title: "Error",
 			alertType: "alert-danger"
 		})
