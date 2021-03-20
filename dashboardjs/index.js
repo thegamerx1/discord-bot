@@ -59,6 +59,7 @@ if (process.env.NODE_ENV == "production") {
 		fs.readFileSync("keys/ca_bundle.crt", "utf-8")
 	]
 
+	console.log(keys)
 	const httpSERV = http.createServer(redirect).listen(80)
 	const httpsSERV = https.createServer(keys, app).listen(443)
 } else {
