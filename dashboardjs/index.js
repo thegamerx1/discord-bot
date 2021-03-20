@@ -59,8 +59,8 @@ if (process.env.NODE_ENV == "production") {
 		ca: fs.readFileSync("keys/ca_bundle.crt", "utf-8")
 	}
 
-	const httpSERV = http.createServer(redirect).listen(80)
-	const httpsSERV = https.createServer(keys, app).listen(443)
+	var httpSERV = http.createServer(redirect).listen(80)
+	var httpsSERV = https.createServer(keys, app).listen(443)
 } else {
-	const httpSERV = http.createServer(app).listen(80)
+	var httpSERV = http.createServer(app).listen(80)
 }
