@@ -55,8 +55,7 @@ if (process.env.NODE_ENV == "production") {
 
 	const keys = {
 		key: fs.readFileSync("keys/private.key", "utf-8"),
-		cert: fs.readFileSync("keys/certificate.crt", "utf-8"),
-		ca: fs.readFileSync("keys/ca_bundle.crt", "utf-8")
+		cert: fs.readFileSync("keys/certificate.crt", "utf-8")
 	}
 
 	var httpSERV = http.createServer(redirect).listen(80)
