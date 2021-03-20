@@ -48,12 +48,9 @@ app.get("/reload", routes.reload)
 app.get("*", routes.notfound)
 
 if (process.env.NODE_ENV == "production") {
-	app.use((req, res, next) => {
-		if (req.secure) {
-			next()
-		} else {
-			res.redirect("https://" + req.headers.host + req.url)
-		}
+	const redirect = express()
+	redirect.get("*", (req, res) => {
+		res.redirect("https://" + req.headers.host + req.url)
 	})
 
 	const keys = {key, cert, ca} = [
@@ -62,6 +59,8 @@ if (process.env.NODE_ENV == "production") {
 		fs.readFileSync("keys/ca_bundle.crt", "utf-8")
 	]
 
+	const httpSERV = http.createServer(redirect).listen(80)
 	const httpsSERV = https.createServer(keys, app).listen(443)
+} else {
+	const httpSERV = http.createServer(app).listen(80)
 }
-const httpSERV = http.createServer(app).listen(80)
