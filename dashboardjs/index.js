@@ -56,11 +56,11 @@ if (process.env.NODE_ENV == "production") {
 		}
 	})
 
-	const keys = {key, cert, ca} = Promise.all([
-		fs.readFile("keys/private.key"),
-		fs.readFile("keys/certificate.crt"),
-		fs.readFile("keys/ca_bundle.crt")
-	])
+	const keys = {key, cert, ca} = [
+		fs.readFileSync("keys/private.key", "utf-8"),
+		fs.readFileSync("keys/certificate.crt", "utf-8"),
+		fs.readFileSync("keys/ca_bundle.crt", "utf-8")
+	]
 
 	const httpsSERV = https.createServer(keys, app).listen(443)
 }
