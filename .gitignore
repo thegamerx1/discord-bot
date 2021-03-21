@@ -4,8 +4,3 @@ bot/data/settings.json
 bot/data/global.json
 bot/commands/_includer.ahk
 dashboard/data
-
-dashboardjs/node_modules
-dashboardjs/.env
-dashboardjs/yarn.lock
-dashboardjs/nodemon.json
