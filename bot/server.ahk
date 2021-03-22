@@ -28,21 +28,32 @@ class dashboardServer {
 			case "guild":
 				guild := api.getGuild(request.id)
 				if guild {
-					guilddata := DiscoBot.getGuild(request.id)
+					gdata := DiscoBot.getGuild(request.id)
 					channels := []
 					for _, val in guild.channels {
 						if (val.type = 0)
 							channels.push({name: val.name, id: val.id})
 					}
-					data := {channels: channels, form: {editschannel: guilddata.logging.edits "", joinschannel: guilddata.logging.joins ""}, id: guild.id}
+					commands := []
+					for name, cmd in Discobot.commands {
+						commands.push(name)
+					}
+					data := {id: guild.id, commands: commands, channels: channels
+							,data: {logging: {edits: gdata.logging.edits ""
+									,joins: gdata.logging.joins ""
+									,deletes: gdata.logging.deletes ""}
+							,disabled_commands: gdata.disabled_commands}}
 				} else {
 					code := 404
 				}
 			case "save":
 				guild := DiscoBot.getGuild(request.id)
-				guild.logging.edits := request.data.editschannel
-				guild.logging.joins := request.data.joinschannel
-				; guilddata.disabled_commands := request.disabled_commands
+				if (request.type == "commands") {
+					guild.disabled_commands := request.data.disabled_commands
+				} else {
+					for key, value in request.data
+						guild[request.type][key] := value
+				}
 			case "isIn":
 				data := []
 				for _, guild in request.guilds {
