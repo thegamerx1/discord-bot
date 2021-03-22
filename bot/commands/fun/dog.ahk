@@ -4,7 +4,7 @@ class command_dog extends DiscoBase.command {
 	aliases := ["woof", "doggo"]
 
 	call(ctx, args) {
-		static API := "https://random.dog/woof.json"
+		static API := "https://random.dog/woof.json?filter=mp4,webm"
 		http := new requests("get", API,, true)
 		http.headers["filter"] := "mp4"
 		http.OnFinished := ObjBindMethod(this, "response", ctx)
