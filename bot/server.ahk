@@ -24,7 +24,6 @@ class dashboardServer {
 		api := DiscoBot.api
 		code := 200
 		data := ""
-		this.log("request for " query)
 		if (request.id == "demo") {
 			debug.print(request)
 			Sock.SendText(200)
@@ -80,6 +79,9 @@ class dashboardServer {
 			default:
 				code := 400
 		}
+
+		if (!data && code != 200)
+			this.log("request for """ query """ failed")
 
 		data := JSON.dump(data ? data : code)
 		Sock.SendText(data)
