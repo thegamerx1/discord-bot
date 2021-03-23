@@ -28,7 +28,11 @@ class command_log extends DiscoBase.command {
 			return
 
 		embed := new discord.embed("Message bulk delete", "Messages deleted: ``" ctx.count "```nIn Channel: " ctx.channel.mention)
-		channel.send(embed)
+		try {
+			channel.send(embed)
+		} catch e {
+			debug.print(e)
+		}
 	}
 
 	messageEdit(ctx, isDelet) {
@@ -49,7 +53,11 @@ class command_log extends DiscoBase.command {
 			attach.push("[" att.content_type "](" att.url ")")
 		}
 		embed.addField("Attachments", Array2String(attach))
-		channel.send(embed)
+		try {
+			channel.send(embed)
+		} catch e {
+			debug.print(e)
+		}
 	}
 
 	manageJoin(ctx, isJoin) {
@@ -67,7 +75,11 @@ class command_log extends DiscoBase.command {
 			embed.addField("Roles", Array2String(roles, ", ", "``"))
 		}
 		embed.addField("Account created at", Miss2Text(discord.utils.snowflakeTime(ctx.user.id) "UTC"))
-		channel.send(embed)
+		try {
+			channel.send(embed)
+		} catch e {
+			debug.print(e)
+		}
 	}
 
 	continuee(ctx, type) {

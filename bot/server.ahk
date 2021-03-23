@@ -73,8 +73,10 @@ class dashboardServer {
 				}
 			case "alive":
 				data := {alive: true}
-			case "admin":
-				data := {uptime: {bot: A_TickCount-this.uptime ""}}
+			case "uptime":
+				data := {uptime: A_TickCount-this.uptime ""}
+			case "logs":
+				data := {logs: debug.log}
 			default:
 				code := 400
 		}
