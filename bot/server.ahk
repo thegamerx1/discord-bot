@@ -1,6 +1,7 @@
 #include <socket>
 class dashboardServer {
 	init(port, ip := "localhost") {
+		this.uptime := A_TickCount
 		this.server := new SocketTCP()
 		this.server.OnAccept := this.OnAccept.Bind(this)
 		this.server.Bind(["127.0.0.1", port])
@@ -24,6 +25,12 @@ class dashboardServer {
 		code := 200
 		data := ""
 		this.log("request for " query)
+		if (request.id == "demo") {
+			debug.print(request)
+			Sock.SendText(200)
+			Sock.Disconnect()
+			return
+		}
 		switch query {
 			case "guild":
 				guild := api.getGuild(request.id)
@@ -34,11 +41,8 @@ class dashboardServer {
 						if (val.type = 0)
 							channels.push({name: val.name, id: val.id})
 					}
-					commands := []
-					for name, cmd in Discobot.commands {
-						commands.push(name)
-					}
-					data := {id: guild.id, commands: commands, channels: channels
+
+					data := {id: guild.id, channels: channels
 							,data: {logging: {edits: gdata.logging.edits ""
 									,joins: gdata.logging.joins ""
 									,deletes: gdata.logging.deletes ""}
@@ -46,6 +50,13 @@ class dashboardServer {
 				} else {
 					code := 404
 				}
+			case "commands":
+					static blacklist := ["bot", "owner"]
+					data := []
+					for name, cmd in Discobot.commands {
+						if !contains(cmd.category, blacklist)
+							data.push(name)
+					}
 			case "save":
 				guild := DiscoBot.getGuild(request.id)
 				if (request.type == "commands") {
@@ -62,6 +73,8 @@ class dashboardServer {
 				}
 			case "alive":
 				data := {alive: true}
+			case "admin":
+				data := {uptime: {bot: A_TickCount-this.uptime ""}}
 			default:
 				code := 400
 		}
