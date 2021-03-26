@@ -5,8 +5,8 @@
 includer.init("commands")
 debug.init({console: !A_DebuggerName, stamp: true})
 
-dashboardServer.init(21901)
 DiscoBot.init()
+dashboardServer.init(21901)
 Return
 #Include bot.ahk
 #Include base.ahk
