@@ -43,7 +43,7 @@ class command_log extends DiscoBase.command {
 		embed.setThumbnail(ctx.author.avatar)
 		embed.addField("Info", ctx.author.mention " "ctx.channel.mention "`n" ctx.author.notMention " (" ctx.author.id ")")
 		if !isDelet {
-			embed.addField("Old message", ctx.edits[1] ? discord.utils.codeblock("text",ctx.edits[1].content) : "Not logged")
+			embed.addField("Old message", ctx.edits[1] ? Truncate(discord.utils.codeblock("text", ctx.edits[1].content), 1200) : "Not logged")
 			embed.setDescription("[Jump to message](" ctx.link ")")
 		}
 
