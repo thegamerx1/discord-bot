@@ -47,7 +47,7 @@ class command_log extends DiscoBase.command {
 			embed.setDescription("[Jump to message](" ctx.link ")")
 		}
 
-		embed.addField(isDelet ? "Message" : "New message", discord.utils.codeblock("text", ctx.content))
+		embed.addField(isDelet ? "Message" : "New message", Truncate(discord.utils.codeblock("text", ctx.content), 1200))
 		attach := []
 		for _, att in ctx.attachments {
 			attach.push("[" att.content_type "](" att.url ")")
