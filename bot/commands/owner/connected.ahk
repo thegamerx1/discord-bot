@@ -7,8 +7,7 @@ class command_connected extends DiscoBase.command {
 	}
 
 	E_MESSAGE_CREATE(ctx) {
-		; 805290913958068245
-		if (ctx.author.id == 373769618327601152 && ctx.content == "Connected!") {
+		if (ctx.author.id == 805290913958068245 && ctx.content == "Connected!") {
 			if (ctx.channel.canI(["SEND_MESSAGES"])) {
 				reply := ctx.reply("Connected!")
 				this.replies[ctx.id] := reply.id
