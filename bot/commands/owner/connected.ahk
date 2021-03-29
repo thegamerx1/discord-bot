@@ -18,15 +18,10 @@ class command_connected extends DiscoBase.command {
 	E_MESSAGE_DELETE(ctx) {
 		if !ctx.channel.canI(["SEND_MESSAGES"])
 			return
-		for key, value in this.replies {
-			if (ctx.id == key) {
-				msg := ctx.channel.getMessage(value)
-				try {
-					msg.delete()
-				} catch e {
-					ctx.channel.send(e)
-				}
-			}
+
+		if (id := this.replies[ctx.id]) {
+			msg := ctx.channel.getMessage(id)
+			msg.delete()
 		}
 	}
 }
