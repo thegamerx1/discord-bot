@@ -57,12 +57,20 @@ class dashboardServer {
 							data.push(name)
 					}
 			case "save":
-				guild := DiscoBot.getGuild(request.id)
-				if (request.type == "commands") {
-					guild.disabled_commands := request.data.disabled_commands
+				try {
+					aguild := DiscoBot.api.getGuild(request.id)
+					user := aguild.getUser(request.user)
+				}
+				if (contains("ADMINISTRATOR", user.permissions)) {
+					guild := DiscoBot.getGuild(request.id)
+					if (request.type == "commands") {
+						guild.disabled_commands := request.data.disabled_commands
+					} else {
+						for key, value in request.data
+							guild[request.type][key] := value
+					}
 				} else {
-					for key, value in request.data
-						guild[request.type][key] := value
+					code := 403
 				}
 			case "isIn":
 				data := []

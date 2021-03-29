@@ -19,11 +19,11 @@ class command_purge extends DiscoBase.command {
 	}
 
 	call(ctx, args) {
-		if (Between(args[1], 1, 99))
+		if (Between(args[1], 1, 1000000000))
 			this.except(ctx, "Count must be between 1 and 100!")
 
 		try {
-			ids := this.getMessages(ctx, {limit: args[1], before: ctx.id})
+			ids := this.getMessages(ctx, {limit: args[1] > 98 ? 99 : args[1], before: ctx.id})
 			ctx.channel.deleteMessage(ids)
 		} catch e {
 			this.except(ctx, e.message)
