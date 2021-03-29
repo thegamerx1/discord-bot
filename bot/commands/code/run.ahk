@@ -19,7 +19,7 @@ class command_run extends DiscoBase.command {
 						,{names: ["py2"], head: "usr/bin/env python"}
 						,{names: ["py", "python"], head: "usr/bin/env python3"}
 						,{names: ["fish"], head: "usr/bin/env fish"}
-						,{names: ["node"], head: "usr/bin/env bide"}
+						,{names: ["node", "js"], head: "usr/bin/env node"}
 						,{names: ["perl"], head: "usr/bin/env perl"}
 						,{names: ["php"], head: "usr/bin/env php"}]
 

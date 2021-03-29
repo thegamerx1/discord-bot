@@ -1,5 +1,4 @@
 class command_connected extends DiscoBase.command {
-	cooldown := 2
 	owneronly := true
 
 	start() {
