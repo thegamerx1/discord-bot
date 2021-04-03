@@ -11,6 +11,7 @@ class DiscoBase {
 			if this.owneronly
 				this.cooldown := 0
 			this.permissions.push("ADD_REACTIONS")
+			this.permissions.push("USE_EXTERNAL_EMOJIS")
 			this.bot := bot
 			this.SET := bot.bot
 			this.cooldowns := {}
