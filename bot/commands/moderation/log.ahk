@@ -87,14 +87,18 @@ class command_log extends DiscoBase.command {
 		if (!data.logging[type] || ctx.author.bot)
 			return
 
-		return ctx.guild.getChannel(data.logging[type])
+		channel := ctx.guild.getChannel(data.logging[type])
+		if channel.canI(["SEND_MESSAGES", "EMBED_LINKS"]) {
+			return channel
+		} else {
+			data.logging[type] := 0
+		}
 	}
 
 	call(ctx, args) {
-		embed := new discord.embed("Logging status")
-		embed.addField("``" this.types[2] "``", ifNull(ctx.guild.getChannel(ctx.guild.data.logging.edits).name, "Not set"))
-		embed.addField("``" this.types[1] "``", ifNull(ctx.guild.getChannel(ctx.guild.data.logging.joins).name, "Not set"))
-		embed.addField("``" this.types[3] "``", ifNull(ctx.guild.getChannel(ctx.guild.data.logging.deletes).name, "Not set"))
+		embed := new discord.embed("Logging status", "Configure logging via the dashboard")
+		for key, value in this.types
+			embed.addField(value, ifNull(ctx.guild.getChannel(ctx.guild.data.logging[value]).mention, "Not set"), true)
 		ctx.reply(embed)
 	}
 }
