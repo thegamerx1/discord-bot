@@ -10,13 +10,12 @@ class command_reload extends DiscoBase.command {
 				msg := channel.getMessage(this.bot.resume[2])
 				msg.unReact("loading")
 				msg.react(this.bot.randomCheck())
+				debug.print("Reload react sucessful: " msg.id)
 			} catch e {
-				debug.print("Error reloading")
-				debug.print(e)
 				debug.print("Reload react failed")
+				debug.print(e)
 			} finally {
 				this.bot.delete("resume")
-				debug.print("Reload react sucessful")
 			}
 		} else {
 			debug.print("Reload react not activated")
