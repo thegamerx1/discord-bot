@@ -70,15 +70,16 @@ class command_run extends DiscoBase.command {
 
 		hjson := http.json()
 		data := {}
-		data.length := StrLen(hjson.stdout)
-		data.lines := StrSplit(hjson.stdout, "`n", "`r").length()
-		; data.time := round(hjson.time,2) "s"
-		data.time := Round(cont.get()/1000,2) "s"
+		data.length := StrLen(hjson.stdout)-1
+		stripped := StripNewline(hjson.stdout)
+		data.lines := StrSplit(StripNewline(hjson.stdout), "`n", "`r").length()
+		data.time := round(hjson.time,2) "s"
+		; data.time := Round(cont.get()/1000,2) "s"
 		if (data.time = "0.00s")
 			data.time := "Timed Out"
 
 		if (data.length > 1200 || data.lines > 16) {
-			if (data.length > 8000)
+			if (data.length > 16000)
 				this.except(ctx, "why the fuck is the output " data.length  " characters?")
 
 			http := new requests("POST", "https://p.ahkscript.org/",, true)
@@ -101,14 +102,14 @@ class command_run extends DiscoBase.command {
 		this.reply(ctx, data, cont, true)
 	}
 
-	reply(ctx, data, cont, isPaste := false) {
-		embed := new discord.embed(,isPaste ? data.content : "", 0x21633F)
-		if !isPaste
+	reply(ctx, data, cont, paste := false) {
+		embed := new discord.embed(,paste ? data.content : "", 0x21633F)
+		if !paste
 			embed.setContent(data.content)
 
+		embed.addField("Lines", Max(data.lines, 0), true)
 		embed.addField("Chars", data.length, true)
-		embed.addField("Lines", data.lines, true)
-		embed.addField("Response", data.time, true)
+		embed.addField("Run Time", data.time, true)
 		ctx.reply(embed)
 	}
 }
