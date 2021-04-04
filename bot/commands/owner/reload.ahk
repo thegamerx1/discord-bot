@@ -8,6 +8,7 @@ class command_reload extends DiscoBase.command {
 			try {
 				channel := new discord.channel(this.bot.api, this.bot.resume[1])
 				msg := channel.getMessage(this.bot.resume[2])
+				debug.print(msg)
 				msg.unReact("loading")
 				msg.react(this.bot.randomCheck())
 				debug.print("Reload react sucessful: " msg.id)
