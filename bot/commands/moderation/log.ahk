@@ -43,11 +43,11 @@ class command_log extends DiscoBase.command {
 		embed.setThumbnail(ctx.author.avatar)
 		embed.addField("Info", ctx.author.mention " "ctx.channel.mention "`n" ctx.author.notMention " (" ctx.author.id ")")
 		if !isDelet {
-			embed.addField("Old message", ctx.edits[1] ? Truncate(discord.utils.codeblock("text", ctx.edits[1].content), 1200) : "Not logged")
+			embed.addField("Old message", ctx.edits[1] ? Truncate(discord.utils.codeblock("text", ctx.edits[1].content), 999) : "Not logged")
 			embed.setDescription("[Jump to message](" ctx.link ")")
 		}
 
-		embed.addField(isDelet ? "Message" : "New message", Truncate(discord.utils.codeblock("text", ctx.content), 1200))
+		embed.addField(isDelet ? "Message" : "New message", Truncate(discord.utils.codeblock("text", ctx.content), 999))
 		attach := []
 		for _, att in ctx.attachments {
 			attach.push("[" att.content_type "](" att.url ")")
