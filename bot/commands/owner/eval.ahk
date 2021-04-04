@@ -5,7 +5,7 @@ class command_eval extends DiscoBase.command {
 	commands := [{name: "msg", args: [{name: "msg", type: "int"}, {name: "query"}]}]
 
 	c_msg(ctx, args) {
-		msg := ctx.api.GetMessage(ctx.channel.id, args[1])
+		msg := ctx.channel.GetMessage(args[1])
 		this.printee(ctx, eval(discord.utils.getCodeBlock(args[2]).code, [{name: "ctx", val: msg}]))
 	}
 
@@ -18,7 +18,7 @@ class command_eval extends DiscoBase.command {
 			deep := ObjectDeep(data, 200)
 			if (deep > 60) {
 				if deep > 190
-					this.except(ctx, "Result is too deep!")
+					return ctx.react("why")
 
 				output := this.beutifolObj(data)
 			} else {
