@@ -13,9 +13,13 @@ class command_reload extends DiscoBase.command {
 			} catch e {
 				debug.print("Error reloading")
 				debug.print(e)
+				debug.print("Reload react failed")
 			} finally {
 				this.bot.delete("resume")
+				debug.print("Reload react sucessful")
 			}
+		} else {
+			debug.print("Reload react not activated")
 		}
 	}
 
