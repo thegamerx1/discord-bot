@@ -7,9 +7,16 @@ class command_logs extends DiscoBase.command {
 		logs := strGetLast(debug.log, args[1])
 		if !logs
 			this.except(ctx, "Logs brokey")
-		pag := new discord.paginator(logs)
-		for _, page in pag.get() {
-			ctx.reply(discord.utils.codeblock("prolog", page))
+		file := new discord.messageFile("prolog", StripNewline(logs))
+		msg := ctx.reply(file)
+		msg.react("trash")
+	}
+
+	E_MESSAGE_REACTION_ADD(ctx) {
+		if (ctx.emoji == "trash") {
+			if (ctx.message.author.id = ctx.api.self.id)
+				if (ctx.author.id = ctx.api.owner.id)
+					ctx.message.delete()
 		}
 	}
 }
