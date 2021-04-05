@@ -17,9 +17,6 @@ class command_eval extends DiscoBase.command {
 		if IsObject(data) {
 			deep := ObjectDeep(data, 200)
 			if (deep > 60) {
-				if deep > 190
-					return ctx.react("why")
-
 				output := this.beutifolObj(data)
 			} else {
 				output := JSON.dump(data,0,1)
@@ -33,15 +30,9 @@ class command_eval extends DiscoBase.command {
 		if (output = "")
 			return ctx.react("empty")
 
-		if StrLen(output) < 100 {
-			ctx.reply(output)
-			return
-		}
-
-		pages := new discord.paginator(output)
-		for _, page in pages.get() {
-			ctx.reply(discord.utils.codeblock("json", page, false, "No output"))
-		}
+		file := new discord.messageFile("json", output)
+		msg := ctx.reply(file)
+		msg.react("trash")
 	}
 
 	beutifolObj(obj) {
@@ -50,5 +41,13 @@ class command_eval extends DiscoBase.command {
 			temp .= (IsObject(key) ? "{}" : key) ": " (IsObject(value) ? "{}" : value)  "`n"
 		}
 		return temp
+	}
+
+	E_MESSAGE_REACTION_ADD(ctx) {
+		if (ctx.emoji == "trash") {
+			if (ctx.message.author.id = ctx.api.self.id)
+				if (ctx.author.id = ctx.api.owner.id)
+					ctx.message.delete()
+		}
 	}
 }
