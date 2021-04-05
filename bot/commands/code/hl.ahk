@@ -13,7 +13,7 @@
 
 		ctx.delete()
 		lang := code.lang ? code.lang : "autohotkey"
-		file := new discord.messageFile(command "." lang, code.code,"Paste by " ctx.author.mention)
+		file := new discord.messageFile(command "." lang, StripNewline(code.code), "Paste by " ctx.author.mention)
 		msg := ctx.reply(file)
 		msg.react(this.emoji)
 	}
