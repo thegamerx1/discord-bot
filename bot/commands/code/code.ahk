@@ -12,7 +12,6 @@
 			ctx.reply(embed)
 			return
 		}
-
 		command := this.bot.getAlias(args[1])
 		if !command
 			this.except(ctx, "Command not found")
@@ -22,8 +21,7 @@
 		} catch e {
 			this.except(ctx, "Error reading file")
 		}
-		page := new discord.paginator(code)
-		for _, value in page.get()
-			ctx.reply("``````autoit`n" value  "``````")
+		file := new discord.messageFile(command ".autoit", code)
+		ctx.reply(file)
 	}
 }

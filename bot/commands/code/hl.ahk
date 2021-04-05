@@ -11,9 +11,9 @@
 		code := discord.utils.getCodeBlock(args[1])
 
 		ctx.delete()
-		embed := new discord.embed(,"_Paste by " ctx.author.mention "_")
-		embed.setContent(discord.utils.codeblock(code.lang ? code.lang : "ahk" , code.code))
-		msg := ctx.reply(embed)
+		lang := code.lang ? code.lang : "autohotkey"
+		file := new discord.messageFile(command "." lang, code.code,"Paste by " ctx.author.mention)
+		msg := ctx.reply(file)
 		msg.react(this.emoji)
 	}
 
@@ -22,8 +22,7 @@
 			return
 
 		if (ctx.message.author.id = ctx.api.self.id)
-			if (ctx.author.id = discord.utils.getId(ctx.message.embeds[1].description))
+			if (ctx.author.id = discord.utils.getId(ctx.message.content))
 				ctx.message.delete()
-
 	}
 }
