@@ -2,6 +2,7 @@
 	cooldown := 3
 	info := "Highlights your text"
 	args := [{optional: false, name: "code"}]
+	permissions := ["MANAGE_MESSAGES"]
 
 	start() {
 		this.emoji := Unicode.get("put_litter_in_its_place")
