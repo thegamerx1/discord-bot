@@ -31,7 +31,7 @@ class command_eval extends DiscoBase.command {
 			return ctx.react("empty")
 
 		ctx.delete()
-		file := new discord.messageFile("json", output, "````" ctx.content "````")
+		file := new discord.messageFile("json", output, "````" discord.utils.sanitize(ctx.content) "````")
 		msg := ctx.reply(file)
 		msg.react("trash")
 	}

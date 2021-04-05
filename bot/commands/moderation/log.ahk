@@ -3,6 +3,7 @@ class command_log extends DiscoBase.command {
 	info := "Manages the logging system"
 	infolong := "Configure logging via the dashboard"
 	userperms := ["ADMINISTRATOR"]
+	aliases := ["logging"]
 
 	static types := ["joins", "edits", "deletes"]
 
