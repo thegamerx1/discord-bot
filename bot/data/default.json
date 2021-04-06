@@ -2,7 +2,8 @@
 	"guild": {
 		"tags": [],
 		"disabled_commands": [],
-		"logging": {}
+		"logging": {},
+		"randomReact": true
 	},
 	"user": {
 		"todos": [],
