@@ -44,7 +44,8 @@ class dashboardServer {
 					data := {id: guild.id, channels: channels
 							,data: {logging: {edits: gdata.logging.edits ""
 									,joins: gdata.logging.joins ""
-									,deletes: gdata.logging.deletes ""}
+									,deletes: gdata.logging.deletes ""
+									,randomReact: {randomReact: gdata.randomReact}}
 							,disabled_commands: gdata.disabled_commands}}
 				} else {
 					code := 404
@@ -63,11 +64,14 @@ class dashboardServer {
 				}
 				if (contains("ADMINISTRATOR", user.permissions)) {
 					guild := DiscoBot.getGuild(request.id)
-					if (request.type == "commands") {
-						guild.disabled_commands := request.data.disabled_commands
-					} else {
-						for key, value in request.data
-							guild[request.type][key] := value
+					Switch request.type {
+						case "commands":
+							guild.disabled_commands := request.data.disabled_commands
+						case "randomReact":
+							guild.randomReact := bool(request.data.randomReact)
+						default:
+							for key, value in request.data
+								guild[request.type][key] := value
 					}
 				} else {
 					code := 403

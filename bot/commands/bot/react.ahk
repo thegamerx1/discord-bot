@@ -9,7 +9,8 @@ class command_react extends DiscoBase.command {
 	}
 
 	call(ctx, args) {
-		ctx.reply("Manage me through the dashboard!")
+		embed := new discord.embed("Random react status", "Currently " (ctx.guild.data.randomReact ? "enabled" : "disabled") "`nConfigure via the dashboard")
+		ctx.reply(embed)
 	}
 
 	E_MESSAGE_CREATE(ctx) {
