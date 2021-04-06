@@ -14,6 +14,9 @@ class command_react extends DiscoBase.command {
 
 	E_MESSAGE_CREATE(ctx) {
 		static ECOOLDOWN := 5*60*1000
+		guild := this.bot.getGuild(ctx.guild.id)
+		if !guild.randomReact
+			return
 		if (random(1,100) == 69 && ctx.channel.canI(["ADD_REACTIONS", "USE_EXTERNAL_EMOJIS"])) {
 			if this.isBlocked(ctx.author)
 				return
