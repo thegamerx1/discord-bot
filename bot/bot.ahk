@@ -20,7 +20,7 @@ class DiscoBot {
 		OnExit(save), SetTimer(save, 60*30*1000)
 	}
 
-	E_READY() {
+	E_READY_EARLY() {
 		this.api.SetPresence("online", this.settings.data.prefix " help", 2)
 		debug.print("READY!")
 	}
